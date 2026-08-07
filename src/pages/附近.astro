@@ -43,10 +43,14 @@ const description = `用你目前的位置，找出新北市離你最近的立�
 
       <div class="state" id="gap">
         <p>
-          <strong>{`目前只有幼兒園能算距離（${withCoords.toLocaleString('en-US')} 間）。`}</strong>
+          <strong>{`這個功能只涵蓋幼兒園（${withCoords.toLocaleString('en-US')} 間）。`}</strong>
         </p>
         <p>
-          {`${nurseries} 間托嬰中心沒有座標資料——政府開放資料只給文字地址，把地址換成座標需要國土測繪中心的介接金鑰，本站尚未申請。托嬰中心請改用行政區瀏覽，或用機構頁上的 Google 地圖連結看位置。`}
+          {`${nurseries} 間托嬰中心算不了距離：政府開放資料只提供文字地址、沒有座標，而本站不自行做地址定位。找托嬰中心請用行政區瀏覽，或在機構頁點 Google 地圖看位置與路線。`}
+        </p>
+        <p>
+          <a href="/搜尋/">用名稱搜尋</a>　·
+          <a href="#districts">從行政區瀏覽</a>
         </p>
       </div>
 
@@ -59,7 +63,7 @@ const description = `用你目前的位置，找出新北市離你最近的立�
         <h2>或從行政區找</h2>
         <p class="note">不想分享位置也沒關係，從自己那一區開始一樣可以。</p>
       </div>
-      <nav class="district-grid" aria-label="行政區">
+      <nav class="district-grid" id="districts" aria-label="行政區">
         {data.districts.map((d) => <a href={districtPath(d)}>{d}</a>)}
       </nav>
     </section>
