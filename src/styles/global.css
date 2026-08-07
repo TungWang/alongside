@@ -2,15 +2,21 @@
    奶油白底、焦糖奶茶棕重點色、圓角柔和卡片、充足留白、手機優先。
    刻意避開陶土橘紅：重點色是偏灰的暖棕，不是橘。 */
 
+/* 色碼與規劃文件的設計規格略有出入：原稿的 #B08863／#8F6D4E／#7A7169 在奶油底上
+   只有 2.9–4.3:1，未達 WCAG AA 內文所需的 4.5:1，七個類型標籤（11.5px 白字）
+   更全部落在 2.9–3.7:1。這裡在同色相上降明度到剛好達標，維持低飽和暖調的原始調性。
+   --accent-soft 保留原始的較亮奶茶棕，只用在不承載文字的裝飾（logo 圖示）。 */
+
 :root {
   --bg: #f7f3ec;
   --card: #fffdf9;
   --band: #ede6da;
-  --accent: #b08863;
-  --accent-dark: #8f6d4e;
+  --accent: #946e4b; /* 按鈕、實心標籤底（配白字 4.50:1）*/
+  --accent-soft: #b08863; /* 純裝飾，不承載文字 */
+  --accent-dark: #7f6145; /* 連結、hover（配奶油底 4.58:1）*/
   --ink: #3e362e;
-  --ink-soft: #7a7169;
-  --line: #e2d9cb;
+  --ink-soft: #6e665e; /* 次要文字（最差背景下 4.55:1）*/
+  --line: #d8cdba;
   --line-soft: #efe7da;
 
   --radius-card: 16px;
@@ -82,7 +88,7 @@ a {
   text-underline-offset: 3px;
 }
 a:hover {
-  color: var(--accent);
+  color: #6a5039; /* hover 要更深不是更淺，6.73:1 */
 }
 
 /* 鍵盤焦點必須看得見 */
@@ -156,7 +162,7 @@ main {
   width: 24px;
   height: 24px;
   border-radius: 9px;
-  background: var(--accent);
+  background: var(--accent-soft);
   display: grid;
   place-items: center;
   flex: 0 0 auto;

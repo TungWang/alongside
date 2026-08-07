@@ -11,14 +11,14 @@ export const SITE_NAME = '育兒同行';
  * 全部低飽和暖調，只用來區分類型，不帶價值判斷。
  */
 const TAGS = {
-  公立: '#7A8B6F',
-  準公共: '#9A8C5E',
-  私立: '#B08863',
-  非營利: '#6F8B85',
-  職場互助: '#8E7F94',
-  公共托育: '#C08A5E',
+  公立: '#6B7A62',
+  準公共: '#80744E',
+  私立: '#946E4B',
+  非營利: '#627A75',
+  職場互助: '#7F6F85',
+  公共托育: '#9E693E',
 };
-const TAG_FALLBACK = '#7A7169'; // 公營公司、社團法人附設等零星值
+const TAG_FALLBACK = '#6E665E'; // 公營公司、社團法人附設等零星值
 
 export function tagColor(ownership) {
   return TAGS[ownership] || TAG_FALLBACK;

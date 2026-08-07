@@ -289,11 +289,34 @@ async function mapLimit(items, limit, fn) {
  * 裁罰明細：封存端以「縣市／機構全名.json」存放，每筆是一個陣列
  *   [日期, 裁處書字號, 法條, 違反內容, 受處分人, 罰鍰]
  */
+/**
+ * 抓單一機構的裁罰明細。
+ *
+ * 每次建置要打四百多次，網路抖一下是常態。這裡的關鍵是要分辨兩種 404：
+ * 「這間真的沒有裁罰紀錄」和「這次沒抓到」——前者回空陣列是對的，
+ * 後者若也回空陣列，就會讓一間有紀錄的園所無聲變成清白，那是最糟的失敗方式。
+ * 所以非 404 的錯誤會重試，重試完仍失敗就 throw，由呼叫端統計並決定是否中止建置。
+ */
 async function fetchPenalties(title) {
   const url = `${ARCHIVE}/data/punish/${encodeURIComponent('新北市')}/${encodeURIComponent(title)}.json`;
-  const res = await fetch(url);
-  if (!res.ok) return [];
-  const rows = await res.json();
+
+  let lastError;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 400 * attempt));
+    try {
+      const res = await fetch(url);
+      if (res.status === 404) return []; // 明確地「這間沒有紀錄」
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const rows = await res.json();
+      return toPenaltyRows(rows);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw new Error(`裁罰明細抓取失敗（${title}）：${lastError?.message}`);
+}
+
+function toPenaltyRows(rows) {
   if (!Array.isArray(rows)) return [];
 
   return rows
@@ -360,12 +383,30 @@ async function enrich(institutions) {
 
   // 只對標記有裁罰的機構抓明細，省掉九成請求
   const targets = preschools.filter((i) => i._hasPenalty);
-  const results = await mapLimit(targets, 8, (inst) => fetchPenalties(inst.name));
+  const results = await mapLimit(targets, 8, async (inst) => {
+    try {
+      return await fetchPenalties(inst.name);
+    } catch (err) {
+      return err; // 先收集，全部跑完再一起判斷，避免一筆失敗就中斷四百多次請求
+    }
+  });
+
+  const failures = results.filter((r) => r instanceof Error);
+  if (failures.length) {
+    console.error(`\n  ${failures.length} / ${targets.length} 間的裁罰明細抓取失敗：`);
+    for (const err of failures.slice(0, 5)) console.error(`    ${err.message}`);
+    // 少數失敗容忍（該園顯示為無紀錄，並非理想但可接受）；大量失敗代表上游有狀況，
+    // 這時寧可讓建置失敗，也不要把幾百間有紀錄的園所publish成清白。
+    if (failures.length > targets.length * 0.05) {
+      throw new Error('裁罰明細失敗比例過高，中止建置以免發布錯誤資訊');
+    }
+    console.error('  失敗比例在容忍範圍內，該些機構本次顯示為無紀錄');
+  }
 
   let penaltyCount = 0;
   targets.forEach((inst, i) => {
-    inst.penalties = results[i];
-    penaltyCount += results[i].length;
+    inst.penalties = results[i] instanceof Error ? [] : results[i];
+    penaltyCount += inst.penalties.length;
   });
   for (const inst of preschools) delete inst._hasPenalty;
 
