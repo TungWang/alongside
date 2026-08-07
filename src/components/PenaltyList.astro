@@ -1,0 +1,142 @@
+---
+/**
+ * 裁罰紀錄。刻意不做成表格——手機上一列六欄會擠到不能讀，
+ * 改成每筆一個區塊，日期與處分先出現，法條與裁處書字號放小字備查。
+ */
+const { penalties, officialUrl, officialLabel } = Astro.props;
+
+const fined = penalties.filter((p) => p.fineAmount);
+const totalFine = fined.reduce((sum, p) => sum + p.fineAmount, 0);
+const years = penalties.map((p) => p.date.slice(0, 4)).filter((y) => /^\d{4}$/.test(y));
+const span = years.length ? [Math.min(...years), Math.max(...years)] : null;
+---
+
+<section class="stack">
+  <div class="stack-sm">
+    <h2>裁罰紀錄（{penalties.length} 筆）</h2>
+    <p class="note">
+      {
+        span
+          ? `${span[0]} 至 ${span[1]} 年間，共 ${penalties.length} 筆${totalFine ? `，罰鍰合計 ${totalFine.toLocaleString('en-US')} 元` : ''}。`
+          : `共 ${penalties.length} 筆。`
+      }
+    </p>
+  </div>
+
+  <div class="caveat">
+    <p><strong>看這份紀錄之前，有幾件事想先說</strong></p>
+    <ul>
+      <li>這份資料<strong>不是政府開放資料</strong>，是民間長期備份全國教保資訊網公告所得。官方公告有時效，過期會下架，因此這裡<strong>可能包含官方目前已經查不到的舊紀錄</strong>。</li>
+      <li>裁罰是過去某個時間點的事，<strong>不代表現在的狀況</strong>。園所可能早已改善，負責人與教保人員也可能已更換。</li>
+      <li>違規的輕重差很多——「收費未報備查」和「對幼兒不當對待」是完全不同的事，請看清楚違反內容，別只看筆數。</li>
+      <li>沒有紀錄不等於沒問題，只表示這份備份裡沒有。</li>
+    </ul>
+    {
+      officialUrl && (
+        <p>
+          要確認現況，請以
+          <a href={officialUrl} target="_blank" rel="noopener nofollow">
+            {officialLabel} ↗
+          </a>
+          的即時查詢為準。
+        </p>
+      )
+    }
+  </div>
+
+  <ol class="penalties">
+    {
+      penalties.map((p) => (
+        <li>
+          <div class="head">
+            <span class="date">{p.date}</span>
+            <span class={p.fineAmount ? 'sanction fine' : 'sanction'}>{p.sanction}</span>
+          </div>
+          <p class="what">{p.description || p.statute}</p>
+          <p class="ref">
+            {p.description && p.statute ? `${p.statute}　` : ''}
+            {p.docNo}
+            {p.person ? `　${p.person}` : ''}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .caveat {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .caveat p {
+    margin: 0;
+  }
+  .caveat strong {
+    color: var(--ink);
+  }
+  .caveat ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 18px;
+    list-style: disc;
+  }
+
+  .penalties {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+  .penalties li {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .date {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .sanction {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .sanction.fine {
+    color: var(--accent-dark);
+  }
+  .what {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .ref {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+</style>

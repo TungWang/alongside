@@ -1,7 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import BarChart from '../components/BarChart.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, districtPath } from '../lib/site.js';
+import { SITE_NAME, districtPath, tagColor } from '../lib/site.js';
+import { byOwnership, chartableFees } from '../lib/stats.js';
+
+const owners = byOwnership();
+const fees = chartableFees();
+const publicish = owners
+  .filter((x) => ['公立', '非營利'].includes(x.ownership))
+  .reduce((s, x) => s + x.count, 0);
 
 const { institutions, districts, total, fetchedAt } = data;
 
@@ -71,6 +79,39 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
           ))
         }
       </nav>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>先看全市的樣子</h2>
+        <p class="note">
+          {`新北市的幼兒園裡，公立與非營利加起來只有 ${publicish} 間，不到三分之一——這也是為什麼公立要抽籤。`}
+        </p>
+      </div>
+      <div class="card">
+        <BarChart
+          items={owners.map((x) => ({ label: x.ownership, value: x.count, color: tagColor(x.ownership) }))}
+          caption="各類型的機構數量。"
+        />
+      </div>
+      {
+        fees.length > 0 && (
+          <div class="card">
+            <BarChart
+              items={fees.map((f) => ({
+                label: f.ownership,
+                value: f.median,
+                display: `${f.median.toLocaleString('en-US')} 元`,
+                color: tagColor(f.ownership),
+              }))}
+              caption="各類型幼兒園的月費中位數，依註冊繳費單推算。資料來源、限制與注意事項見托育概況頁。"
+            />
+          </div>
+        )
+      }
+      <a class="btn btn-quiet" href="/概況/" style="align-self:flex-start">
+        看完整的新北市托育概況 →
+      </a>
     </section>
 
     <section class="card stack-sm">

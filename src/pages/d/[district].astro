@@ -1,8 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import InstitutionCard from '../../components/InstitutionCard.astro';
+import BarChart from '../../components/BarChart.astro';
 import data from '../../data/institutions.json';
-import { SITE_NAME } from '../../lib/site.js';
+import { SITE_NAME, tagColor } from '../../lib/site.js';
+import { byOwnership } from '../../lib/stats.js';
 
 export function getStaticPaths() {
   return data.districts.map((district) => ({
@@ -18,6 +20,11 @@ const { district, list } = Astro.props;
 
 const preschools = list.filter((i) => i.kind === 'preschool').length;
 const nurseries = list.length - preschools;
+const composition = byOwnership(list);
+
+const fees = list.map((i) => i.monthly).filter(Boolean).sort((a, b) => a - b);
+const feeMedian = fees.length ? fees[Math.floor(fees.length / 2)] : null;
+const penalised = list.filter((i) => i.penalties.length).length;
 
 // 篩選鈕只列這一區真的存在的屬性，避免家長按了得到空白
 const ownerships = [...new Set(list.map((i) => i.ownership))];
@@ -56,6 +63,32 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
           )
         }
       </div>
+
+      {
+        list.length >= 5 && (
+          <details class="composition">
+            <summary>
+              這一區的組成
+              {feeMedian ? `　·　幼兒園月費中位數 ${feeMedian.toLocaleString('en-US')} 元` : ''}
+            </summary>
+            <div class="composition-body">
+              <BarChart
+                items={composition.map((c) => ({
+                  label: c.ownership,
+                  value: c.count,
+                  color: tagColor(c.ownership),
+                }))}
+              />
+              {penalised > 0 && (
+                <p class="note">
+                  {`其中 ${penalised} 間幼兒園在民間備份資料裡查得到裁罰紀錄。備份可能包含官方已下架的舊紀錄，詳見各機構頁的說明。`}
+                </p>
+              )}
+              <a class="note" href="/概況/">看全市概況與資料來源說明 →</a>
+            </div>
+          </details>
+        )
+      }
 
       <div class="filterbar" role="group" aria-label="篩選機構">
         <button type="button" data-filter="all" aria-pressed="true">全部 {list.length}</button>

@@ -28,6 +28,13 @@
   box-sizing: border-box;
 }
 
+/* 瀏覽器預設的 [hidden] { display:none } 屬於 UA 樣式，會被本檔任何
+   .inst-card { display:flex } 這類作者樣式蓋掉，導致 hidden 設了卻仍看得見。
+   篩選功能靠 hidden 運作，所以在這裡把它釘死。 */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -327,6 +334,41 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- 行政區組成（可收合，預設收起免得擋住清單） ---------- */
+
+.composition {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.composition summary {
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  cursor: pointer;
+  list-style: none;
+}
+.composition summary::-webkit-details-marker {
+  display: none;
+}
+.composition summary::after {
+  content: '＋';
+  float: right;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+.composition[open] summary::after {
+  content: '－';
+}
+.composition-body {
+  padding: 4px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 /* ---------- 篩選列 ---------- */
 
 .filterbar {
@@ -383,6 +425,28 @@ main {
 .deflist dd {
   margin: 0;
   line-height: 1.6;
+}
+
+.deflist .hint {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.deflist .regno {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  word-break: break-all;
+}
+
+.source {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
 }
 
 .copybar {

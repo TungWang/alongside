@@ -2,7 +2,7 @@
 
 // 部署後改成你的 Firebase 網址（例如 https://alongside-tw.web.app）。
 // sitemap 與 canonical 都靠這個值，上線前務必改對。
-export const SITE_URL = 'https://alongside-tw.web.app';
+export const SITE_URL = 'https://alongside-53f07.web.app/';
 export const SITE_NAME = '育兒同行';
 
 /**

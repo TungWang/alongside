@@ -1,0 +1,72 @@
+---
+/**
+ * 純 HTML/CSS 的橫向長條圖。不畫 SVG、不用圖表函式庫——
+ * 每一列本身就是可讀的文字，關掉樣式或用螢幕閱讀器也看得懂。
+ *
+ * items: [{ label, value, display?, color?, note? }]
+ */
+const { items, max: maxProp, caption } = Astro.props;
+const max = maxProp ?? Math.max(...items.map((i) => i.value), 1);
+---
+
+<div class="bars">
+  {
+    items.map((item) => (
+      <div class="bar-row">
+        <span class="bar-label">{item.label}</span>
+        <span class="bar-track">
+          <span
+            class="bar-fill"
+            style={`width:${Math.max((item.value / max) * 100, 1.5)}%;background:${item.color || 'var(--accent)'}`}
+          />
+        </span>
+        <span class="bar-value">{item.display ?? item.value.toLocaleString('en-US')}</span>
+      </div>
+    ))
+  }
+</div>
+{caption && <p class="note bar-caption">{caption}</p>}
+
+<style>
+  .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 4.6em 1fr auto;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+  }
+  .bar-label {
+    color: var(--ink-soft);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-track {
+    display: block;
+    background: var(--band);
+    border-radius: 999px;
+    height: 14px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+  }
+  .bar-value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+    min-width: 3.6em;
+    text-align: right;
+  }
+  .bar-caption {
+    margin-top: 12px;
+  }
+</style>

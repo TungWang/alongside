@@ -1,0 +1,294 @@
+---
+import Base from '../layouts/Base.astro';
+import BarChart from '../components/BarChart.astro';
+import { SITE_NAME, tagColor, districtPath } from '../lib/site.js';
+import {
+  overview,
+  byOwnership,
+  feeByOwnership,
+  chartableFees,
+  CHART_MIN_SAMPLE,
+  penaltyStats,
+  districtStats,
+  archive,
+  fetchedAt,
+} from '../lib/stats.js';
+
+const o = overview();
+const owners = byOwnership();
+const fees = feeByOwnership();
+const feeChart = chartableFees();
+const pen = penaltyStats();
+const districts = districtStats();
+
+const fee = (name) => fees.find((f) => f.ownership === name);
+const flatTypes = fees.filter((f) => f.flat && f.count >= 3).map((f) => f.ownership);
+const hidden = fees.filter((f) => f.count < CHART_MIN_SAMPLE);
+const least = districts[districts.length - 1];
+
+const title = `新北市托育概況：${o.total} 間機構的數字整理｜${SITE_NAME}`;
+const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立案幼兒園與托嬰中心的統計：各區分布、公私立組成、各類型月費中位數與裁罰紀錄概況。資料來自政府開放平台與民間封存。`;
+---
+
+<Base title={title} description={description} path="/概況/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <h1>新北市托育概況</h1>
+      <p class="muted">
+        {`把 ${o.total.toLocaleString('en-US')} 間機構的資料攤開來看，比一間一間點更快抓到全貌。以下數字全部由開放資料自動計算，每月隨資料更新。`}
+      </p>
+      <div class="figures">
+        <div><strong>{o.total.toLocaleString('en-US')}</strong><span>立案機構</span></div>
+        <div><strong>{o.preschools.toLocaleString('en-US')}</strong><span>幼兒園</span></div>
+        <div><strong>{o.nurseries}</strong><span>托嬰中心</span></div>
+        <div><strong>{o.districts}</strong><span>行政區</span></div>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>各行政區有多少間</h2>
+        <p class="note">
+          {`機構最多的${districts[0].district}有 ${districts[0].total} 間，最少的${least.district}只有 ${least.total} 間。找托育的難易度，很大一部分取決於你住哪裡。`}
+        </p>
+      </div>
+      <div class="card">
+        <BarChart
+          items={districts.map((d) => ({ label: d.district, value: d.total }))}
+          caption="點行政區名稱可以看該區完整清單。"
+        />
+      </div>
+      <nav class="district-grid">
+        {districts.map((d) => <a href={districtPath(d.district)}>{d.district}<span class="n">{d.total}</span></a>)}
+      </nav>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>公立、準公共、私立各有多少</h2>
+        <p class="note">
+          {`公立與非營利加起來 ${owners.filter((x) => ['公立', '非營利'].includes(x.ownership)).reduce((s, x) => s + x.count, 0)} 間，佔全部幼兒園不到三分之一。這也是為什麼公立幼兒園要抽籤。`}
+        </p>
+      </div>
+      <div class="card">
+        <BarChart
+          items={owners.map((x) => ({
+            label: x.ownership,
+            value: x.count,
+            color: tagColor(x.ownership),
+          }))}
+        />
+      </div>
+    </section>
+
+    {
+      fees.length > 0 && (
+        <section class="stack">
+          <div class="stack-sm">
+            <h2>各類型的月費差多少</h2>
+            <p class="note">
+              {`私立幼兒園的月費中位數是 ${fee('私立')?.median.toLocaleString('en-US')} 元，公立是 ${fee('公立')?.median.toLocaleString('en-US')} 元。用中位數而不是平均，因為私立的範圍從 ${fee('私立')?.min.toLocaleString('en-US')} 到 ${fee('私立')?.max.toLocaleString('en-US')} 元都有，平均會被少數高價園拉走。`}
+            </p>
+          </div>
+          <div class="card">
+            <BarChart
+              items={feeChart.map((f) => ({
+                label: f.ownership,
+                value: f.median,
+                display: `${f.median.toLocaleString('en-US')} 元`,
+                color: tagColor(f.ownership),
+              }))}
+              caption={`每一類的月費中位數。家數少於 ${CHART_MIN_SAMPLE} 間的類型不畫進圖表——樣本太少的「中位數」不具代表性，數字仍列在下方表格。`}
+            />
+          </div>
+
+          <div class="caveat">
+            <p><strong>月費這組數字要注意</strong></p>
+            <ul>
+              {
+                flatTypes.length > 0 && (
+                  <li>
+                    {`${flatTypes.join('、')}的月費全部是同一個數字，那是政策訂的收費上限，不是實際分布算出來的中位數。`}
+                  </li>
+                )
+              }
+              <li>這是依註冊繳費單推算的<strong>每月平均</strong>，含月費與代辦費。實際繳費會因學期、餐點、才藝、延托而不同。</li>
+              <li>公立與非營利要抽籤，名額有限；準公共與私立雖然隨時可談，但價差極大。<strong>便宜不等於好，貴也不等於好</strong>，這組數字只幫你抓預算範圍。</li>
+              {
+                hidden.length > 0 && (
+                  <li>{`${hidden.map((f) => `${f.ownership}（${f.count} 間）`).join('、')}家數太少，不畫進圖表。`}</li>
+                )
+              }
+            </ul>
+          </div>
+          <div class="card">
+            <table class="datatable">
+              <thead>
+                <tr><th>類型</th><th>園數</th><th>中位數</th><th>範圍</th></tr>
+              </thead>
+              <tbody>
+                {fees.map((f) => (
+                  <tr>
+                    <td>{f.ownership}</td>
+                    <td class="num">{f.count}</td>
+                    <td class="num">{f.median.toLocaleString('en-US')}</td>
+                    <td class="num">
+                      {f.flat ? '全部相同' : `${f.min.toLocaleString('en-US')}–${f.max.toLocaleString('en-US')}`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      pen.records > 0 && (
+        <section class="stack">
+          <div class="stack-sm">
+            <h2>裁罰紀錄概況</h2>
+            <p class="note">
+              {`${pen.ofPreschools.toLocaleString('en-US')} 間幼兒園中，有 ${pen.institutions} 間（${pen.percent}%）在備份資料裡查得到裁罰紀錄，合計 ${pen.records.toLocaleString('en-US')} 筆，罰鍰中位數 ${pen.fineMedian.toLocaleString('en-US')} 元。`}
+            </p>
+          </div>
+
+          <div class="caveat">
+            <p><strong>這組數字要這樣讀</strong></p>
+            <ul>
+              <li>裁罰資料<strong>不是政府開放資料</strong>，來自民間長期備份全國教保資訊網的公告，<strong>可能包含官方已下架的舊紀錄</strong>。</li>
+              <li>違規輕重差距極大，從「收費未報備查」到「對幼兒不當對待」都算一筆。看比例前請先看內容。</li>
+              <li>私立園被稽查的頻率與家數都與公立不同，比例差異不能直接解讀成「私立比較不安全」。</li>
+              <li>托嬰中心（{o.nurseries} 間）沒有對應的備份資料，完全不在這組統計內。</li>
+            </ul>
+          </div>
+
+          <div class="card stack-sm">
+            <h3>各類型有裁罰紀錄的比例</h3>
+            <BarChart
+              items={pen.rate.map((r) => ({
+                label: r.ownership,
+                value: r.percent,
+                display: `${r.percent}%`,
+                color: tagColor(r.ownership),
+              }))}
+              max={100}
+              caption={`括號內為家數：${pen.rate.map((r) => `${r.ownership} ${r.hit}/${r.total}`).join('、')}。`}
+            />
+          </div>
+
+          <div class="card stack-sm">
+            <h3>裁罰筆數的年度分布</h3>
+            <BarChart items={pen.byYear.map((y) => ({ label: y.year, value: y.count }))} />
+            <p class="note">
+              早年筆數偏低多半是備份與公告時效造成的，不代表當年違規較少。
+            </p>
+          </div>
+
+          <div class="card stack-sm">
+            <h3>處分類型</h3>
+            <BarChart items={pen.kinds.map((k) => ({ label: k.kind, value: k.count }))} />
+          </div>
+        </section>
+      )
+    }
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>托嬰中心的收托量</h2>
+        <p class="note">
+          {`${o.nurseries} 間托嬰中心中，私立托嬰有核定收托人數資料，合計 ${o.nurseryCapacity.toLocaleString('en-US')} 個名額，單一機構的中位數是 ${o.nurseryCapacityMedian} 人。`}
+        </p>
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <p class="stamp">
+        {`機構基本資料擷取時間 ${fetchedAt}，來源為新北市政府資料開放平臺。`}
+        {archive
+          ? `月費與裁罰來自${archive.name}（${archive.author}，${archive.license} 授權），原始出處為${archive.origin}，該備份更新於 ${archive.updatedAt}。`
+          : ''}
+        所有數字皆由程式自動計算，不經人工挑選；統計僅供概覽，個別機構情形請以主管機關公告為準。
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 10px;
+  }
+  .figures div {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow);
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    align-items: center;
+    text-align: center;
+  }
+  .figures strong {
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-dark);
+    line-height: 1.2;
+  }
+  .figures span {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .datatable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .datatable th,
+  .datatable td {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .datatable th {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .datatable tr:last-child td {
+    border-bottom: 0;
+  }
+  .datatable .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .caveat {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .caveat p {
+    margin: 0;
+  }
+  .caveat strong {
+    color: var(--ink);
+  }
+  .caveat ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 18px;
+    list-style: disc;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PenaltyList from '../../components/PenaltyList.astro';
 import data from '../../data/institutions.json';
 import {
   SITE_NAME,
@@ -22,6 +23,10 @@ const links = officialLinks(inst.authority);
 const needsName = links.some((l) => l.needsName);
 
 const authorityName = inst.authority === 'edu' ? '新北市政府教育局' : '新北市政府社會局';
+
+// 月費與裁罰來自民間封存，只有幼兒園有；archive 為 null 表示本次建置未採用該來源
+const enriched = data.archive && inst.kind === 'preschool';
+const penaltyLink = links.find((l) => l.label.includes('裁罰'));
 
 const title = `${inst.name}｜${inst.district}${inst.category}－${SITE_NAME}`;
 const description = `${inst.name}位於新北市${inst.district}${inst.street}，電話 ${inst.tel}，屬性為${inst.ownership}。附 Google 地圖連結，以及裁罰紀錄、評鑑結果、收退費與育兒補助的官方查詢入口。`;
@@ -100,8 +105,77 @@ const jsonLd = {
             </div>
           )
         }
+        {
+          enriched && inst.approvedCount && (
+            <div>
+              <dt>核定招收</dt>
+              <dd>{inst.approvedCount} 人</dd>
+            </div>
+          )
+        }
+        {
+          enriched && inst.monthly && (
+            <div>
+              <dt>平均月費</dt>
+              <dd>
+                {inst.monthly.toLocaleString('en-US')} 元
+                <span class="hint">含月費、代辦費等，依註冊繳費單推算的每月平均</span>
+              </dd>
+            </div>
+          )
+        }
+        {
+          enriched && inst.floorArea && (
+            <div>
+              <dt>室內面積</dt>
+              <dd>{inst.floorArea}</dd>
+            </div>
+          )
+        }
+        {
+          enriched && inst.regNo && (
+            <div>
+              <dt>立案字號</dt>
+              <dd class="regno">{inst.regNo}</dd>
+            </div>
+          )
+        }
+        {
+          enriched && inst.website && (
+            <div>
+              <dt>園所網站</dt>
+              <dd>
+                <a href={inst.website} target="_blank" rel="noopener nofollow">
+                  {inst.website.replace(/^https?:\/\//, '').slice(0, 34)} ↗
+                </a>
+              </dd>
+            </div>
+          )
+        }
       </dl>
+      {
+        enriched && (inst.monthly || inst.regNo) && (
+          <p class="source">
+            月費、立案字號、核定人數與面積來自
+            <a href={data.archive.url} target="_blank" rel="noopener nofollow">
+              {data.archive.name} ↗
+            </a>
+            （{data.archive.author}，{data.archive.license} 授權），原始出處為{data.archive.origin}，
+            該備份更新於 {data.archive.updatedAt}。月費為推算值，實際收費請直接向園所確認。
+          </p>
+        )
+      }
     </section>
+
+    {
+      enriched && inst.penalties.length > 0 && (
+        <PenaltyList
+          penalties={inst.penalties}
+          officialUrl={penaltyLink?.url}
+          officialLabel={penaltyLink?.source}
+        />
+      )
+    }
 
     <section class="stack">
       <div class="stack-sm">

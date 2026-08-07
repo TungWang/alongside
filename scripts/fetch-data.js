@@ -17,6 +17,20 @@ const OUT_FILE = path.join(ROOT, 'src/data/institutions.json');
 const BASE = 'https://data.ntpc.gov.tw/api/datasets';
 const PAGE_SIZE = 500;
 
+// 民間封存：g0v 江明宗（kiang）長期備份全國教保資訊網的幼兒園資料。
+// 政府開放資料沒有月費與裁罰，這是目前唯一結構化、可程式取用的來源。
+// 只補幼兒園，托嬰中心無對應資料。詳見 README「資料來源與其限制」。
+const ARCHIVE = 'https://kiang.github.io/ap.ece.moe.edu.tw';
+const ARCHIVE_CREDIT = {
+  name: '台灣幼兒園地圖封存資料',
+  author: '江明宗 kiang',
+  url: 'https://github.com/kiang/ap.ece.moe.edu.tw',
+  license: 'MIT',
+  origin: '全國教保資訊網',
+};
+// 封存超過這個天數就不採用——上游停止維護時要讓資料消失，而不是無聲變舊
+const ARCHIVE_MAX_AGE_DAYS = 120;
+
 const SOURCES = [
   {
     key: 'preschool',
@@ -175,6 +189,146 @@ function normalizeRow(row, src) {
     capacity: src.key === 'nursery' && row.person ? Number(row.person) : null,
     operator: squash(row.unit) || null, // 公共托育的受託單位
     mapUrl: mapsUrl(name, district, street),
+
+    // 以下由 enrich() 從民間封存補上，托嬰中心無對應資料，維持 null
+    regNo: null, // 立案／設立許可字號
+    approvedCount: null, // 核定招收人數
+    monthly: null, // 平均月費
+    floorArea: null,
+    website: null,
+    closed: false,
+    penalties: [],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 民間封存資料（月費、裁罰、立案字號等），只補幼兒園
+// ---------------------------------------------------------------------------
+
+// 比對用：封存端與開放資料端的機構名稱寫法略有出入，去掉空白與括號後可 100% 對上
+const matchKey = (name) => squash(name).replace(/\s/g, '').replace(/[（）()]/g, '');
+
+const toInt = (v) => {
+  const n = parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
+/**
+ * 處分欄位不一定是罰鍰，也可能是「停止招生：2026/04/24~2027/04/23」這種期間，
+ * 或「公布姓名」這種沒有數值的處分。只有明確標示罰鍰時才解析金額——
+ * 否則會把日期區間的數字串成天文數字。
+ */
+function parseSanction(raw) {
+  const text = squash(raw);
+  const fine = text.match(/罰鍰[：:]\s*([\d,]+)\s*元/);
+  const kind = text.split(/[：:]/)[0].trim() || '其他處分';
+  return { text, kind, fineAmount: fine ? toInt(fine[1]) : null };
+}
+
+// 併發抓取，避免一次打太多請求
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let cursor = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (cursor < items.length) {
+        const i = cursor++;
+        out[i] = await fn(items[i], i);
+      }
+    }),
+  );
+  return out;
+}
+
+/**
+ * 裁罰明細：封存端以「縣市／機構全名.json」存放，每筆是一個陣列
+ *   [日期, 裁處書字號, 法條, 違反內容, 受處分人, 罰鍰]
+ */
+async function fetchPenalties(title) {
+  const url = `${ARCHIVE}/data/punish/${encodeURIComponent('新北市')}/${encodeURIComponent(title)}.json`;
+  const res = await fetch(url);
+  if (!res.ok) return [];
+  const rows = await res.json();
+  if (!Array.isArray(rows)) return [];
+
+  return rows
+    .filter((r) => Array.isArray(r) && r.length >= 6)
+    .map(([date, docNo, statute, description, person, sanction]) => {
+      const s = parseSanction(sanction);
+      return {
+        date: squash(date),
+        docNo: squash(docNo),
+        statute: squash(statute),
+        description: squash(description),
+        person: squash(person),
+        sanction: s.text, // 原文，例如「罰鍰：60,000元」或「停止招生：2026/04/24~2027/04/23」
+        sanctionKind: s.kind, // 罰鍰 / 停止招生 / 減少招收人數 …
+        fineAmount: s.fineAmount, // 僅罰鍰有值
+      };
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+async function fetchArchive() {
+  const res = await fetch(`${ARCHIVE}/preschools.json`);
+  if (!res.ok) throw new Error(`封存資料下載失敗：${res.status}`);
+
+  // 上游停更就整批不採用，寧可少顯示也不要給家長過期資訊
+  const lastModified = res.headers.get('last-modified');
+  const updatedAt = lastModified ? new Date(lastModified) : null;
+  const ageDays = updatedAt ? Math.floor((Date.now() - updatedAt) / 86400000) : Infinity;
+  if (ageDays > ARCHIVE_MAX_AGE_DAYS) {
+    console.warn(`  封存資料已 ${ageDays} 天未更新，超過 ${ARCHIVE_MAX_AGE_DAYS} 天上限，本次不採用`);
+    return null;
+  }
+
+  const geo = await res.json();
+  const byName = new Map();
+  for (const feature of geo.features || []) {
+    const p = feature.properties || {};
+    if (p.city !== '新北市') continue;
+    byName.set(matchKey(p.title), p);
+  }
+
+  return { byName, updatedAt: updatedAt.toISOString().slice(0, 10), ageDays };
+}
+
+async function enrich(institutions) {
+  const archive = await fetchArchive();
+  if (!archive) return { enriched: 0, penaltyCount: 0, archive: null };
+
+  const preschools = institutions.filter((i) => i.kind === 'preschool');
+  let enriched = 0;
+
+  for (const inst of preschools) {
+    const p = archive.byName.get(matchKey(inst.name));
+    if (!p) continue;
+    enriched++;
+    inst.regNo = squash(p.reg_docno) || squash(p.reg_no) || null;
+    inst.approvedCount = toInt(p.count_approved);
+    inst.monthly = toInt(p.monthly);
+    inst.floorArea = squash(p.size) || null;
+    inst.website = /^https?:\/\//.test(squash(p.url)) ? squash(p.url) : null;
+    inst.closed = p.is_active === 0;
+    inst._hasPenalty = squash(p.penalty) !== '' && squash(p.penalty) !== '無';
+  }
+
+  // 只對標記有裁罰的機構抓明細，省掉九成請求
+  const targets = preschools.filter((i) => i._hasPenalty);
+  const results = await mapLimit(targets, 8, (inst) => fetchPenalties(inst.name));
+
+  let penaltyCount = 0;
+  targets.forEach((inst, i) => {
+    inst.penalties = results[i];
+    penaltyCount += results[i].length;
+  });
+  for (const inst of preschools) delete inst._hasPenalty;
+
+  return {
+    enriched,
+    penaltyCount,
+    institutionsWithPenalty: targets.filter((i) => i.penalties.length).length,
+    archive: { ...ARCHIVE_CREDIT, updatedAt: archive.updatedAt },
   };
 }
 
@@ -204,6 +358,14 @@ async function main() {
     process.exit(1);
   }
 
+  console.log('\n  補充月費與裁罰（民間封存）…');
+  const meta = await enrich(institutions);
+  if (meta.archive) {
+    console.log(
+      `  對上 ${meta.enriched} 間，其中 ${meta.institutionsWithPenalty} 間有裁罰、共 ${meta.penaltyCount} 筆（封存更新於 ${meta.archive.updatedAt}）`,
+    );
+  }
+
   institutions.sort((a, b) => a.district.localeCompare(b.district, 'zh-Hant') || a.name.localeCompare(b.name, 'zh-Hant'));
 
   const districts = [...new Set(institutions.map((i) => i.district))].sort((a, b) =>
@@ -215,6 +377,7 @@ async function main() {
     fetchedAt: new Date().toISOString().slice(0, 10),
     total: institutions.length,
     districts,
+    archive: meta.archive, // 民間封存的出處與更新日；為 null 表示本次未採用
     institutions,
   };
 
