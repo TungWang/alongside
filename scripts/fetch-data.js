@@ -214,6 +214,51 @@ const toInt = (v) => {
 };
 
 /**
+ * 受處分人只保留角色，不保留姓名。
+ *
+ * 來源是「負責人：黃桂貞」「行為人：某某」這種格式，全市共 477 位可識別自然人。
+ * 家長選園在意的是機構，不是某個人的姓名；而公開自然人的裁罰紀錄——尤其官方公告
+ * 已下架之後——涉及個資與名譽，風險遠高於它帶來的價值。
+ * 在這裡就砍掉，姓名不會進入 institutions.json，也不會進到版控。
+ * 保留角色是有意義的：「行為人」表示是教保人員個人的行為，「負責人」是經營者。
+ */
+function toRole(raw) {
+  const role = squash(raw).split(/[：:]/)[0].trim();
+  return ['負責人', '行為人', '代表人'].includes(role) ? role : null;
+}
+
+/**
+ * 園所網站：來源夾雜學校內網 IP、缺 TLD 的殘缺網址、短網址與已停止服務的平台。
+ * 這些連結對家長沒有用，短網址更等於把人送去我們沒看過的目的地，一律不輸出。
+ */
+const DEAD_HOSTS = ['wretch.cc', 'myblog.yahoo.com', 'blogkids.net', 'mypaper.pchome.com.tw'];
+const SHORTENERS = ['reurl.cc', 'pse.is', 'bit.ly', 'lihi.cc', 'goo.gl', 'tinyurl.com'];
+
+function safeWebsite(raw) {
+  let url;
+  try {
+    url = new URL(squash(raw));
+  } catch {
+    return null; // 「http://blog」「http://http://…」這類殘缺網址在這裡就被擋下
+  }
+  if (!/^https?:$/.test(url.protocol)) return null;
+
+  // 帶帳號密碼的網址一律不要。來源實際出現過 http:/someone@yahoo.com.tw——
+  // 那其實是打錯的電子郵件地址，會被解析成 userinfo，既洩漏個資又是釣魚連結的形態。
+  if (url.username || url.password) return null;
+
+  const host = url.hostname.toLowerCase();
+  if (!host.includes('.')) return null;
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) return null; // 學校內網 IP
+  if (SHORTENERS.some((s) => host === s || host.endsWith(`.${s}`))) return null;
+  if (DEAD_HOSTS.some((s) => host === s || host.endsWith(`.${s}`))) return null;
+
+  // 輸出正規化後的網址，不是原始字串——來源有「http:www.example.tw/」這種
+  // 少寫斜線的寫法，直接輸出會變成點不開的死連結。
+  return url.href;
+}
+
+/**
  * 處分欄位不一定是罰鍰，也可能是「停止招生：2026/04/24~2027/04/23」這種期間，
  * 或「公布姓名」這種沒有數值的處分。只有明確標示罰鍰時才解析金額——
  * 否則會把日期區間的數字串成天文數字。
@@ -260,7 +305,7 @@ async function fetchPenalties(title) {
         docNo: squash(docNo),
         statute: squash(statute),
         description: squash(description),
-        person: squash(person),
+        role: toRole(person), // 只留「負責人」／「行為人」，姓名不輸出
         sanction: s.text, // 原文，例如「罰鍰：60,000元」或「停止招生：2026/04/24~2027/04/23」
         sanctionKind: s.kind, // 罰鍰 / 停止招生 / 減少招收人數 …
         fineAmount: s.fineAmount, // 僅罰鍰有值
@@ -308,7 +353,7 @@ async function enrich(institutions) {
     inst.approvedCount = toInt(p.count_approved);
     inst.monthly = toInt(p.monthly);
     inst.floorArea = squash(p.size) || null;
-    inst.website = /^https?:\/\//.test(squash(p.url)) ? squash(p.url) : null;
+    inst.website = safeWebsite(p.url);
     inst.closed = p.is_active === 0;
     inst._hasPenalty = squash(p.penalty) !== '' && squash(p.penalty) !== '無';
   }

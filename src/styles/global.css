@@ -179,6 +179,15 @@ main {
 .sitefoot a {
   color: var(--accent-dark);
 }
+.footlinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-top: 6px;
+}
+.footlinks a {
+  font-weight: 600;
+}
 
 /* ---------- 元件 ---------- */
 

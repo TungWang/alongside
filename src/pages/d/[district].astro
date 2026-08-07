@@ -2,8 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import InstitutionCard from '../../components/InstitutionCard.astro';
 import BarChart from '../../components/BarChart.astro';
+import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
-import { SITE_NAME, tagColor } from '../../lib/site.js';
+import { SITE_NAME, tagColor, DATASETS } from '../../lib/site.js';
 import { byOwnership } from '../../lib/stats.js';
 
 export function getStaticPaths() {
@@ -25,6 +26,17 @@ const composition = byOwnership(list);
 const fees = list.map((i) => i.monthly).filter(Boolean).sort((a, b) => a - b);
 const feeMedian = fees.length ? fees[Math.floor(fees.length / 2)] : null;
 const penalised = list.filter((i) => i.penalties.length).length;
+
+const noticeSources = [
+  ...[...new Set(list.map((i) => i.category))].map((c) => ({
+    label: DATASETS[c].label,
+    agency: DATASETS[c].agency,
+    url: DATASETS[c].url,
+  })),
+  ...(data.archive && preschools
+    ? [{ label: data.archive.name, agency: `${data.archive.author}　原始出處：${data.archive.origin}`, url: data.archive.url }]
+    : []),
+];
 
 // 篩選鈕只列這一區真的存在的屬性，避免家長按了得到空白
 const ownerships = [...new Set(list.map((i) => i.ownership))];
@@ -53,12 +65,11 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
         {
           nurseries === 0 && (
             <p class="note">
-              找不到不代表沒有——居家保母（居家托育）因為沒有完整的開放資料，不在本站收錄範圍，
-              可洽{' '}
-              <a href="https://lovebaby.sw.ntpc.gov.tw/" target="_blank" rel="noopener nofollow">
-                新北育兒資訊網
-              </a>{' '}
-              或鄰近行政區的居家托育服務中心。
+              {'找不到不代表沒有——居家保母（居家托育）因為沒有完整的開放資料，不在本站收錄範圍，可洽'}<a
+                href="https://lovebaby.sw.ntpc.gov.tw/"
+                target="_blank"
+                rel="noopener nofollow">新北育兒資訊網</a
+              >{'或鄰近行政區的居家托育服務中心。'}
             </p>
           )
         }
@@ -117,10 +128,7 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
     </section>
 
     <section class="stack-sm">
-      <p class="stamp">
-        資料擷取時間 {data.fetchedAt}，來源為新北市政府開放資料。
-        本站不排名、不評分，卡片順序僅依機構名稱排列。
-      </p>
+      <DataNotice sources={noticeSources} />
     </section>
   </div>
 </Base>

@@ -1,0 +1,85 @@
+---
+/**
+ * 全站一致的資料聲明。這是對家長的誠實交代，不是免責小字——
+ * 所以樣式上要看得見，而且一定附上可以點過去核對的原始出處。
+ *
+ * sources: [{ label, agency?, url, note? }]
+ */
+import data from '../data/institutions.json';
+
+const { sources = [], compact = false } = Astro.props;
+---
+
+<aside class={compact ? 'notice compact' : 'notice'}>
+  <p class="lead">
+    這裡的資料是<strong>程式自動整理</strong>的，可能有誤、也可能已經跟不上異動。請以下列原始資料與機構本身的說明為準。
+  </p>
+  <ul>
+    {
+      sources.map((s) => (
+        <li>
+          <a href={s.url} target="_blank" rel="noopener">
+            {s.label} ↗
+          </a>
+          {s.agency ? <span class="agency">{s.agency}</span> : null}
+          {s.note ? <span class="agency">{s.note}</span> : null}
+        </li>
+      ))
+    }
+  </ul>
+  <p class="tail">
+    {`資料擷取時間 ${data.fetchedAt}。本站僅整理公開資訊與提供官方查詢入口，不對機構品質作任何評價或背書。完整的來源、授權與加工方式見`}<a
+      href="/授權/">資料來源與授權聲明</a
+    >。
+  </p>
+</aside>
+
+<style>
+  .notice {
+    background: var(--band);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .notice.compact {
+    background: transparent;
+    border-left: 2px solid var(--line);
+    border-radius: 0;
+    padding: 2px 0 2px 14px;
+  }
+  .notice p {
+    margin: 0;
+  }
+  .lead strong {
+    color: var(--ink);
+  }
+  .notice ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .notice li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+  }
+  .notice a {
+    font-weight: 600;
+  }
+  .agency {
+    font-size: 11.5px;
+  }
+  .tail {
+    font-size: 11.5px;
+    line-height: 1.7;
+  }
+</style>

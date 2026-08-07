@@ -93,6 +93,30 @@ export function officialLinks(authority) {
 }
 
 /**
+ * 每個資料集在開放平台上的頁面。聲明資料可能有誤時要附「可以點過去核對的東西」，
+ * 只寫機關名稱幫不上忙。
+ */
+export const DATASETS = {
+  幼兒園: {
+    label: '新北市公私立立案幼兒園資料',
+    agency: '新北市政府教育局',
+    url: 'https://data.ntpc.gov.tw/datasets/f563b4cd-b850-41f5-9709-b910f2d147e9',
+  },
+  托嬰中心: {
+    label: '新北市私立托嬰機構名冊',
+    agency: '新北市政府社會局',
+    url: 'https://data.ntpc.gov.tw/datasets/69cecdb0-7796-48df-84e5-99e4f1274245',
+  },
+  公共托育中心: {
+    label: '新北市公共托育中心名冊',
+    agency: '新北市政府社會局',
+    url: 'https://data.ntpc.gov.tw/datasets/b3faf2aa-e96b-4f2f-b647-da47dc094860',
+  },
+};
+
+export const datasetFor = (category) => DATASETS[category] || DATASETS['幼兒園'];
+
+/**
  * 屬性＋類別的完整說法。多數情況是相接的（「準公共」＋「幼兒園」→「準公共幼兒園」），
  * 但公共托育的屬性本身已包含類別（「公共托育」＋「公共托育中心」），直接相接會變成
  * 「公共托育公共托育中心」，所以要判斷。

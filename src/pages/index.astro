@@ -1,10 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
 import BarChart from '../components/BarChart.astro';
+import DataNotice from '../components/DataNotice.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, districtPath, tagColor } from '../lib/site.js';
+import { SITE_NAME, districtPath, tagColor, DATASETS } from '../lib/site.js';
 import { byOwnership, chartableFees } from '../lib/stats.js';
 
+const allSources = [
+  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...(data.archive
+    ? [{ label: data.archive.name, agency: `${data.archive.author}　原始出處：${data.archive.origin}`, url: data.archive.url }]
+    : []),
+];
 const owners = byOwnership();
 const fees = chartableFees();
 const publicish = owners
@@ -125,9 +132,7 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
     </section>
 
     <section class="stack-sm">
-      <p class="stamp">
-        {`資料擷取時間 ${fetchedAt}。開放資料的更新頻率為不定期至每年一次，機構可能已增設、遷址或停辦，實際情形請以主管機關公告與機構本身為準。`}
-      </p>
+      <DataNotice sources={allSources} />
     </section>
   </div>
 </Base>

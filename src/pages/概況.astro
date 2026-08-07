@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import BarChart from '../components/BarChart.astro';
-import { SITE_NAME, tagColor, districtPath } from '../lib/site.js';
+import DataNotice from '../components/DataNotice.astro';
+import { SITE_NAME, tagColor, districtPath, DATASETS } from '../lib/site.js';
 import {
   overview,
   byOwnership,
@@ -25,6 +26,12 @@ const fee = (name) => fees.find((f) => f.ownership === name);
 const flatTypes = fees.filter((f) => f.flat && f.count >= 3).map((f) => f.ownership);
 const hidden = fees.filter((f) => f.count < CHART_MIN_SAMPLE);
 const least = districts[districts.length - 1];
+const noticeSources = [
+  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...(archive
+    ? [{ label: archive.name, agency: `${archive.author}　原始出處：${archive.origin}　備份於 ${archive.updatedAt}`, url: archive.url }]
+    : []),
+];
 
 const title = `新北市托育概況：${o.total} 間機構的數字整理｜${SITE_NAME}`;
 const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立案幼兒園與托嬰中心的統計：各區分布、公私立組成、各類型月費中位數與裁罰紀錄概況。資料來自政府開放平台與民間封存。`;
@@ -204,13 +211,7 @@ const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立�
     </section>
 
     <section class="stack-sm">
-      <p class="stamp">
-        {`機構基本資料擷取時間 ${fetchedAt}，來源為新北市政府資料開放平臺。`}
-        {archive
-          ? `月費與裁罰來自${archive.name}（${archive.author}，${archive.license} 授權），原始出處為${archive.origin}，該備份更新於 ${archive.updatedAt}。`
-          : ''}
-        所有數字皆由程式自動計算，不經人工挑選；統計僅供概覽，個別機構情形請以主管機關公告為準。
-      </p>
+      <DataNotice sources={noticeSources} />
     </section>
   </div>
 </Base>

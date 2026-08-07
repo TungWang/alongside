@@ -1,0 +1,175 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME } from '../lib/site.js';
+
+const title = `資料來源與授權聲明｜${SITE_NAME}`;
+const description = `本站使用的資料來源、授權條款、對原始資料所做的加工，以及不收錄的內容。`;
+---
+
+<Base title={title} description={description} path="/授權/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <h1>資料來源與授權聲明</h1>
+      <p class="muted">
+        本站的資料從哪裡來、依什麼授權使用、我們做了哪些加工，以及刻意不收錄什麼。
+      </p>
+    </section>
+
+    <section class="stack">
+      <h2>一、機構基本資料</h2>
+      <div class="card stack-sm">
+        <p><strong>來源</strong>　新北市政府資料開放平臺三個資料集：</p>
+        <ul class="bullets">
+          <li>新北市公私立立案幼兒園資料（新北市政府教育局）</li>
+          <li>新北市私立托嬰機構名冊（新北市政府社會局）</li>
+          <li>新北市公共托育中心名冊（新北市政府社會局）</li>
+        </ul>
+        <p>
+          <strong>授權</strong>　<a href="https://data.gov.tw/license" target="_blank" rel="noopener"
+            >政府資料開放授權條款－第 1 版</a
+          >。該條款允許重製、改作、編輯、公開傳輸與商業利用，條件為明確標示資料來源。
+        </p>
+        <p>
+          <strong>我們做的加工</strong>{'　三個資料集的地址格式不一致，本站將其正規化為統一寫法（去除郵遞區號、重複的縣市與行政區、里鄰資訊），並依機構名稱與行政區產生站內識別碼。電話號碼調整為易讀格式。資料內容本身未經增刪。'}
+        </p>
+        <p class="note">依授權條款規定聲明：本站為衍生著作，原始資料由上述機關提供，機關不對衍生結果負責。</p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <h2>二、幼兒園月費與裁罰紀錄</h2>
+      <div class="card stack-sm">
+        <p>
+          <strong>來源</strong>　<a
+            href="https://github.com/kiang/ap.ece.moe.edu.tw"
+            target="_blank"
+            rel="noopener nofollow">kiang/ap.ece.moe.edu.tw ↗</a
+          >{'（台灣幼兒園地圖封存資料），原始出處為教育部全國教保資訊網。本站使用的欄位：平均月費、裁罰明細、立案字號、核定招收人數、室內面積、園所網站。'}
+        </p>
+        <p>
+          <strong>授權</strong>{'　MIT License。依條款要求，以下為完整著作權聲明與授權聲明：'}
+        </p>
+        <pre class="license">{`MIT License
+
+Copyright (c) 2024 Finjon Kiang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`}</pre>
+        <p class="note">
+          {'裁罰紀錄的原始內容為主管機關依法公告之行政處分，屬公文書，依著作權法第 9 條不得為著作權之標的。'}
+          {data.archive ? `本站採用的備份版本更新於 ${data.archive.updatedAt}。` : ''}
+        </p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <h2>三、地圖與家長評價</h2>
+      <div class="card stack-sm">
+        <p>
+          本站<strong>不呼叫任何 Google API、不儲存也不轉載 Google 的任何內容</strong>{'——包含星等、評論文字、地圖圖磚與街景。每間機構頁上的是一個普通的 Google 地圖搜尋連結，家長點擊後由自己的瀏覽器開啟 Google，適用的是家長與 Google 之間的服務條款。'}
+        </p>
+        <p class="note">
+          {'文中提及「Google 地圖」僅為指稱該服務本身。Google 與 Google 地圖為 Google LLC 的商標，本站與 Google 無任何合作或隸屬關係。'}
+        </p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <h2>四、文字、插圖與程式</h2>
+      <div class="card stack-sm">
+        <p>
+          {'站上所有說明文字、標語與圖表為本站自行撰寫。插圖為手繪之向量圖形，直接寫在頁面原始碼中，未使用任何第三方圖庫或圖片素材。'}
+        </p>
+        <p>
+          <strong>字型</strong>{'　本站不散布任何字型檔案，也不向外部字型服務發出請求。頁面僅指定字型名稱（Noto Sans TC、蘋方、黑體等），由讀者裝置上已安裝的字型顯示。'}
+        </p>
+        <p class="note">全站未使用任何圖片檔、影音檔或外部樣式表；不載入第三方追蹤或廣告腳本。</p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <h2>五、我們刻意不收錄的東西</h2>
+      <div class="card stack-sm">
+        <ul class="bullets">
+          <li>
+            <strong>裁罰紀錄中的個人姓名。</strong>{'原始公告含「負責人」「行為人」的姓名，本站在資料處理階段即予移除，只保留角色。家長選擇的是機構，不是某個人；公開自然人的裁罰紀錄涉及個人資料與名譽，風險高於它帶來的幫助。'}
+          </li>
+          <li>
+            <strong>Google 上的星等與評論內容。</strong>那是 Google 與撰寫者的內容，我們只提供連結。
+          </li>
+          <li>
+            <strong>居家保母（居家托育）名冊。</strong>受個資法規範，無完整開放資料。
+          </li>
+          <li>
+            <strong>來源不明的園所連結。</strong>{'原始資料中的學校內網 IP、缺漏網址、含帳號資訊的網址、短網址與已停止服務的部落格平台一律不輸出，避免把家長導向未經確認的目的地。'}
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stack">
+      <h2>六、更正與下架</h2>
+      <div class="card stack-sm">
+        <p>
+          {'若您是機構經營者或相關當事人，認為本站呈現的資料有誤、已不符現況，或認為特定內容不應公開，請透過'}
+          <a href="https://github.com/kiang/ap.ece.moe.edu.tw/issues" target="_blank" rel="noopener nofollow">
+            原始資料來源 ↗
+          </a>
+          {'反映，或聯繫本站處理。本站每月自動重新抓取資料，上游更正後這裡會跟著更新。'}
+        </p>
+        <p class="note">
+          {'本站僅整理公開資訊並提供官方查詢入口，不對任何機構的品質作出評價、排名或背書。'}
+        </p>
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <p class="stamp">
+        {`本頁最後隨資料更新於 ${data.fetchedAt}。`}
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 18px;
+    list-style: disc;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .bullets strong {
+    color: var(--ink);
+  }
+  .license {
+    background: var(--band);
+    border-radius: 10px;
+    padding: 14px;
+    overflow-x: auto;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+    white-space: pre;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PenaltyList from '../../components/PenaltyList.astro';
+import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
 import {
   SITE_NAME,
@@ -9,6 +10,7 @@ import {
   districtPath,
   fullType,
   needsCategoryTag,
+  datasetFor,
 } from '../../lib/site.js';
 
 export function getStaticPaths() {
@@ -27,6 +29,21 @@ const authorityName = inst.authority === 'edu' ? '新北市政府教育局' : '�
 // 月費與裁罰來自民間封存，只有幼兒園有；archive 為 null 表示本次建置未採用該來源
 const enriched = data.archive && inst.kind === 'preschool';
 const penaltyLink = links.find((l) => l.label.includes('裁罰'));
+
+const dataset = datasetFor(inst.category);
+const noticeSources = [
+  { label: dataset.label, agency: dataset.agency, url: dataset.url },
+  ...(enriched
+    ? [
+        {
+          label: data.archive.name,
+          agency: `${data.archive.author}　原始出處：${data.archive.origin}　備份於 ${data.archive.updatedAt}`,
+          url: data.archive.url,
+        },
+      ]
+    : []),
+  { label: `${penaltyLink.source}：即時查詢`, agency: '裁罰與評鑑以此為準', url: penaltyLink.url },
+];
 
 const title = `${inst.name}｜${inst.district}${inst.category}－${SITE_NAME}`;
 const description = `${inst.name}位於新北市${inst.district}${inst.street}，電話 ${inst.tel}，屬性為${inst.ownership}。附 Google 地圖連結，以及裁罰紀錄、評鑑結果、收退費與育兒補助的官方查詢入口。`;
@@ -156,12 +173,11 @@ const jsonLd = {
       {
         enriched && (inst.monthly || inst.regNo) && (
           <p class="source">
-            月費、立案字號、核定人數與面積來自
-            <a href={data.archive.url} target="_blank" rel="noopener nofollow">
-              {data.archive.name} ↗
-            </a>
-            （{data.archive.author}，{data.archive.license} 授權），原始出處為{data.archive.origin}，
-            該備份更新於 {data.archive.updatedAt}。月費為推算值，實際收費請直接向園所確認。
+            月費、立案字號、核定人數與面積來自<a
+              href={data.archive.url}
+              target="_blank"
+              rel="noopener nofollow">{data.archive.name} ↗</a
+            >{`（${data.archive.author}，${data.archive.license} 授權），原始出處為${data.archive.origin}，該備份更新於 ${data.archive.updatedAt}。月費為推算值，實際收費請直接向園所確認。`}
           </p>
         )
       }
@@ -211,9 +227,7 @@ const jsonLd = {
     </section>
 
     <section class="stack-sm">
-      <p class="stamp">
-        {`基本資料擷取時間 ${data.fetchedAt}，來源為${authorityName}的開放資料。機構可能已遷址、停辦或變更收托人數，實際情形請以主管機關公告與機構本身為準。本站僅整理公開資訊，不對機構品質作任何背書或保證。`}
-      </p>
+      <DataNotice sources={noticeSources} />
     </section>
   </div>
 </Base>

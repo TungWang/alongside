@@ -60,19 +60,22 @@ const canonical = new URL(path, SITE_URL).href;
           <strong style="color:var(--ink)">{SITE_NAME} Alongside</strong>　陪你一起看看新北市有哪些托育選擇。
         </p>
         <p>
-          {`機構基本資料來自新北市政府教育局與社會局的開放資料，擷取時間 ${data.fetchedAt}，共 ${data.total.toLocaleString('en-US')} 間。評鑑、裁罰、收退費與補助請以各主管機關公告為準；本站僅整理公開資訊與提供官方查詢入口，不對機構品質作任何背書或保證。`}
+          {`站上資料為程式自動整理，可能有誤或未及反映異動——請以官方公告與機構本身的說明為準。機構基本資料擷取時間 ${data.fetchedAt}，共 ${data.total.toLocaleString('en-US')} 間。`}
         </p>
         {
           data.archive && (
             <p>
-              {`幼兒園的月費、立案字號與裁罰紀錄來自${data.archive.name}（${data.archive.author}，${data.archive.license} 授權，原始出處為${data.archive.origin}，備份更新於 ${data.archive.updatedAt}）。該備份可能包含官方已下架的舊紀錄，托嬰中心則無對應資料。`}
+              {`幼兒園的月費、立案字號與裁罰紀錄來自${data.archive.name}（${data.archive.author}，${data.archive.license} 授權，原始出處為${data.archive.origin}，備份於 ${data.archive.updatedAt}）。該備份可能包含官方已下架的舊紀錄，托嬰中心則無對應資料。`}
             </p>
           )
         }
         <p>
-          <a href="/概況/">新北市托育概況</a>　·
+          本站僅整理公開資訊與提供官方查詢入口，不對機構品質作任何評價、排名或背書。
+        </p>
+        <p class="footlinks">
+          <a href="/概況/">新北市托育概況</a>
+          <a href="/授權/">資料來源與授權聲明</a>
           <a href="https://data.ntpc.gov.tw/" rel="noopener">新北市政府資料開放平臺</a>
-          {data.archive && <>　·　<a href={data.archive.url} rel="noopener nofollow">封存資料原始碼</a></>}
         </p>
       </div>
     </footer>
