@@ -1,0 +1,201 @@
+---
+import Base from '../layouts/Base.astro';
+import DataNotice from '../components/DataNotice.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, districtPath, DATASETS } from '../lib/site.js';
+
+const withCoords = data.institutions.filter((i) => i.lat).length;
+const nurseries = data.institutions.filter((i) => i.kind === 'nursery').length;
+
+const noticeSources = [
+  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...(data.archive
+    ? [
+        {
+          label: data.archive.name,
+          agency: `${data.archive.author}　座標由該來源以國土測繪中心 API 產生`,
+          url: data.archive.url,
+        },
+      ]
+    : []),
+];
+
+const title = `找我附近的幼兒園｜${SITE_NAME}`;
+const description = `用你目前的位置，找出新北市離你最近的立案幼兒園，依直線距離排序。不跨行政區限制——住在交界處時，隔壁區可能更近。`;
+---
+
+<Base title={title} description={description} path="/附近/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <h1>找我附近的</h1>
+        <p class="muted">
+          {`依你目前位置的直線距離排序，不受行政區限制——住在交界處時，隔壁區往往更近。`}
+        </p>
+      </div>
+
+      <div class="card stack-sm">
+        <button class="btn btn-block" type="button" id="locate">用目前位置尋找</button>
+        <p class="note">
+          {'瀏覽器會問你要不要分享位置。位置只在你的裝置上用來算距離，不會傳到任何地方，本站沒有伺服器也不做記錄。'}
+        </p>
+      </div>
+
+      <div class="state" id="gap">
+        <p>
+          <strong>{`目前只有幼兒園能算距離（${withCoords.toLocaleString('en-US')} 間）。`}</strong>
+        </p>
+        <p>
+          {`${nurseries} 間托嬰中心沒有座標資料——政府開放資料只給文字地址，把地址換成座標需要國土測繪中心的介接金鑰，本站尚未申請。托嬰中心請改用行政區瀏覽，或用機構頁上的 Google 地圖連結看位置。`}
+        </p>
+      </div>
+
+      <p class="search-status" id="status" hidden></p>
+      <ol class="near-list" id="results"></ol>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>或從行政區找</h2>
+        <p class="note">不想分享位置也沒關係，從自己那一區開始一樣可以。</p>
+      </div>
+      <nav class="district-grid" aria-label="行政區">
+        {data.districts.map((d) => <a href={districtPath(d)}>{d}</a>)}
+      </nav>
+    </section>
+
+    <section class="stack-sm">
+      <DataNotice sources={noticeSources} />
+    </section>
+  </div>
+</Base>
+
+<script>
+  const button = document.getElementById('locate');
+  const status = document.getElementById('status');
+  const results = document.getElementById('results');
+  const SHOW = 25;
+
+  let index = null;
+
+  // 直線距離。實際步行或開車會更遠，文案上要講清楚這是直線距離。
+  function haversine(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const toRad = (d) => (d * Math.PI) / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+
+  const fmt = (km) => (km < 1 ? `${Math.round(km * 1000)} 公尺` : `${km.toFixed(1)} 公里`);
+
+  function say(text) {
+    status.hidden = false;
+    status.textContent = text;
+  }
+
+  async function loadIndex() {
+    if (index) return index;
+    const res = await fetch('/search-index.json');
+    if (!res.ok) throw new Error('索引載入失敗');
+    index = (await res.json()).filter((it) => it.y);
+    return index;
+  }
+
+  function render(list) {
+    results.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    for (const it of list) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `/i/${encodeURIComponent(it.i)}/`;
+
+      const dist = document.createElement('span');
+      dist.className = 'near-dist';
+      dist.textContent = fmt(it._km);
+
+      const body = document.createElement('span');
+      body.className = 'near-body';
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = it.n;
+      const sub = document.createElement('span');
+      sub.className = 'sub';
+      sub.textContent =
+        `${it.d}　${it.o}` +
+        (it.m ? `　平均月費 ${it.m.toLocaleString('en-US')} 元` : '') +
+        (it.p ? `　裁罰 ${it.p} 筆` : '');
+      body.append(nm, sub);
+
+      a.append(dist, body);
+      li.append(a);
+      frag.append(li);
+    }
+    results.append(frag);
+  }
+
+  button.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      say('這個瀏覽器不支援定位，請改用下方的行政區瀏覽。');
+      return;
+    }
+    say('正在取得位置…');
+    button.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const list = await loadIndex();
+          const near = list
+            .map((it) => ({ ...it, _km: haversine(coords.latitude, coords.longitude, it.y, it.x) }))
+            .sort((a, b) => a._km - b._km);
+
+          // 離最近一間超過 30 公里，多半是人不在新北市，直說比給一堆無用結果好
+          if (near[0]._km > 30) {
+            say(`離你最近的幼兒園在 ${fmt(near[0]._km)} 外，你可能不在新北市。本站目前只收錄新北市。`);
+            results.innerHTML = '';
+            return;
+          }
+          say(`以下是離你最近的 ${SHOW} 間幼兒園，依直線距離排序（實際路程會更遠）。`);
+          render(near.slice(0, SHOW));
+        } catch {
+          say('資料載入失敗，請重新整理頁面再試一次。');
+        } finally {
+          button.disabled = false;
+        }
+      },
+      (err) => {
+        button.disabled = false;
+        say(
+          err.code === err.PERMISSION_DENIED
+            ? '你沒有允許分享位置，所以算不出距離。可以改用下方的行政區瀏覽。'
+            : '取不到位置，可能是訊號或裝置設定的問題。可以改用下方的行政區瀏覽。',
+        );
+      },
+      { timeout: 10000, maximumAge: 300000 },
+    );
+  });
+</script>
+
+<style>
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+</style>

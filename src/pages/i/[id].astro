@@ -141,6 +141,14 @@ const jsonLd = {
           )
         }
         {
+          enriched && inst.floorAreaOut && (
+            <div>
+              <dt>戶外空間</dt>
+              <dd>{inst.floorAreaOut}</dd>
+            </div>
+          )
+        }
+        {
           enriched && inst.regNo && (
             <div>
               <dt>立案字號</dt>

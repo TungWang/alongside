@@ -256,6 +256,34 @@ check('搜尋索引存在且筆數相符', () => {
   return missing.length ? `${missing.length} 筆索引指向不存在的頁面` : true;
 });
 
+check('座標覆蓋與範圍', () => {
+  const pre = DATA.institutions.filter((i) => i.kind === 'preschool');
+  const withGeo = pre.filter((i) => i.lat);
+  if (withGeo.length < pre.length * 0.95) {
+    return `幼兒園只有 ${withGeo.length}/${pre.length} 有座標`;
+  }
+  // geocoding 失敗常表現為落在海上或別的縣市，不是缺值
+  const out = withGeo.filter(
+    (i) => i.lat < 24.6 || i.lat > 25.4 || i.lng < 121.0 || i.lng > 122.2,
+  );
+  return out.length ? `${out.length} 筆座標落在新北市範圍外` : true;
+});
+
+check('搜尋索引含座標，供距離排序使用', () => {
+  const idx = JSON.parse(read('search-index.json'));
+  const withGeo = idx.filter((it) => it.y && it.x);
+  return withGeo.length >= 1000 ? true : `索引只有 ${withGeo.length} 筆帶座標`;
+});
+
+// 動態產生的節點拿不到 Astro 的 data-astro-cid 屬性，樣式必須在全域，
+// 否則「附近」清單會退化成一堆無樣式的底線文字
+check('附近清單的樣式在全域 CSS 而非 scoped', () => {
+  const css = allFiles.filter((f) => f.endsWith('.css')).map((f) => fs.readFileSync(f, 'utf8')).join('');
+  const rule = css.match(/\.near-list a[^{]*\{[^}]*\}/);
+  if (!rule) return '找不到 .near-list a 規則';
+  return /data-astro-cid/.test(rule[0]) ? '.near-list a 被 scoped，動態節點吃不到' : true;
+});
+
 // --- 執行 ---------------------------------------------------------------
 
 let failed = 0;

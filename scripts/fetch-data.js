@@ -199,6 +199,9 @@ function normalizeRow(row, src) {
     website: null,
     closed: false,
     penalties: [],
+    floorAreaOut: null, // 戶外活動空間
+    lat: null, // 托嬰中心無座標來源，維持 null
+    lng: null,
   };
 }
 
@@ -208,6 +211,9 @@ function normalizeRow(row, src) {
 
 // 比對用：封存端與開放資料端的機構名稱寫法略有出入，去掉空白與括號後可 100% 對上
 const matchKey = (name) => squash(name).replace(/\s/g, '').replace(/[（）()]/g, '');
+
+const inRange = (v, lo, hi) => typeof v === 'number' && v >= lo && v <= hi;
+const round6 = (v) => Math.round(v * 1e6) / 1e6; // 約 0.1 公尺精度，足夠且省檔案大小
 
 const toInt = (v) => {
   const n = parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10);
@@ -356,7 +362,11 @@ async function fetchArchive() {
   for (const feature of geo.features || []) {
     const p = feature.properties || {};
     if (p.city !== '新北市') continue;
-    byName.set(matchKey(p.title), p);
+    // 座標來自封存端以國土測繪中心 API 做的 geocoding（GeoJSON 為 [lng, lat] 順序）。
+    // 原規劃文件說「三個資料集全都沒有經緯度所以不做地圖」——那是指政府開放資料，
+    // 封存端補上了，因此距離排序現在做得到，且完全不需要呼叫任何地圖 API。
+    const c = feature.geometry?.coordinates;
+    byName.set(matchKey(p.title), { ...p, _lng: c?.[0], _lat: c?.[1] });
   }
 
   return { byName, updatedAt: updatedAt.toISOString().slice(0, 10), ageDays };
@@ -379,6 +389,12 @@ async function enrich(institutions) {
     inst.floorArea = squash(p.size) || null;
     inst.website = safeWebsite(p.url);
     inst.closed = p.is_active === 0;
+    inst.floorAreaOut = squash(p.size_out) || null;
+    // 只收在新北市合理範圍內的座標，避免 geocoding 失敗落到海上或別的縣市
+    if (inRange(p._lat, 24.6, 25.4) && inRange(p._lng, 121.0, 122.2)) {
+      inst.lat = round6(p._lat);
+      inst.lng = round6(p._lng);
+    }
     inst._hasPenalty = squash(p.penalty) !== '' && squash(p.penalty) !== '無';
   }
 
@@ -488,12 +504,16 @@ async function main() {
     n: i.name,
     d: i.district,
     c: i.category,
+    o: i.ownership,
     m: i.monthly || 0,
+    p: i.penalties.length,
+    ...(i.lat ? { y: i.lat, x: i.lng } : {}),
   }));
   await fs.mkdir(INDEX_DIR, { recursive: true });
   await fs.writeFile(path.join(INDEX_DIR, 'search-index.json'), JSON.stringify(index));
   const kb = Math.round(Buffer.byteLength(JSON.stringify(index)) / 1024);
-  console.log(`搜尋索引 ${index.length} 筆、${kb} KB → public/search-index.json`);
+  const geocoded = institutions.filter((i) => i.lat).length;
+  console.log(`搜尋索引 ${index.length} 筆、${kb} KB（含座標 ${geocoded} 筆）→ public/search-index.json`);
 
   console.log(`\n共 ${institutions.length} 間、${districts.length} 個行政區 → ${path.relative(ROOT, OUT_FILE)}`);
 }
