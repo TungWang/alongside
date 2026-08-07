@@ -1,0 +1,34 @@
+name: 每月更新資料並部署
+
+on:
+  schedule:
+    # 每月 1 號 02:00 UTC（台灣時間 10:00）。開放資料本身更新頻率是不定期至每年，
+    # 每月跑一次已經很充裕，不需要更密。
+    - cron: '0 2 1 * *'
+  workflow_dispatch: # 手動觸發，正式排程前先用這個測幾次
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # 抓開放資料 → 產生 src/data/institutions.json → 建置成靜態頁
+      # 主鍵碰撞時 fetch-data.js 會 exit 1，建置直接失敗，不會把壞資料部署上線
+      - run: npm run build
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live

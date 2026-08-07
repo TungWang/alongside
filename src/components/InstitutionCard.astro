@@ -1,0 +1,30 @@
+---
+import { tagColor, institutionPath, needsCategoryTag } from '../lib/site.js';
+
+const { inst } = Astro.props;
+---
+
+<li
+  class="inst-card"
+  data-kind={inst.kind}
+  data-ownership={inst.ownership}
+>
+  <div class="tagrow">
+    <span class="tag" style={`background:${tagColor(inst.ownership)}`}>{inst.ownership}</span>
+    {needsCategoryTag(inst) && <span class="tag tag-outline">{inst.category}</span>}
+    {inst.capacity && <span class="tag tag-outline">收托 {inst.capacity} 人</span>}
+  </div>
+
+  <a class="title" href={institutionPath(inst.id)}>{inst.name}</a>
+
+  <div class="meta">
+    <span>{inst.district}{inst.street}</span>
+    <span>{inst.tel}</span>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-quiet" href={inst.mapUrl} target="_blank" rel="noopener nofollow">
+      在 Google 地圖看評價 ↗
+    </a>
+  </div>
+</li>

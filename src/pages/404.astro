@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, districtPath } from '../lib/site.js';
+---
+
+<Base title={`找不到這一頁｜${SITE_NAME}`} description="找不到這個頁面。" path="/404">
+  <div class="card empty">
+    <svg viewBox="0 0 120 84" width="140" role="img" aria-label="插圖：一只空杯子">
+      <g fill="none" stroke="#B08863" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M34 36h46v22a12 12 0 0 1-12 12H46a12 12 0 0 1-12-12z"></path>
+        <path d="M80 42h10a8 8 0 0 1 0 16H80"></path>
+        <path d="M30 76h58"></path>
+        <path d="M48 26c0-6 6-6 6-12M62 26c0-6 6-6 6-12"></path>
+      </g>
+    </svg>
+    <h1>找不到這一頁</h1>
+    <p>可能是機構已從名冊移除，或網址打錯了。從行政區重新找找看？</p>
+    <a class="btn" href="/">回首頁看 29 個行政區</a>
+  </div>
+
+  <nav class="district-grid" style="margin-top:32px" aria-label="行政區">
+    {data.districts.map((d) => <a href={districtPath(d)}>{d}</a>)}
+  </nav>
+</Base>

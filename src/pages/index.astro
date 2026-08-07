@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, districtPath } from '../lib/site.js';
+
+const { institutions, districts, total, fetchedAt } = data;
+
+const countByDistrict = Object.fromEntries(
+  districts.map((d) => [d, institutions.filter((i) => i.district === d).length]),
+);
+
+// 家長找托育多半從自己那一區開始，所以按數量排——機構多的區先出現，
+// 但仍保留完整 29 區，偏遠區不能因為只有兩三間就被藏起來。
+const ordered = [...districts].sort((a, b) => countByDistrict[b] - countByDistrict[a]);
+
+const preschools = institutions.filter((i) => i.kind === 'preschool').length;
+const nurseries = total - preschools;
+
+const title = `新北市幼兒園與托嬰中心一覽｜${SITE_NAME}`;
+const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒園與托嬰中心的基本資料，並附上裁罰、評鑑、收退費與補助的官方查詢連結。資料來自政府開放平台。`;
+---
+
+<Base title={title} description={description} path="/">
+  <div class="stack-lg">
+    <section class="stack">
+      <h1>一起看看<br />附近有哪些托育選擇</h1>
+      <p class="muted">
+        新北市 {total.toLocaleString('en-US')} 間立案幼兒園與托嬰中心，資料來自政府開放平台。慢慢比較，不用急。
+      </p>
+
+      <svg
+        viewBox="0 0 300 132"
+        width="100%"
+        style="max-width:420px"
+        role="img"
+        aria-label="插圖：大人牽著孩子走向一間小房子"
+      >
+        <g fill="none" stroke="#B08863" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 116H286"></path>
+          <path d="M196 116V72l30-22 30 22v44"></path>
+          <path d="M186 74l40-30 40 30"></path>
+          <rect x="214" y="92" width="24" height="24" rx="3"></rect>
+          <circle cx="226" cy="66" r="7"></circle>
+          <circle cx="72" cy="46" r="12"></circle>
+          <path d="M72 58v30m0 0l-12 28m12-28l12 28m-12-48l-24 10m24-10l26 14"></path>
+          <circle cx="120" cy="72" r="8.5"></circle>
+          <path d="M120 80.5V98m0 0l-8 18m8-18l8 18m-8-30l-16-4m16 4l13 6"></path>
+        </g>
+        <g fill="#EDE6DA">
+          <circle cx="40" cy="30" r="5"></circle>
+          <circle cx="268" cy="26" r="7"></circle>
+          <circle cx="164" cy="22" r="4"></circle>
+        </g>
+      </svg>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>想找哪一區？</h2>
+        <p class="note">
+          幼兒園 {preschools.toLocaleString('en-US')} 間、托嬰中心 {nurseries} 間，可在各區頁面再篩選。
+        </p>
+      </div>
+      <nav class="district-grid" aria-label="行政區">
+        {
+          ordered.map((d) => (
+            <a href={districtPath(d)}>
+              {d}
+              <span class="n">{countByDistrict[d]}</span>
+            </a>
+          ))
+        }
+      </nav>
+    </section>
+
+    <section class="card stack-sm">
+      <h2>這個網站幫你做什麼</h2>
+      <p class="note">
+        {'找托育的資訊散在好幾個政府網站：立案名冊在開放資料平台、裁罰紀錄在全國教保資訊網或社會局、評鑑結果又是另一個頁面。這裡把每間機構的基本資料集中成一頁，並且直接給你四個官方查詢入口，少繞一點路。'}
+      </p>
+      <p class="note">
+        {'評價與地圖都連到 Google 地圖，由你自己去看第一手的家長留言——本站不轉載、不評分、不排名。居家保母（居家托育）因為沒有完整的開放資料，不在收錄範圍。'}
+      </p>
+    </section>
+
+    <section class="stack-sm">
+      <p class="stamp">
+        {`資料擷取時間 ${fetchedAt}。開放資料的更新頻率為不定期至每年一次，機構可能已增設、遷址或停辦，實際情形請以主管機關公告與機構本身為準。`}
+      </p>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,161 @@
+---
+import Base from '../../layouts/Base.astro';
+import data from '../../data/institutions.json';
+import {
+  SITE_NAME,
+  tagColor,
+  officialLinks,
+  districtPath,
+  fullType,
+  needsCategoryTag,
+} from '../../lib/site.js';
+
+export function getStaticPaths() {
+  return data.institutions.map((inst) => ({
+    params: { id: inst.id },
+    props: { inst },
+  }));
+}
+
+const { inst } = Astro.props;
+const links = officialLinks(inst.authority);
+const needsName = links.some((l) => l.needsName);
+
+const authorityName = inst.authority === 'edu' ? '新北市政府教育局' : '新北市政府社會局';
+
+const title = `${inst.name}｜${inst.district}${inst.category}－${SITE_NAME}`;
+const description = `${inst.name}位於新北市${inst.district}${inst.street}，電話 ${inst.tel}，屬性為${inst.ownership}。附 Google 地圖連結，以及裁罰紀錄、評鑑結果、收退費與育兒補助的官方查詢入口。`;
+
+// 結構化資料讓 Google 認得這是一間托育機構，而不只是一頁文字
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ChildCare',
+  name: inst.name,
+  telephone: inst.tel,
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'TW',
+    addressRegion: '新北市',
+    addressLocality: inst.district,
+    streetAddress: inst.street,
+  },
+  ...(inst.operator ? { parentOrganization: { '@type': 'Organization', name: inst.operator } } : {}),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`/i/${inst.id}/`}
+  back={{ href: districtPath(inst.district), label: inst.district }}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <div class="tagrow">
+          <span class="tag" style={`background:${tagColor(inst.ownership)}`}>{inst.ownership}</span>
+          {needsCategoryTag(inst) && <span class="tag tag-outline">{inst.category}</span>}
+        </div>
+        <h1>{inst.name}</h1>
+        <p class="muted">新北市{inst.district}　主管機關：{authorityName}</p>
+      </div>
+
+      <a class="btn btn-block" href={inst.mapUrl} target="_blank" rel="noopener nofollow">
+        在 Google 地圖查看與看評價 ↗
+      </a>
+      <p class="note">
+        {'本站不轉載星等與評論，點上面的連結會開啟 Google 地圖，由你直接看其他家長的第一手留言。'}
+      </p>
+    </section>
+
+    <section class="card">
+      <dl class="deflist">
+        <div>
+          <dt>地址</dt>
+          <dd>{inst.address}</dd>
+        </div>
+        <div>
+          <dt>電話</dt>
+          <dd><a href={`tel:${inst.telHref}`}>{inst.tel}</a></dd>
+        </div>
+        <div>
+          <dt>屬性</dt>
+          <dd>{fullType(inst)}</dd>
+        </div>
+        {
+          inst.capacity && (
+            <div>
+              <dt>核定收托</dt>
+              <dd>{inst.capacity} 人</dd>
+            </div>
+          )
+        }
+        {
+          inst.operator && (
+            <div>
+              <dt>受託單位</dt>
+              <dd>{inst.operator}</dd>
+            </div>
+          )
+        }
+      </dl>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>想再確認什麼，這裡直接查</h2>
+        <p class="note">
+          {'以下都是主管機關的官方查詢頁，資料以那邊為準。本站不自行收錄裁罰與評鑑紀錄，因為那些資料會隨時效下架、格式也不一，轉載反而容易誤導。'}
+        </p>
+      </div>
+
+      {
+        needsName && (
+          <div class="copybar">
+            <span class="note">官方查詢頁沒辦法用網址帶入機構名稱，先複製起來再貼過去比較快。</span>
+            <button type="button" id="copy-name" data-name={inst.name}>
+              複製「{inst.name}」
+            </button>
+          </div>
+        )
+      }
+
+      <div class="stack-sm">
+        {
+          links.map((link) => (
+            <a class="linkrow" href={link.url} target="_blank" rel="noopener nofollow">
+              <span>{link.label}</span>
+              <span class="src">
+                {link.source} ↗
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <p class="stamp">
+        {`基本資料擷取時間 ${data.fetchedAt}，來源為${authorityName}的開放資料。機構可能已遷址、停辦或變更收托人數，實際情形請以主管機關公告與機構本身為準。本站僅整理公開資訊，不對機構品質作任何背書或保證。`}
+      </p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const button = document.getElementById('copy-name');
+  if (button) {
+    const original = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.name);
+        button.textContent = '已複製，貼到官方查詢頁就行';
+      } catch {
+        button.textContent = '複製失敗，請長按上方名稱手動複製';
+      }
+      setTimeout(() => (button.textContent = original), 2600);
+    });
+  }
+</script>

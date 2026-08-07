@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import { SITE_URL, SITE_NAME } from '../lib/site.js';
+import data from '../data/institutions.json';
+
+const { title, description, path = '/', back = null } = Astro.props;
+const canonical = new URL(path, SITE_URL).href;
+---
+
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#F7F3EC" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23B08863'/%3E%3Cpath d='M7 18a4.5 4.5 0 0 1 9 0 4.5 4.5 0 0 1 9 0l-9 9z' fill='%23FFFDF9'/%3E%3C/svg%3E"
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="shell">
+      <div class="masthead">
+        <a class="brandmark" href="/">
+          <span class="glyph" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 12 12">
+              <path d="M2 6.5A2 2 0 0 1 6 6.5 2 2 0 0 1 10 6.5L6 10.5z" fill="#FFFDF9"></path>
+            </svg>
+          </span>
+          {SITE_NAME}
+        </a>
+        {
+          back ? (
+            <a class="crumb" href={back.href}>
+              ← {back.label}
+            </a>
+          ) : (
+            <span class="tag tag-outline">新北市</span>
+          )
+        }
+      </div>
+    </header>
+
+    <main class="shell">
+      <slot />
+    </main>
+
+    <footer class="sitefoot">
+      <div class="shell stack-sm">
+        <p>
+          <strong style="color:var(--ink)">{SITE_NAME} Alongside</strong>　陪你一起看看新北市有哪些托育選擇。
+        </p>
+        <p>
+          {`機構基本資料來自新北市政府教育局與社會局的開放資料，擷取時間 ${data.fetchedAt}，共 ${data.total.toLocaleString('en-US')} 間。評鑑、裁罰、收退費與補助請以各主管機關公告為準；本站僅整理公開資訊與提供官方查詢入口，不對機構品質作任何背書或保證。`}
+        </p>
+        <p>
+          資料來源：<a href="https://data.ntpc.gov.tw/" rel="noopener">新北市政府資料開放平臺</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

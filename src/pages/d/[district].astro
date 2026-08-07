@@ -1,0 +1,128 @@
+---
+import Base from '../../layouts/Base.astro';
+import InstitutionCard from '../../components/InstitutionCard.astro';
+import data from '../../data/institutions.json';
+import { SITE_NAME } from '../../lib/site.js';
+
+export function getStaticPaths() {
+  return data.districts.map((district) => ({
+    params: { district },
+    props: {
+      district,
+      list: data.institutions.filter((i) => i.district === district),
+    },
+  }));
+}
+
+const { district, list } = Astro.props;
+
+const preschools = list.filter((i) => i.kind === 'preschool').length;
+const nurseries = list.length - preschools;
+
+// 篩選鈕只列這一區真的存在的屬性，避免家長按了得到空白
+const ownerships = [...new Set(list.map((i) => i.ownership))];
+
+const title = `${district}幼兒園與托嬰中心一覽（共 ${list.length} 間）｜${SITE_NAME}`;
+const mix = [preschools && `幼兒園 ${preschools} 間`, nurseries && `托嬰中心 ${nurseries} 間`]
+  .filter(Boolean)
+  .join('、');
+const description = `新北市${district}共 ${list.length} 間立案托育機構：${mix}。附地址、電話、Google 地圖，以及裁罰、評鑑、收退費與補助的官方查詢連結。`;
+---
+
+<Base title={title} description={description} path={`/d/${district}/`} back={{ href: '/', label: '所有行政區' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <h1>新北市{district}</h1>
+        <p class="muted">
+          {
+            preschools > 0 && nurseries > 0
+              ? `共 ${list.length} 間立案托育機構——幼兒園 ${preschools} 間、托嬰中心 ${nurseries} 間。`
+              : nurseries === 0
+                ? `共 ${preschools} 間立案幼兒園。這一區目前沒有立案托嬰中心。`
+                : `共 ${nurseries} 間立案托嬰中心。這一區目前沒有立案幼兒園。`
+          }
+        </p>
+        {
+          nurseries === 0 && (
+            <p class="note">
+              找不到不代表沒有——居家保母（居家托育）因為沒有完整的開放資料，不在本站收錄範圍，
+              可洽{' '}
+              <a href="https://lovebaby.sw.ntpc.gov.tw/" target="_blank" rel="noopener nofollow">
+                新北育兒資訊網
+              </a>{' '}
+              或鄰近行政區的居家托育服務中心。
+            </p>
+          )
+        }
+      </div>
+
+      <div class="filterbar" role="group" aria-label="篩選機構">
+        <button type="button" data-filter="all" aria-pressed="true">全部 {list.length}</button>
+        {preschools > 0 && <button type="button" data-filter="kind:preschool" aria-pressed="false">幼兒園 {preschools}</button>}
+        {nurseries > 0 && <button type="button" data-filter="kind:nursery" aria-pressed="false">托嬰中心 {nurseries}</button>}
+        {
+          ownerships.map((o) => (
+            <button type="button" data-filter={`ownership:${o}`} aria-pressed="false">
+              {o}
+            </button>
+          ))
+        }
+      </div>
+
+      <p class="note" id="result-count" aria-live="polite">依名稱排序，共 {list.length} 間</p>
+
+      <ul class="stack" id="inst-list">
+        {list.map((inst) => <InstitutionCard inst={inst} />)}
+      </ul>
+
+      <div class="card empty" id="no-match" hidden>
+        <h3>這個條件下沒有機構</h3>
+        <p>換一個條件看看，或回到全部。</p>
+        <button class="btn" type="button" data-filter="all">看全部 {list.length} 間</button>
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <p class="stamp">
+        資料擷取時間 {data.fetchedAt}，來源為新北市政府開放資料。
+        本站不排名、不評分，卡片順序僅依機構名稱排列。
+      </p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  // 唯一的前端腳本：純用來切換卡片顯示，不需要伺服器，不影響靜態部署。
+  // 所有機構在 HTML 裡都已存在，關掉 JavaScript 仍看得到完整清單。
+  const list = document.getElementById('inst-list');
+  const counter = document.getElementById('result-count');
+  const emptyState = document.getElementById('no-match');
+  const cards = [...list.querySelectorAll('.inst-card')];
+  const buttons = [...document.querySelectorAll('.filterbar button')];
+
+  function apply(filter) {
+    const [field, value] = filter.split(':');
+    let shown = 0;
+
+    for (const card of cards) {
+      const match =
+        field === 'all' ||
+        (field === 'kind' && card.dataset.kind === value) ||
+        (field === 'ownership' && card.dataset.ownership === value);
+      card.hidden = !match;
+      if (match) shown++;
+    }
+
+    for (const btn of buttons) {
+      btn.setAttribute('aria-pressed', String(btn.dataset.filter === filter));
+    }
+
+    counter.textContent = shown ? `依名稱排序，共 ${shown} 間` : '';
+    emptyState.hidden = shown > 0;
+  }
+
+  for (const el of document.querySelectorAll('[data-filter]')) {
+    el.addEventListener('click', () => apply(el.dataset.filter));
+  }
+</script>

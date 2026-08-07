@@ -1,0 +1,598 @@
+<title>育兒同行 Alongside — UI/UX 示意圖</title>
+<style>
+/* ============================================================
+   外層文件（隨檢視者深淺色主題調整）
+   ============================================================ */
+:root{
+  --page-bg:#FAF8F4;
+  --page-fg:#332C25;
+  --page-muted:#7C7268;
+  --page-line:#E4DCD0;
+  --page-card:#FFFFFF;
+  --page-accent:#8F6D4E;
+  --page-chip:#F0E9DE;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page-bg:#1A1714;
+    --page-fg:#EDE6DC;
+    --page-muted:#A2978B;
+    --page-line:#332C25;
+    --page-card:#221E1A;
+    --page-accent:#C9A47C;
+    --page-chip:#2C2620;
+  }
+}
+:root[data-theme="dark"]{
+  --page-bg:#1A1714; --page-fg:#EDE6DC; --page-muted:#A2978B;
+  --page-line:#332C25; --page-card:#221E1A; --page-accent:#C9A47C; --page-chip:#2C2620;
+}
+:root[data-theme="light"]{
+  --page-bg:#FAF8F4; --page-fg:#332C25; --page-muted:#7C7268;
+  --page-line:#E4DCD0; --page-card:#FFFFFF; --page-accent:#8F6D4E; --page-chip:#F0E9DE;
+}
+
+*{box-sizing:border-box}
+
+.doc{
+  background:var(--page-bg);
+  color:var(--page-fg);
+  font-family:"PingFang TC","Noto Sans TC","Heiti TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.75;
+  padding:56px 24px 96px;
+  min-height:100vh;
+}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:64px}
+
+/* 抬頭 */
+.masthead{display:flex;flex-direction:column;gap:14px;max-width:62ch}
+.eyebrow{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--page-accent);font-weight:600;
+}
+.masthead h1{
+  margin:0;font-size:clamp(30px,4.4vw,44px);line-height:1.2;font-weight:700;
+  text-wrap:balance;letter-spacing:-.01em;
+}
+.masthead p{margin:0;color:var(--page-muted)}
+.masthead .rule{height:2px;background:var(--page-accent);width:64px;border-radius:2px;margin-top:6px}
+
+/* 區塊標題 */
+.sec{display:flex;flex-direction:column;gap:24px}
+.sec-head{display:flex;flex-direction:column;gap:6px;max-width:62ch}
+.sec-head h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.005em}
+.sec-head p{margin:0;color:var(--page-muted);font-size:15px}
+
+/* 色票 */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+.sw{
+  background:var(--page-card);border:1px solid var(--page-line);border-radius:12px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.sw .chip{height:56px}
+.sw .meta{padding:10px 12px;display:flex;flex-direction:column;gap:1px}
+.sw .nm{font-size:13.5px;font-weight:600;line-height:1.4}
+.sw .hex{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;
+  color:var(--page-muted);letter-spacing:.02em;
+}
+.sw .use{font-size:11.5px;color:var(--page-muted);line-height:1.5}
+
+/* 畫面陳列 */
+.screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:40px 32px}
+.slot{display:flex;flex-direction:column;gap:16px}
+.slot-label{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.slot-label .n{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;
+  color:var(--page-accent);font-weight:600;
+}
+.slot-label .t{font-size:16px;font-weight:700}
+.slot-label .s{font-size:13px;color:var(--page-muted)}
+.notes{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;
+  font-size:13.5px;color:var(--page-muted);line-height:1.6}
+.notes code{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;
+  background:var(--page-chip);padding:1px 5px;border-radius:4px;color:var(--page-fg);
+}
+
+/* 手機外框 */
+.phone{
+  width:100%;max-width:360px;border-radius:30px;padding:9px;
+  background:linear-gradient(160deg,#CFC5B6,#A79B8B);
+  box-shadow:0 14px 34px rgba(50,42,34,.18);
+}
+@media (prefers-color-scheme: dark){ .phone{box-shadow:0 14px 34px rgba(0,0,0,.5)} }
+.phone .screen{border-radius:22px;overflow:hidden;background:#F7F3EC}
+
+/* ============================================================
+   品牌畫面內部（固定使用規格書配色，不隨主題變動）
+   ============================================================ */
+.brand{
+  --bg:#F7F3EC; --card:#FFFDF9; --band:#EDE6DA;
+  --accent:#B08863; --accent-dk:#8F6D4E;
+  --ink:#3E362E; --ink2:#7A7169;
+  background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  font-size:15px;line-height:1.7;
+}
+.brand .statusbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 16px 2px;font-size:11px;color:var(--ink2);
+  font-variant-numeric:tabular-nums;
+}
+.brand .navbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px 12px;
+}
+.brand .logo{display:flex;align-items:center;gap:7px;font-weight:700;font-size:16px}
+.brand .logo .mark{
+  width:22px;height:22px;border-radius:8px;background:var(--accent);
+  display:grid;place-items:center;
+}
+.brand .body{padding:4px 16px 22px;display:flex;flex-direction:column;gap:18px}
+
+.brand h2.hero{
+  margin:0;font-size:25px;line-height:1.35;font-weight:700;text-wrap:balance;
+  letter-spacing:-.01em;
+}
+.brand .lede{margin:0;font-size:14px;color:var(--ink2)}
+
+.brand .card{
+  background:var(--card);border-radius:16px;padding:18px 16px;
+  box-shadow:0 2px 12px rgba(62,54,46,.06);
+  display:flex;flex-direction:column;gap:12px;
+}
+.brand .field{display:flex;flex-direction:column;gap:6px}
+.brand .field label{font-size:12.5px;color:var(--ink2);font-weight:600}
+.brand .select{
+  border:1px solid #E2D9CB;border-radius:12px;padding:11px 13px;
+  background:#FFF;font-size:14.5px;display:flex;justify-content:space-between;
+  align-items:center;color:var(--ink);
+}
+.brand .select.ph{color:var(--ink2)}
+.brand .select .caret{color:var(--accent);font-size:11px}
+.brand .btn{
+  background:var(--accent);color:#FFFDF9;border:0;border-radius:12px;
+  padding:13px;font-size:15.5px;font-weight:600;text-align:center;
+  font-family:inherit;width:100%;
+}
+.brand .btn.ghost{
+  background:transparent;color:var(--accent-dk);
+  border:1.5px solid #DFD3C2;font-weight:600;
+}
+.brand .btn.sm{padding:9px 12px;font-size:13.5px;border-radius:10px;width:auto}
+
+.brand .band{
+  background:var(--band);margin:0 -16px;padding:18px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.brand .quiet{font-size:12.5px;color:var(--ink2);line-height:1.65;margin:0}
+
+/* 標籤 */
+.tag{
+  display:inline-flex;align-items:center;font-size:11.5px;font-weight:600;
+  padding:3px 9px;border-radius:999px;color:#FFFDF9;letter-spacing:.02em;
+  white-space:nowrap;
+}
+.tag.pub{background:#7A8B6F}      /* 公立 */
+.tag.np{background:#6F8B85}       /* 非營利 */
+.tag.quasi{background:#9A8C5E}    /* 準公共 */
+.tag.priv{background:#B08863}     /* 私立 */
+.tag.work{background:#8E7F94}     /* 職場互助 */
+.tag.pubcare{background:#C08A5E}  /* 公共托育 */
+.tag.other{background:#7A7169}    /* 其他 */
+.tag.line{
+  background:transparent;color:var(--ink2);border:1px solid #DED3C3;font-weight:500;
+}
+
+/* 篩選列 */
+.filterbar{display:flex;gap:7px;overflow-x:auto;padding:2px 0 6px;margin:0 -2px}
+.pill{
+  flex:0 0 auto;border:1px solid #E2D9CB;background:#FFF;border-radius:999px;
+  padding:6px 13px;font-size:13px;color:var(--ink2);
+}
+.pill.on{background:var(--accent);border-color:var(--accent);color:#FFFDF9;font-weight:600}
+.count{font-size:12.5px;color:var(--ink2)}
+
+/* 機構卡 */
+.inst{
+  background:var(--card);border-radius:16px;padding:16px;
+  box-shadow:0 2px 12px rgba(62,54,46,.06);
+  display:flex;flex-direction:column;gap:9px;
+}
+.inst .nm{font-size:16px;font-weight:700;line-height:1.45;margin:0}
+.inst .rows{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--ink2)}
+.inst .tags{display:flex;gap:6px;flex-wrap:wrap}
+.inst .foot{display:flex;gap:8px;align-items:center;padding-top:2px}
+
+/* 機構詳細頁 */
+.deftable{display:flex;flex-direction:column;gap:0}
+.deftable .r{
+  display:grid;grid-template-columns:76px 1fr;gap:12px;
+  padding:10px 0;border-bottom:1px solid #EFE7DA;font-size:14px;
+}
+.deftable .r:last-child{border-bottom:0}
+.deftable .k{color:var(--ink2);font-size:13px}
+.deftable .v{line-height:1.6}
+.linklist{display:flex;flex-direction:column;gap:8px}
+.linkrow{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  background:#FFF;border:1px solid #E7DED0;border-radius:12px;padding:12px 14px;
+  font-size:14px;font-weight:600;color:var(--accent-dk);
+}
+.linkrow .ext{font-size:11px;color:var(--ink2);font-weight:500}
+.stamp{
+  font-size:11.5px;color:var(--ink2);line-height:1.6;
+  border-left:2px solid #DED3C3;padding-left:10px;
+}
+.copybar{
+  display:flex;flex-direction:column;gap:7px;margin-bottom:10px;
+  background:#F3ECE0;border-radius:12px;padding:12px 13px;
+}
+.copybar-t{font-size:12px;color:var(--ink2);line-height:1.5}
+.copybar-b{
+  background:#FFF;border:1px solid #DFD3C2;border-radius:9px;padding:8px 11px;
+  font-size:13.5px;font-weight:600;color:var(--accent-dk);
+}
+.adslot{
+  border:1px dashed #D9CDBB;border-radius:12px;padding:16px;text-align:center;
+  font-size:11.5px;color:#A2978B;letter-spacing:.06em;
+}
+.empty{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:14px 8px}
+.empty h3{margin:0;font-size:17px;font-weight:700}
+.empty p{margin:0;font-size:13.5px;color:var(--ink2);max-width:26ch}
+
+/* 表格（發現與待辦） */
+.tblwrap{overflow-x:auto;border:1px solid var(--page-line);border-radius:12px;background:var(--page-card)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--page-line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--page-muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;
+  background:var(--page-chip);padding:1px 5px;border-radius:4px}
+
+.footnote{
+  font-size:13px;color:var(--page-muted);border-top:1px solid var(--page-line);
+  padding-top:20px;max-width:70ch;line-height:1.7;
+}
+</style>
+
+<div class="doc">
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">UI / UX 示意圖 · 新北市首發版</div>
+    <h1>育兒同行 Alongside</h1>
+    <p>依規劃文件〈附錄：設計規格〉繪製的四個核心畫面。示意內容全部使用新北市開放資料的真實機構，非填充文字。</p>
+    <div class="rule"></div>
+  </header>
+
+  <!-- 色票 -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>色彩 tokens</h2>
+      <p>奶油白底、焦糖奶茶棕重點色。全部低飽和暖調，刻意避開陶土橘紅。</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#F7F3EC"></div><div class="meta"><span class="nm">奶油米白</span><span class="hex">#F7F3EC</span><span class="use">頁面背景</span></div></div>
+      <div class="sw"><div class="chip" style="background:#FFFDF9"></div><div class="meta"><span class="nm">暖白</span><span class="hex">#FFFDF9</span><span class="use">卡片底</span></div></div>
+      <div class="sw"><div class="chip" style="background:#EDE6DA"></div><div class="meta"><span class="nm">淺陶米</span><span class="hex">#EDE6DA</span><span class="use">區塊分隔、頁尾</span></div></div>
+      <div class="sw"><div class="chip" style="background:#B08863"></div><div class="meta"><span class="nm">焦糖奶茶棕</span><span class="hex">#B08863</span><span class="use">按鈕、連結、重點</span></div></div>
+      <div class="sw"><div class="chip" style="background:#8F6D4E"></div><div class="meta"><span class="nm">深奶茶</span><span class="hex">#8F6D4E</span><span class="use">hover、強調</span></div></div>
+      <div class="sw"><div class="chip" style="background:#3E362E"></div><div class="meta"><span class="nm">深棕灰</span><span class="hex">#3E362E</span><span class="use">主文字</span></div></div>
+      <div class="sw"><div class="chip" style="background:#7A7169"></div><div class="meta"><span class="nm">灰棕</span><span class="hex">#7A7169</span><span class="use">次要文字</span></div></div>
+    </div>
+  </section>
+
+  <!-- 標籤色擴充 -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>機構類型標籤（需擴充到 7 種）</h2>
+      <p>規劃文件只定義了公立／私立／公共托育三色，但實測幼兒園資料的 <code style="font-family:ui-monospace,monospace;font-size:12.5px">type</code> 欄位有 7 種值。以下是補齊後的建議，維持全部低飽和暖調。</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <span class="tag pub">公立 · 224 間</span>
+      <span class="tag quasi">準公共 · 271 間</span>
+      <span class="tag priv">私立 · 459 間</span>
+      <span class="tag np">非營利 · 39 間</span>
+      <span class="tag work">職場互助 · 5 間</span>
+      <span class="tag other">其他 · 2 間</span>
+      <span class="tag pubcare">公共托育 · 130 間</span>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>類型</th><th>Hex</th><th>來源</th><th>筆數</th></tr></thead>
+        <tbody>
+          <tr><td>公立</td><td><code>#7A8B6F</code> 暖綠</td><td>幼兒園 <code>type</code></td><td>224</td></tr>
+          <tr><td>準公共</td><td><code>#9A8C5E</code> 橄欖金</td><td>幼兒園 <code>type</code></td><td>271</td></tr>
+          <tr><td>私立</td><td><code>#B08863</code> 奶茶棕</td><td>幼兒園 / 托嬰</td><td>459 + 252</td></tr>
+          <tr><td>非營利</td><td><code>#6F8B85</code> 灰青綠</td><td>幼兒園 <code>type</code></td><td>39</td></tr>
+          <tr><td>職場互助</td><td><code>#8E7F94</code> 灰紫</td><td>幼兒園 <code>type</code></td><td>5</td></tr>
+          <tr><td>公營公司 / 社團法人附設</td><td><code>#7A7169</code> 灰棕</td><td>幼兒園 <code>type</code></td><td>2</td></tr>
+          <tr><td>公共托育</td><td><code>#C08A5E</code> 暖橘褐</td><td>公托名冊</td><td>130</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 畫面 -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>四個核心畫面</h2>
+      <p>手機優先，單欄、卡片堆疊、按鈕夠大好點。示意寬度 360px。</p>
+    </div>
+
+    <div class="screens">
+
+      <!-- 1 首頁 -->
+      <div class="slot">
+        <div class="slot-label"><span class="n">01</span><span class="t">首頁</span><span class="s">搜尋入口</span></div>
+        <div class="phone"><div class="screen brand">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="navbar">
+            <div class="logo">
+              <span class="mark">
+                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                  <path d="M2 6.5 A2 2 0 0 1 6 6.5 A2 2 0 0 1 10 6.5 L6 10.5 Z" fill="#FFFDF9"/>
+                </svg>
+              </span>
+              育兒同行
+            </div>
+            <span class="tag line">新北市</span>
+          </div>
+          <div class="body">
+            <h2 class="hero">一起看看<br>附近有哪些托育選擇</h2>
+            <p class="lede">新北市 1,493 間立案幼兒園與托嬰中心，資料來自政府開放平台。慢慢比較，不用急。</p>
+
+            <svg viewBox="0 0 300 132" width="100%" role="img" aria-label="手繪風插圖：大人牽著孩子走向一間小房子">
+              <g fill="none" stroke="#B08863" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 116 H286"/>
+                <path d="M196 116 V72 L226 50 L256 72 V116"/>
+                <path d="M186 74 L226 44 L266 74"/>
+                <rect x="214" y="92" width="24" height="24" rx="3"/>
+                <circle cx="226" cy="66" r="7"/>
+                <circle cx="72" cy="46" r="12"/>
+                <path d="M72 58 V88 M72 88 L60 116 M72 88 L84 116 M72 68 L48 78 M72 68 L98 82"/>
+                <circle cx="120" cy="72" r="8.5"/>
+                <path d="M120 80.5 V98 M120 98 L112 116 M120 98 L128 116 M120 86 L104 82 M120 86 L133 92"/>
+              </g>
+              <g fill="#EDE6DA">
+                <circle cx="40" cy="30" r="5"/><circle cx="268" cy="26" r="7"/><circle cx="164" cy="22" r="4"/>
+              </g>
+            </svg>
+
+            <div class="card">
+              <div class="field">
+                <label>想找哪一區？</label>
+                <div class="select ph">全部行政區（29 區）<span class="caret">▼</span></div>
+              </div>
+              <div class="field">
+                <label>要看哪一種？</label>
+                <div class="select ph">幼兒園、托嬰中心都看<span class="caret">▼</span></div>
+              </div>
+              <button class="btn" type="button">看看有哪些</button>
+            </div>
+
+            <div class="band">
+              <p class="quiet"><strong style="color:#3E362E">關於這些資料</strong><br>基本資料來自新北市政府教育局與社會局開放資料，最後更新 2026-08-01。評鑑、裁罰與收退費請以官方公告為準，每間機構頁都附上查詢連結。</p>
+            </div>
+          </div>
+        </div></div>
+        <ul class="notes">
+          <li>標語用陪伴語氣，不出現「安全把關」「保證優質」。</li>
+          <li>插圖為線條手繪風，正式版改用 unDraw / Open Doodles 或自繪。</li>
+          <li>資料時效聲明放首頁底，不是小字藏在頁尾。</li>
+        </ul>
+      </div>
+
+      <!-- 2 列表 -->
+      <div class="slot">
+        <div class="slot-label"><span class="n">02</span><span class="t">列表</span><span class="s">篩選結果</span></div>
+        <div class="phone"><div class="screen brand">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="navbar">
+            <div class="logo" style="font-size:15px">
+              <span class="mark" style="width:19px;height:19px;border-radius:7px"></span>板橋區
+            </div>
+            <span class="btn ghost sm">改條件</span>
+          </div>
+          <div class="body" style="gap:14px">
+            <div class="filterbar">
+              <span class="pill on">全部</span>
+              <span class="pill">幼兒園</span>
+              <span class="pill">托嬰中心</span>
+              <span class="pill">公立</span>
+              <span class="pill">準公共</span>
+            </div>
+            <div class="count">板橋區共 <strong style="color:#3E362E">186</strong> 間，依名稱排序</div>
+
+            <div class="inst">
+              <div class="tags"><span class="tag quasi">準公共</span><span class="tag line">幼兒園</span></div>
+              <p class="nm">新北市私立悅淨幼兒園</p>
+              <div class="rows">
+                <span>板橋區東門街 30 之 2 號 1 樓</span>
+                <span>(02) 8968-1060</span>
+              </div>
+              <div class="foot"><span class="btn ghost sm">在 Google 地圖看評價 ↗</span></div>
+            </div>
+
+            <div class="inst">
+              <div class="tags"><span class="tag priv">私立</span><span class="tag line">托嬰中心</span><span class="tag line">收托 90 人</span></div>
+              <p class="nm">茵幼爾股份有限公司附設新北市私立寶貝媽咪托嬰中心</p>
+              <div class="rows">
+                <span>板橋區莊敬路 46 號 2 樓</span>
+                <span>(02) 8252-9955</span>
+              </div>
+              <div class="foot"><span class="btn ghost sm">在 Google 地圖看評價 ↗</span></div>
+            </div>
+
+            <div class="adslot">廣 告 版 位 · 每 6 張卡插入一次</div>
+
+            <div class="inst">
+              <div class="tags"><span class="tag priv">私立</span><span class="tag line">托嬰中心</span><span class="tag line">收托 140 人</span></div>
+              <p class="nm">新北市私立卡爾威特托嬰中心</p>
+              <div class="rows">
+                <span>板橋區板新路 101 號 1 樓、107 號 2 樓</span>
+                <span>(02) 8951-8905</span>
+              </div>
+              <div class="foot"><span class="btn ghost sm">在 Google 地圖看評價 ↗</span></div>
+            </div>
+          </div>
+        </div></div>
+        <ul class="notes">
+          <li>卡片本身整塊可點進機構頁；地圖按鈕另開 Google，需 <code>target="_blank" rel="noopener"</code>。</li>
+          <li>機構名稱很長（實測最長逾 30 字），卡片標題不可截斷成一行。</li>
+          <li>網站不顯示星等數字，評價一律導向 Google。</li>
+        </ul>
+      </div>
+
+      <!-- 3 機構頁 -->
+      <div class="slot">
+        <div class="slot-label"><span class="n">03</span><span class="t">機構頁</span><span class="s">SEO 主戰場</span></div>
+        <div class="phone"><div class="screen brand">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="navbar">
+            <span style="font-size:13px;color:#7A7169">← 汐止區</span>
+            <span class="tag pubcare">公共托育</span>
+          </div>
+          <div class="body" style="gap:16px">
+            <div>
+              <h2 class="hero" style="font-size:21px">汐止忠厚公共托育中心</h2>
+              <p class="lede" style="margin-top:4px">新北市汐止區 · 公設民營托嬰中心</p>
+            </div>
+
+            <button class="btn" type="button">在 Google 地圖查看與看評價 ↗</button>
+
+            <div class="card" style="padding:6px 16px">
+              <div class="deftable">
+                <div class="r"><span class="k">地址</span><span class="v">新北市汐止區樟樹一路 137 巷 26 號 2 樓</span></div>
+                <div class="r"><span class="k">電話</span><span class="v">(02) 2641-3300</span></div>
+                <div class="r"><span class="k">屬性</span><span class="v">公共托育中心</span></div>
+                <div class="r"><span class="k">受託單位</span><span class="v">社團法人新北市兒童教保協會</span></div>
+              </div>
+            </div>
+
+            <div>
+              <p class="quiet" style="font-weight:600;color:#3E362E;margin-bottom:8px">想再確認什麼，這裡直接查</p>
+              <div class="copybar">
+                <span class="copybar-t">官方查詢頁不能帶入園名，先複製起來</span>
+                <span class="copybar-b">複製「汐止忠厚公共托育中心」</span>
+              </div>
+              <div class="linklist">
+                <div class="linkrow"><span>裁罰紀錄</span><span class="ext">新北社會局 ↗</span></div>
+                <div class="linkrow"><span>機構評鑑結果</span><span class="ext">新北社會局 ↗</span></div>
+                <div class="linkrow"><span>收費與相關規定</span><span class="ext">托嬰中心專區 ↗</span></div>
+                <div class="linkrow"><span>育兒津貼與托育補助</span><span class="ext">衛福部 ↗</span></div>
+              </div>
+            </div>
+
+            <div class="band">
+              <p class="stamp">資料擷取時間 2026-08-01，來源為新北市政府社會局開放資料。實際收托狀況、費用與評鑑結果請以機構與官方公告為準。</p>
+            </div>
+          </div>
+        </div></div>
+        <ul class="notes">
+          <li>頁面 <code>&lt;title&gt;</code> 用「汐止區 汐止忠厚公共托育中心｜托嬰中心 - 育兒同行」。</li>
+          <li>四個官方連結是本站的核心價值，位置要高，不能埋在頁尾。</li>
+          <li>官方查詢頁全是 POST 表單，<strong>無法用網址帶入園名</strong>，所以必須先給「複製名稱」按鈕，否則家長點過去會迷路。</li>
+          <li>加 <code>LocalBusiness</code> / <code>ChildCare</code> JSON-LD 結構化資料。</li>
+        </ul>
+      </div>
+
+      <!-- 4 空狀態 -->
+      <div class="slot">
+        <div class="slot-label"><span class="n">04</span><span class="t">空狀態</span><span class="s">化解挫折</span></div>
+        <div class="phone"><div class="screen brand">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="navbar">
+            <div class="logo" style="font-size:15px">
+              <span class="mark" style="width:19px;height:19px;border-radius:7px"></span>平溪區
+            </div>
+            <span class="btn ghost sm">改條件</span>
+          </div>
+          <div class="body" style="gap:16px">
+            <div class="filterbar">
+              <span class="pill">全部</span>
+              <span class="pill on">托嬰中心</span>
+              <span class="pill">幼兒園</span>
+            </div>
+
+            <div class="card">
+              <div class="empty">
+                <svg viewBox="0 0 120 84" width="132" role="img" aria-label="手繪風插圖：一只空杯子與冒出的熱氣">
+                  <g fill="none" stroke="#B08863" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M34 36 H80 V58 A12 12 0 0 1 68 70 H46 A12 12 0 0 1 34 58 Z"/>
+                    <path d="M80 42 H90 A8 8 0 0 1 90 58 H80"/>
+                    <path d="M30 76 H88"/>
+                    <path d="M48 26 C48 20 54 20 54 14 M62 26 C62 20 68 20 68 14"/>
+                  </g>
+                </svg>
+                <h3>這一區還沒有托嬰中心</h3>
+                <p>平溪區目前沒有立案托嬰中心。要不要看看鄰近行政區，或把幼兒園也一起看？</p>
+              </div>
+              <button class="btn" type="button">看看鄰近的汐止區、瑞芳區</button>
+              <button class="btn ghost" type="button">把幼兒園也加進來</button>
+            </div>
+
+            <p class="quiet">找不到不代表沒有——居家保母（居家托育）不在本站資料範圍內，可到新北市居家托育服務中心詢問。</p>
+          </div>
+        </div></div>
+        <ul class="notes">
+          <li>空狀態一定要給下一步，不能只說「查無資料」。</li>
+          <li>平溪、貢寮、雙溪等偏遠區真的會空，不是假設情境。</li>
+          <li>順便說明保母不在範圍內，管理家長預期。</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 官方連結決定表 -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>四類官方連結：定案網址</h2>
+      <p>全部於 2026-08-07 實測回傳 200。幼兒園與托嬰中心分屬教育部與衛福部兩套系統，機構頁要依 <code style="font-family:ui-monospace,monospace;font-size:12.5px">type</code> 給不同連結，不能共用一組。</p>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>用途</th><th>幼兒園</th><th>托嬰中心 / 公共托育</th><th>可否帶入園名</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>裁罰紀錄</td>
+            <td><code>ap.ece.moe.edu.tw/webecems/punishSearch.aspx</code><br>全國教保資訊網</td>
+            <td><code>sw.ntpc.gov.tw/home.jsp?id=1746a22a2af02008</code><br>新北社會局裁罰公告</td>
+            <td>否（POST 表單）</td>
+          </tr>
+          <tr>
+            <td>評鑑結果</td>
+            <td><code>ap.ece.moe.edu.tw/webecems/evaSearch.aspx</code><br>基礎評鑑結果查詢</td>
+            <td><code>sw.ntpc.gov.tw/home.jsp?id=40c85471efd9ce2f</code><br>機構評鑑結果</td>
+            <td>否（POST 表單）</td>
+          </tr>
+          <tr>
+            <td>收退費 / 收費規定</td>
+            <td><code>kidedu.ntpc.edu.tw/p/412-1000-154.php</code><br>新北市幼兒教育資源網 · 招生收費</td>
+            <td><code>sw.ntpc.gov.tw/home.jsp?id=9f08068f32b4c183</code><br>新北市托嬰中心專區</td>
+            <td>不需要（一般說明頁）</td>
+          </tr>
+          <tr>
+            <td>補助 / 津貼</td>
+            <td><code>ece.moe.edu.tw/ch/subsidy/allowance-1/</code><br>全國教保資訊網 · 2–未滿 5 歲育兒津貼</td>
+            <td><code>mohw.gov.tw/cp-5130-58003-1.html</code><br>未滿 2 歲照顧政策專區</td>
+            <td>不需要（一般說明頁）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:0;font-size:13.5px;color:var(--page-muted);max-width:70ch;line-height:1.7">
+      備用：新北市教育局另有〈<a href="https://kidedu.ntpc.edu.tw/app/index.php?Plugin=o_tpckedu&amp;Action=o_tpckeduschpenalty&amp;Url=1" style="color:var(--page-accent)">歷年裁罰記錄</a>〉單一列表頁，只含新北市幼兒園，比全國教保網好讀，可與中央連結並列。托嬰另有社家署〈<a href="https://www.sfaa.gov.tw/SFAA/Pages/List.aspx?nodeid=1126" style="color:var(--page-accent)">各縣市違反兒少法規公告專區</a>〉。
+    </p>
+  </section>
+
+  <p class="footnote">
+    示意圖字體使用系統內建的蘋方／黑體以避免外部字型請求；正式站請自行託管 Noto Sans TC 的子集字型（CJK 全字集過大，務必用 <code style="font-family:ui-monospace,monospace;font-size:12.5px">subset-font</code> 之類工具依實際用字裁切）。所有機構名稱、地址、電話、數量皆為 2026-08-07 從新北市開放資料 API 實際取得。
+  </p>
+
+</div>
+</div>

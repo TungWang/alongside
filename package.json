@@ -1,0 +1,17 @@
+{
+  "name": "alongside",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch": "node scripts/fetch-data.js",
+    "dev": "astro dev",
+    "build": "npm run fetch && astro build",
+    "build:offline": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.0"
+  }
+}
