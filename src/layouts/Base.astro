@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE_URL, SITE_NAME } from '../lib/site.js';
+import { SITE_URL, SITE_NAME, GSC_VERIFICATION } from '../lib/site.js';
 import data from '../data/institutions.json';
 
 const { title, description, path = '/', back = null } = Astro.props;
@@ -12,6 +12,7 @@ const canonical = new URL(path, SITE_URL).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {GSC_VERIFICATION && <meta name="google-site-verification" content={GSC_VERIFICATION} />}
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />

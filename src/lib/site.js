@@ -6,6 +6,18 @@ export const SITE_URL = 'https://alongside-53f07.web.app/';
 export const SITE_NAME = '育兒同行';
 
 /**
+ * Google Search Console 的網站驗證碼。
+ *
+ * 在 Search Console 選「HTML 標記」驗證時，它會給一段
+ *   <meta name="google-site-verification" content="AbC123..." />
+ * 只要把引號裡的那串 content 值貼在下面即可，不用貼整個標籤。
+ * 留空則不輸出這個 meta，頁面不受影響。
+ *
+ * 驗證通過後不要刪掉——Google 會定期重新確認，拿掉會失去資源擁有權。
+ */
+export const GSC_VERIFICATION = '';
+
+/**
  * 機構屬性標籤。幼兒園的 type 欄位實測有 7 種值，
  * 托嬰兩個資料集則各自固定，合起來需要 7 種顏色。
  * 全部低飽和暖調，只用來區分類型，不帶價值判斷。
