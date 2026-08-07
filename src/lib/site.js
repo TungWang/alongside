@@ -15,7 +15,7 @@ export const SITE_NAME = '育兒同行';
  *
  * 驗證通過後不要刪掉——Google 會定期重新確認，拿掉會失去資源擁有權。
  */
-export const GSC_VERIFICATION = '';
+export const GSC_VERIFICATION = '-FbkcBBuKxZ3C-sOBNFoX-GUGMZcy-516b79xpILpoo';
 
 /**
  * 機構屬性標籤。幼兒園的 type 欄位實測有 7 種值，
