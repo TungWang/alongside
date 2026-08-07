@@ -1,0 +1,266 @@
+---
+import Base from '../layouts/Base.astro';
+import DataNotice from '../components/DataNotice.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, tagColor, institutionPath, DATASETS, officialLinks } from '../lib/site.js';
+import { penalisedInstitutions, penaltyCategories, penaltyStats, UNSPECIFIED } from '../lib/stats.js';
+
+const list = penalisedInstitutions();
+const cats = penaltyCategories();
+const pen = penaltyStats();
+const districts = [...new Set(list.map((i) => i.district))].sort((a, b) =>
+  a.localeCompare(b, 'zh-Hant'),
+);
+const officialUrl = officialLinks('edu').find((l) => l.label.includes('裁罰'));
+
+const noticeSources = [
+  { label: DATASETS['幼兒園'].label, agency: DATASETS['幼兒園'].agency, url: DATASETS['幼兒園'].url },
+  ...(data.archive
+    ? [
+        {
+          label: data.archive.name,
+          agency: `${data.archive.author}　原始出處：${data.archive.origin}　備份於 ${data.archive.updatedAt}`,
+          url: data.archive.url,
+        },
+      ]
+    : []),
+  { label: '全國教保資訊網：即時查詢', agency: '裁罰現況以此為準', url: officialUrl.url },
+];
+
+const title = `新北市幼兒園裁罰紀錄一覽（${list.length} 間）｜${SITE_NAME}`;
+const description = `新北市 ${pen.ofPreschools} 間立案幼兒園中，有 ${list.length} 間在民間備份的全國教保資訊網公告裡查得到裁罰紀錄，合計 ${pen.records} 筆。可依行政區與違規類型查看。`;
+---
+
+<Base title={title} description={description} path="/裁罰/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <h1>新北市幼兒園裁罰紀錄</h1>
+      <p class="muted">
+        {`${pen.ofPreschools.toLocaleString('en-US')} 間立案幼兒園中，有 ${list.length} 間查得到紀錄，合計 ${pen.records.toLocaleString('en-US')} 筆。以最近一次裁罰的時間排序。`}
+      </p>
+
+      <div class="caveat">
+        <p><strong>這份清單不是「壞幼兒園名單」，請這樣讀</strong></p>
+        <ul>
+          <li>
+            {'排序依「最近一次裁罰的日期」，'}<strong>不依筆數</strong>
+            {'。依筆數排等於做出一份最壞排行榜，而筆數多寡與違規輕重無關——一間被罰十次「未依規定公開資訊」，和一間被罰一次「對幼兒不當對待」，是完全不同的事。'}
+          </li>
+          <li>
+            這份資料<strong>不是政府開放資料</strong>
+            {'，來自民間長期備份全國教保資訊網的公告。官方公告有時效、過期會下架，因此這裡'}
+            <strong>可能包含官方目前已經查不到的舊紀錄</strong>。
+          </li>
+          <li>{'裁罰是過去某個時間點的事，不代表現在的狀況。園所可能早已改善，負責人與教保人員也可能已更換。'}</li>
+          <li>
+            {`沒有出現在這份清單上的 ${(pen.ofPreschools - list.length).toLocaleString('en-US')} 間，不等於從未違規，只表示這份備份裡查不到。`}
+          </li>
+          <li>{'托嬰中心（382 間）歸衛生福利部管，沒有對應的備份資料，完全不在這份清單內。'}</li>
+        </ul>
+        <p>
+          要確認任何一間的現況，請以
+          <a href={officialUrl.url} target="_blank" rel="noopener nofollow">全國教保資訊網 ↗</a>
+          的即時查詢為準。
+        </p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>違規類型</h2>
+        <p class="note">
+          {`點類型可以篩選下方清單。有 ${cats.find((c) => c.category === UNSPECIFIED)?.count ?? 0} 筆的原始公告只寫了法條條號、沒有寫違規內容——這些裁罰橫跨多個法律版本，同一個條號在不同版本指向不同條文，本站不從條號推論內容。`}
+        </p>
+      </div>
+      <div class="filterbar" role="group" aria-label="依違規類型篩選">
+        <button type="button" data-cat="all" aria-pressed="true">全部 {list.length} 間</button>
+        {
+          cats.map((c) => (
+            <button type="button" data-cat={c.category} aria-pressed="false">
+              {c.category} {c.count}
+            </button>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>依行政區</h2>
+      </div>
+      <div class="filterbar" role="group" aria-label="依行政區篩選">
+        <button type="button" data-dist="all" aria-pressed="true">全部行政區</button>
+        {
+          districts.map((d) => (
+            <button type="button" data-dist={d} aria-pressed="false">
+              {d}
+            </button>
+          ))
+        }
+      </div>
+
+      <p class="note" id="count" aria-live="polite">共 {list.length} 間</p>
+
+      <ul class="stack-sm" id="pen-list">
+        {
+          list.map((i) => (
+            <li
+              class="pen-row"
+              data-district={i.district}
+              data-cats={i.categories.join('|')}
+            >
+              <a class="pen-title" href={institutionPath(i.id)}>
+                {i.name}
+              </a>
+              <div class="pen-meta">
+                <span class="tag" style={`background:${tagColor(i.ownership)}`}>{i.ownership}</span>
+                <span>{i.district}</span>
+                <span>最近 {i.latest}</span>
+                <span>{i.count} 筆</span>
+                {i.fines > 0 && <span>罰鍰 {i.fines.toLocaleString('en-US')} 元</span>}
+              </div>
+              <div class="pen-cats">
+                {i.categories.map((c) => (
+                  <span class={c === UNSPECIFIED ? 'chip chip-quiet' : 'chip'}>{c}</span>
+                ))}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="card empty" id="no-match" hidden>
+        <h3>這個條件下沒有機構</h3>
+        <p>換一個條件看看。</p>
+        <button class="btn" type="button" data-cat="all" data-dist="all">看全部 {list.length} 間</button>
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <DataNotice sources={noticeSources} />
+    </section>
+  </div>
+</Base>
+
+<script>
+  const rows = [...document.querySelectorAll('.pen-row')];
+  const counter = document.getElementById('count');
+  const emptyState = document.getElementById('no-match');
+  const catButtons = [...document.querySelectorAll('[data-cat]')];
+  const distButtons = [...document.querySelectorAll('[data-dist]')];
+
+  let cat = 'all';
+  let dist = 'all';
+
+  function render() {
+    let shown = 0;
+    for (const row of rows) {
+      const ok =
+        (cat === 'all' || row.dataset.cats.split('|').includes(cat)) &&
+        (dist === 'all' || row.dataset.district === dist);
+      row.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const b of catButtons) {
+      if (b.dataset.cat !== undefined && b.closest('.filterbar')) {
+        b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+      }
+    }
+    for (const b of distButtons) {
+      if (b.dataset.dist !== undefined && b.closest('.filterbar')) {
+        b.setAttribute('aria-pressed', String(b.dataset.dist === dist));
+      }
+    }
+    counter.textContent = shown ? `共 ${shown} 間` : '';
+    emptyState.hidden = shown > 0;
+  }
+
+  for (const b of catButtons) {
+    b.addEventListener('click', () => {
+      cat = b.dataset.cat;
+      if (b.dataset.dist) dist = b.dataset.dist;
+      render();
+    });
+  }
+  for (const b of distButtons) {
+    b.addEventListener('click', () => {
+      dist = b.dataset.dist;
+      if (b.dataset.cat) cat = b.dataset.cat;
+      render();
+    });
+  }
+  render();
+</script>
+
+<style>
+  .caveat {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .caveat p {
+    margin: 0;
+  }
+  .caveat strong {
+    color: var(--ink);
+  }
+  .caveat ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 18px;
+    list-style: disc;
+  }
+
+  .pen-row {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pen-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .pen-title:hover {
+    color: var(--accent-dark);
+  }
+  .pen-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .pen-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .chip {
+    font-size: 11.5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid #c9a889;
+    color: #8a5a3c;
+    white-space: nowrap;
+  }
+  .chip-quiet {
+    border-color: var(--line);
+    color: var(--ink-soft);
+  }
+</style>

@@ -85,6 +85,73 @@ export function feeByOwnership() {
 export const CHART_MIN_SAMPLE = 10;
 export const chartableFees = () => feeByOwnership().filter((f) => f.count >= CHART_MIN_SAMPLE);
 
+/**
+ * 裁罰的違規分類。
+ *
+ * 只依「來源公告自己寫的文字」分類，不從條號推論。
+ *
+ * 試過用資料自學「條號 → 類型」的對照，結果不可靠：`第26條第2項` 底下同時出現
+ * 「違反幼童專用車之相關規定」與「進用未具資格者從事教保服務」兩種完全不同的違規，
+ * 而該條號有 162 筆只寫條號。原因是這些裁罰橫跨多個法律版本（106 制定、107 修正、
+ * 111 修正重編條號），同一組數字在不同版本指向不同條文。
+ *
+ * 猜錯的代價不對稱——把娃娃車違規標成「對幼兒不當對待」，或反過來，都是在誤導家長。
+ * 所以沒寫內容的就誠實說沒寫，並附官方查詢連結。
+ */
+const CATEGORY_RULES = [
+  ['對幼兒不當對待', /不當對待|不當管教|體罰|身心虐待|傷害幼兒/],
+  ['幼童專用車', /幼童專用車|娃娃車|載運/],
+  ['人員資格與配置', /未具資格|不適任|資格|配置.{0,4}教保服務人員|專任/],
+  ['超收人數或違規擴充', /超收|招收人數|擴充/],
+  ['編班與師生比', /師生比|編班|班級人數|年齡規定/],
+  ['收費違規', /收費|費用|退費/],
+  ['衛生保健與服務禁止規定', /禁止規定|衛生保健|教保及照顧服務/],
+  ['妨礙檢查或評鑑', /規避|妨礙|拒絕檢查|評鑑/],
+  ['未經核准提供服務', /未經核准/],
+  ['行政與資訊揭露', /公開資訊|備查|書面契約|報.{0,4}主管機關/],
+];
+
+export const UNSPECIFIED = '原始公告未載明內容';
+
+export function penaltyCategory(description) {
+  // 條號前綴不參與比對，只看後面的敘述
+  const body = (description || '').replace(/^第\d+條(第\d+項)?[-－—\s]*/, '');
+  if (body.length < 3) return UNSPECIFIED;
+  for (const [name, pattern] of CATEGORY_RULES) if (pattern.test(body)) return name;
+  return '其他違規';
+}
+
+/** 有裁罰紀錄的機構，供裁罰總覽頁使用 */
+export function penalisedInstitutions() {
+  return preschools
+    .filter((i) => i.penalties.length)
+    .map((i) => {
+      const cats = [...new Set(i.penalties.map((p) => penaltyCategory(p.description)))];
+      const dates = i.penalties.map((p) => p.date).filter(Boolean).sort();
+      return {
+        id: i.id,
+        name: i.name,
+        district: i.district,
+        ownership: i.ownership,
+        count: i.penalties.length,
+        latest: dates[dates.length - 1] || '',
+        categories: cats,
+        fines: i.penalties.reduce((s, p) => s + (p.fineAmount || 0), 0),
+      };
+    })
+    // 依最近一次裁罰排序，不依筆數——依筆數排等於做出一份「最壞排行榜」，
+    // 而筆數多寡與違規輕重無關。時間序至少能回答「最近有沒有事」。
+    .sort((a, b) => b.latest.localeCompare(a.latest));
+}
+
+/** 各違規類型的筆數 */
+export function penaltyCategories() {
+  const all = preschools.flatMap((i) => i.penalties);
+  return [...countBy(all, (p) => penaltyCategory(p.description))]
+    .sort((a, b) => b[1] - a[1])
+    .map(([category, count]) => ({ category, count }));
+}
+
 /** 裁罰統計 */
 export function penaltyStats() {
   const withPenalty = preschools.filter((i) => i.penalties.length);
