@@ -2,17 +2,26 @@
 import { tagColor, institutionPath, needsCategoryTag } from '../lib/site.js';
 
 const { inst } = Astro.props;
+
+// 卡片的主要動作是「進到整理過的內頁」，不是「跳去 Google」。
+// 先前把 Google 地圖做成唯一看起來可點的元素，結果家長全被帶離站外，
+// 從沒發現內頁。現在整張卡都是進內頁的連結，地圖降為次要小連結。
+const penaltyCount = inst.penalties?.length || 0;
 ---
 
 <li
   class="inst-card"
   data-kind={inst.kind}
   data-ownership={inst.ownership}
+  data-monthly={inst.monthly || ''}
+  data-penalties={penaltyCount}
+  data-name={inst.name}
 >
   <div class="tagrow">
     <span class="tag" style={`background:${tagColor(inst.ownership)}`}>{inst.ownership}</span>
     {needsCategoryTag(inst) && <span class="tag tag-outline">{inst.category}</span>}
     {inst.capacity && <span class="tag tag-outline">收托 {inst.capacity} 人</span>}
+    {penaltyCount > 0 && <span class="tag tag-flag">裁罰 {penaltyCount} 筆</span>}
   </div>
 
   <a class="title" href={institutionPath(inst.id)}>{inst.name}</a>
@@ -22,9 +31,77 @@ const { inst } = Astro.props;
     <span>{inst.tel}</span>
   </div>
 
+  {
+    inst.monthly && (
+      <p class="fee">
+        平均月費 <strong>{inst.monthly.toLocaleString('en-US')}</strong> 元
+        <span class="fee-note">推算值</span>
+      </p>
+    )
+  }
+
   <div class="actions">
-    <a class="btn btn-quiet" href={inst.mapUrl} target="_blank" rel="noopener nofollow">
-      在 Google 地圖看評價 ↗
-    </a>
+    <span class="go">看整理後的資料 →</span>
+    <a class="map" href={inst.mapUrl} target="_blank" rel="noopener nofollow">Google 地圖 ↗</a>
   </div>
 </li>
+
+<style>
+  /* 整張卡可點：標題連結用 ::after 覆蓋整張卡，地圖連結拉到上層維持可點。
+     這樣既保有語意正確的單一主連結，又讓整塊都是點擊目標。 */
+  .inst-card {
+    position: relative;
+  }
+  .inst-card .title::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-card);
+  }
+  .inst-card .map {
+    position: relative;
+    z-index: 1;
+  }
+
+  .fee {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .fee strong {
+    font-size: 15px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .fee-note {
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  .actions {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 2px;
+  }
+  .go {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--accent-dark);
+  }
+  .inst-card:hover .go {
+    color: #6a5039;
+  }
+  .map {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .map:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
+  }
+</style>

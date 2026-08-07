@@ -1,0 +1,98 @@
+---
+/**
+ * 收費。同樣是「沒有資料時也要出現並說明原因」——
+ * 家長點進來最想知道的兩件事就是收費和裁罰，兩者都不能只是默默不顯示。
+ */
+import data from '../data/institutions.json';
+
+const { inst, feeLink } = Astro.props;
+
+const available = Boolean(data.archive && inst.kind === 'preschool');
+const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
+---
+
+<section class="stack">
+  <h2>收費</h2>
+
+  {
+    available && inst.monthly ? (
+      <div class="card stack-sm">
+        <p class="figure">
+          <strong>{inst.monthly.toLocaleString('en-US')}</strong> 元 <span>／ 每月平均</span>
+        </p>
+        <p class="note">
+          {flatCap
+            ? `${inst.ownership}幼兒園的收費由政策訂定上限，全市同類型都是這個數字，不是這間園的實際結算金額。`
+            : '依註冊繳費單推算的每月平均，含月費與代辦費。實際繳費會因學期、餐點、才藝、延托而不同。'}
+        </p>
+        {feeLink && (
+          <p class="note">
+            官方收費規定見
+            <a href={feeLink.url} target="_blank" rel="noopener nofollow">
+              {feeLink.source} ↗
+            </a>
+            ，確切金額請直接向園所確認。
+          </p>
+        )}
+      </div>
+    ) : (
+      <div class="state">
+        <p>
+          <strong>
+            {inst.kind === 'preschool'
+              ? '這間園所沒有收費資料。'
+              : `本站沒有${inst.category}的收費資料。`}
+          </strong>
+        </p>
+        <p>
+          {inst.kind === 'preschool'
+            ? '民間備份的資料裡查不到這間園的繳費單，可能是尚未申報或格式無法解析。'
+            : '幼兒園的收費有民間備份的繳費單資料可用，托嬰中心目前沒有任何結構化來源，本站無法整理。'}
+        </p>
+        {feeLink && (
+          <p>
+            收費規定請見
+            <a href={feeLink.url} target="_blank" rel="noopener nofollow">
+              {feeLink.source} ↗
+            </a>
+            ，實際金額直接向機構詢問最準。
+          </p>
+        )}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .figure {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .figure strong {
+    font-size: 30px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+  .figure span {
+    font-size: 13px;
+  }
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+</style>

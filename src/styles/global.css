@@ -259,6 +259,14 @@ main {
   border: 1px solid var(--line);
   font-weight: 500;
 }
+/* 有裁罰紀錄的標記。刻意用中性的暖褐而非警示紅——裁罰輕重差距極大，
+   不該在列表上就把一間園染成危險色，家長點進去看內容才是我們要的行為。 */
+.tag-flag {
+  background: transparent;
+  color: #8a5a3c;
+  border: 1px solid #c9a889;
+  font-weight: 600;
+}
 
 .tagrow {
   display: flex;
@@ -549,4 +557,87 @@ main {
   main {
     padding: 16px 0 72px;
   }
+}
+
+/* ---------- 列表工具列（排序） ---------- */
+
+.listbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sortpick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.sortpick select {
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px 10px;
+}
+
+/* ---------- 搜尋 ---------- */
+
+.search {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.search input {
+  font: inherit;
+  font-size: 16px; /* 小於 16px 時 iOS Safari 會自動放大頁面 */
+  width: 100%;
+  padding: 13px 15px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-btn);
+  background: var(--card);
+  color: var(--ink);
+}
+.search input::placeholder {
+  color: var(--ink-soft);
+}
+.search input:focus {
+  border-color: var(--accent);
+}
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.search-results a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 11px 14px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--ink);
+}
+.search-results a:hover {
+  color: var(--accent-dark);
+}
+.search-results .nm {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.search-results .sub {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.search-status {
+  font-size: 13px;
+  color: var(--ink-soft);
 }

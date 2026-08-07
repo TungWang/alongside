@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, districtPath } from '../lib/site.js';
+
+const title = `搜尋機構｜${SITE_NAME}`;
+const description = `直接輸入機構名稱，在新北市 ${data.total} 間立案幼兒園與托嬰中心中尋找。`;
+---
+
+<Base title={title} description={description} path="/搜尋/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <h1>搜尋機構</h1>
+        <p class="muted">
+          {`輸入機構名稱的任何一段就行，例如「悅淨」或「大觀」。共 ${data.total.toLocaleString('en-US')} 間可搜尋。`}
+        </p>
+      </div>
+
+      <div class="search">
+        <label class="visually-hidden" for="q">機構名稱</label>
+        <input id="q" type="search" autocomplete="off" placeholder="輸入機構名稱…" />
+        <p class="search-status" id="status">索引載入中…</p>
+        <div class="search-results" id="results"></div>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>或從行政區找</h2>
+        <p class="note">不知道確切名稱時，從自己那一區看起比較快。</p>
+      </div>
+      <nav class="district-grid" aria-label="行政區">
+        {data.districts.map((d) => <a href={districtPath(d)}>{d}</a>)}
+      </nav>
+    </section>
+  </div>
+</Base>
+
+<script>
+  // 索引在使用者聚焦搜尋框時才載入，不拖慢首次進頁。
+  // 全站純靜態，這裡只是抓一個 JSON 檔在瀏覽器端比對，不需要伺服器。
+  const input = document.getElementById('q');
+  const status = document.getElementById('status');
+  const results = document.getElementById('results');
+  const MAX = 30;
+
+  let index = null;
+  let loading = null;
+
+  function load() {
+    if (!loading) {
+      loading = fetch('/search-index.json')
+        .then((r) => {
+          if (!r.ok) throw new Error(String(r.status));
+          return r.json();
+        })
+        .then((d) => {
+          index = d;
+          status.textContent = '準備好了，開始輸入吧。';
+          if (input.value) run();
+        })
+        .catch(() => {
+          status.textContent = '索引載入失敗，請重新整理頁面，或改從下方的行政區找。';
+        });
+    }
+    return loading;
+  }
+
+  // 名稱裡的空白與括號寫法不一，比對前先抹平，讓「悅淨幼兒園」也能配到「悅淨 幼兒園」
+  const norm = (s) => s.replace(/[\s（）()]/g, '');
+
+  function run() {
+    const q = norm(input.value.trim());
+    results.innerHTML = '';
+
+    if (!q) {
+      status.textContent = index ? '準備好了，開始輸入吧。' : '索引載入中…';
+      return;
+    }
+    if (!index) {
+      status.textContent = '索引載入中…';
+      return;
+    }
+
+    const hits = index.filter((it) => norm(it.n).includes(q) || it.d.includes(q));
+    if (!hits.length) {
+      status.textContent = `找不到符合「${input.value.trim()}」的機構。試試少打幾個字，或從下方行政區找。`;
+      return;
+    }
+
+    status.textContent =
+      hits.length > MAX ? `找到 ${hits.length} 間，先顯示前 ${MAX} 間` : `找到 ${hits.length} 間`;
+
+    const frag = document.createDocumentFragment();
+    for (const it of hits.slice(0, MAX)) {
+      const a = document.createElement('a');
+      a.href = `/i/${encodeURIComponent(it.i)}/`;
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = it.n;
+      const sub = document.createElement('span');
+      sub.className = 'sub';
+      sub.textContent = `${it.d}　${it.c}${it.m ? `　平均月費 ${it.m.toLocaleString('en-US')} 元` : ''}`;
+      a.append(nm, sub);
+      frag.append(a);
+    }
+    results.append(frag);
+  }
+
+  input.addEventListener('focus', load, { once: true });
+  input.addEventListener('input', () => {
+    load();
+    run();
+  });
+  load();
+</script>
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

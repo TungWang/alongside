@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PenaltyList from '../../components/PenaltyList.astro';
+import FeeBlock from '../../components/FeeBlock.astro';
 import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
 import {
@@ -29,6 +30,7 @@ const authorityName = inst.authority === 'edu' ? '新北市政府教育局' : '�
 // 月費與裁罰來自民間封存，只有幼兒園有；archive 為 null 表示本次建置未採用該來源
 const enriched = data.archive && inst.kind === 'preschool';
 const penaltyLink = links.find((l) => l.label.includes('裁罰'));
+const feeLink = links.find((l) => l.label.includes('收'));
 
 const dataset = datasetFor(inst.category);
 const noticeSources = [
@@ -131,17 +133,6 @@ const jsonLd = {
           )
         }
         {
-          enriched && inst.monthly && (
-            <div>
-              <dt>平均月費</dt>
-              <dd>
-                {inst.monthly.toLocaleString('en-US')} 元
-                <span class="hint">含月費、代辦費等，依註冊繳費單推算的每月平均</span>
-              </dd>
-            </div>
-          )
-        }
-        {
           enriched && inst.floorArea && (
             <div>
               <dt>室內面積</dt>
@@ -183,15 +174,15 @@ const jsonLd = {
       }
     </section>
 
-    {
-      enriched && inst.penalties.length > 0 && (
-        <PenaltyList
-          penalties={inst.penalties}
-          officialUrl={penaltyLink?.url}
-          officialLabel={penaltyLink?.source}
-        />
-      )
-    }
+    <FeeBlock inst={inst} feeLink={feeLink} />
+
+    <PenaltyList
+      penalties={inst.penalties}
+      available={enriched}
+      kindLabel={inst.category}
+      officialUrl={penaltyLink?.url}
+      officialLabel={penaltyLink?.source}
+    />
 
     <section class="stack">
       <div class="stack-sm">

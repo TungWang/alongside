@@ -1,9 +1,14 @@
 ---
 /**
- * 裁罰紀錄。刻意不做成表格——手機上一列六欄會擠到不能讀，
- * 改成每筆一個區塊，日期與處分先出現，法條與裁處書字號放小字備查。
+ * 裁罰紀錄。
+ *
+ * 這個區塊在「沒有紀錄」時也要出現——先前只在有紀錄時渲染，結果家長點進來
+ * 看不到任何與裁罰有關的東西，無從判斷是「查過、沒有」還是「這站根本沒查」。
+ * 沒查到和沒有，對家長是完全不同的資訊。
+ *
+ * 表格刻意不用 <table>：手機上一列六欄擠到不能讀，改成每筆一個區塊。
  */
-const { penalties, officialUrl, officialLabel } = Astro.props;
+const { penalties = [], officialUrl, officialLabel, available = true, kindLabel } = Astro.props;
 
 const fined = penalties.filter((p) => p.fineAmount);
 const totalFine = fined.reduce((sum, p) => sum + p.fineAmount, 0);
@@ -13,58 +18,117 @@ const span = years.length ? [Math.min(...years), Math.max(...years)] : null;
 
 <section class="stack">
   <div class="stack-sm">
-    <h2>裁罰紀錄（{penalties.length} 筆）</h2>
-    <p class="note">
-      {
-        span
-          ? `${span[0]} 至 ${span[1]} 年間，共 ${penalties.length} 筆${totalFine ? `，罰鍰合計 ${totalFine.toLocaleString('en-US')} 元` : ''}。`
-          : `共 ${penalties.length} 筆。`
-      }
-    </p>
-  </div>
-
-  <div class="caveat">
-    <p><strong>看這份紀錄之前，有幾件事想先說</strong></p>
-    <ul>
-      <li>這份資料<strong>不是政府開放資料</strong>，是民間長期備份全國教保資訊網公告所得。官方公告有時效，過期會下架，因此這裡<strong>可能包含官方目前已經查不到的舊紀錄</strong>。</li>
-      <li>裁罰是過去某個時間點的事，<strong>不代表現在的狀況</strong>。園所可能早已改善，負責人與教保人員也可能已更換。</li>
-      <li>違規的輕重差很多——「收費未報備查」和「對幼兒不當對待」是完全不同的事，請看清楚違反內容，別只看筆數。</li>
-      <li>沒有紀錄不等於沒問題，只表示這份備份裡沒有。</li>
-    </ul>
+    <h2>裁罰紀錄{available && penalties.length > 0 ? `（${penalties.length} 筆）` : ''}</h2>
     {
-      officialUrl && (
-        <p>
-          要確認現況，請以
-          <a href={officialUrl} target="_blank" rel="noopener nofollow">
-            {officialLabel} ↗
-          </a>
-          的即時查詢為準。
+      available && penalties.length > 0 && (
+        <p class="note">
+          {span
+            ? `${span[0]} 至 ${span[1]} 年間，共 ${penalties.length} 筆${totalFine ? `，罰鍰合計 ${totalFine.toLocaleString('en-US')} 元` : ''}。`
+            : `共 ${penalties.length} 筆。`}
         </p>
       )
     }
   </div>
 
-  <ol class="penalties">
-    {
-      penalties.map((p) => (
-        <li>
-          <div class="head">
-            <span class="date">{p.date}</span>
-            <span class={p.fineAmount ? 'sanction fine' : 'sanction'}>{p.sanction}</span>
-          </div>
-          <p class="what">{p.description || p.statute}</p>
-          <p class="ref">
-            {p.description && p.statute ? `${p.statute}　` : ''}
-            {p.docNo}
-            {p.role ? `　受處分：${p.role}` : ''}
+  {
+    !available && (
+      <div class="state">
+        <p>
+          <strong>本站沒有{kindLabel}的裁罰資料。</strong>
+        </p>
+        <p>
+          {`幼兒園歸教育部管，有民間長期備份的公告可用；${kindLabel}歸衛生福利部管，目前沒有任何結構化、可程式取用的來源，本站無法整理。這不代表這間機構有或沒有紀錄，只表示我們查不到。`}
+        </p>
+        {officialUrl && (
+          <p>
+            請直接到
+            <a href={officialUrl} target="_blank" rel="noopener nofollow">
+              {officialLabel} ↗
+            </a>
+            查詢。上方有「複製機構名稱」可以直接貼過去。
           </p>
-        </li>
-      ))
-    }
-  </ol>
+        )}
+      </div>
+    )
+  }
+
+  {
+    available && penalties.length === 0 && (
+      <div class="state">
+        <p>
+          <strong>在備份資料中查無這間園所的裁罰紀錄。</strong>
+        </p>
+        <p>
+          {'查無不等於從未違規——官方公告有時效，過期會下架，備份也可能有遺漏。這只表示這份資料裡沒有。'}
+        </p>
+        {officialUrl && (
+          <p>
+            要確認現況，請以
+            <a href={officialUrl} target="_blank" rel="noopener nofollow">
+              {officialLabel} ↗
+            </a>
+            的即時查詢為準。
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  {
+    available && penalties.length > 0 && (
+      <>
+        <div class="caveat">
+          <p>
+            <strong>看這份紀錄之前，有幾件事想先說</strong>
+          </p>
+          <ul>
+            <li>
+              這份資料<strong>不是政府開放資料</strong>
+              {'，是民間長期備份全國教保資訊網公告所得。官方公告有時效，過期會下架，因此這裡'}
+              <strong>可能包含官方目前已經查不到的舊紀錄</strong>。
+            </li>
+            <li>
+              {'裁罰是過去某個時間點的事，'}
+              <strong>不代表現在的狀況</strong>
+              {'。園所可能早已改善，負責人與教保人員也可能已更換。'}
+            </li>
+            <li>{'違規的輕重差很多——「收費未報備查」和「對幼兒不當對待」是完全不同的事，請看清楚違反內容，別只看筆數。'}</li>
+            <li>{'沒有紀錄不等於沒問題，只表示這份備份裡沒有。'}</li>
+          </ul>
+          {officialUrl && (
+            <p>
+              要確認現況，請以
+              <a href={officialUrl} target="_blank" rel="noopener nofollow">
+                {officialLabel} ↗
+              </a>
+              的即時查詢為準。
+            </p>
+          )}
+        </div>
+
+        <ol class="penalties">
+          {penalties.map((p) => (
+            <li>
+              <div class="head">
+                <span class="date">{p.date}</span>
+                <span class={p.fineAmount ? 'sanction fine' : 'sanction'}>{p.sanction}</span>
+              </div>
+              <p class="what">{p.description || p.statute}</p>
+              <p class="ref">
+                {p.description && p.statute ? `${p.statute}　` : ''}
+                {p.docNo}
+                {p.role ? `　受處分：${p.role}` : ''}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </>
+    )
+  }
 </section>
 
 <style>
+  .state,
   .caveat {
     background: #f3ece0;
     border-radius: var(--radius-card);
@@ -76,9 +140,11 @@ const span = years.length ? [Math.min(...years), Math.max(...years)] : null;
     line-height: 1.75;
     color: var(--ink-soft);
   }
+  .state p,
   .caveat p {
     margin: 0;
   }
+  .state strong,
   .caveat strong {
     color: var(--ink);
   }
@@ -97,7 +163,6 @@ const span = years.length ? [Math.min(...years), Math.max(...years)] : null;
     padding: 0;
     margin: 0;
     list-style: none;
-    counter-reset: none;
   }
   .penalties li {
     background: var(--card);

@@ -64,6 +64,21 @@
 .sec-head h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.005em}
 .sec-head p{margin:0;color:var(--page-muted);font-size:15px}
 
+/* 已被實作取代的提示 */
+.superseded{
+  background:var(--page-card);border:1px solid var(--page-line);
+  border-left:3px solid var(--page-accent);border-radius:12px;
+  padding:18px 20px;display:flex;flex-direction:column;gap:10px;
+  font-size:14px;line-height:1.75;color:var(--page-muted);max-width:76ch;
+}
+.superseded p{margin:0}
+.superseded strong{color:var(--page-fg)}
+.superseded ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.superseded code{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;
+  background:var(--page-chip);padding:1px 5px;border-radius:4px;color:var(--page-fg);
+}
+
 /* 色票 */
 .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
 .sw{
@@ -262,11 +277,24 @@ td code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;
 <div class="wrap">
 
   <header class="masthead">
-    <div class="eyebrow">UI / UX 示意圖 · 新北市首發版</div>
+    <div class="eyebrow">UI / UX 示意圖 · 開發前版本</div>
     <h1>育兒同行 Alongside</h1>
     <p>依規劃文件〈附錄：設計規格〉繪製的四個核心畫面。示意內容全部使用新北市開放資料的真實機構，非填充文字。</p>
     <div class="rule"></div>
   </header>
+
+  <section class="sec">
+    <div class="superseded">
+      <p><strong>這份是動工前的示意圖，網站已經做好且與此不同。</strong></p>
+      <p>實際站台：<a href="https://alongside-53f07.web.app/">alongside-53f07.web.app</a>。以下畫面保留作為設計過程紀錄，但這幾處已經改掉：</p>
+      <ul>
+        <li><strong>色碼全部調深。</strong>示意圖用的 <code>#B08863</code> 等值在奶油底上對比只有 2.9–4.3:1，未達 WCAG AA 的 4.5:1，實作時在同色相上降明度至達標。</li>
+        <li><strong>首頁改用行政區連結網格</strong>，不是下拉選單——連結能讓 Google 從首頁爬到全部 29 個行政區頁，選單不行。</li>
+        <li><strong>卡片主要動作改為進入內頁。</strong>示意圖把「在 Google 地圖看評價」做成卡上唯一的按鈕，實測會讓人以為那是唯一可點的東西，全被帶離站外，從沒發現內頁。現在整張卡都是進內頁的連結，地圖降為次要小連結。</li>
+        <li><strong>多了月費、裁罰紀錄與統計圖表</strong>，以及 <code>/概況/</code>、<code>/授權/</code>、<code>/搜尋/</code> 三個示意圖沒有的頁面。原因見規劃文件的〈實作後的修訂〉。</li>
+      </ul>
+    </div>
+  </section>
 
   <!-- 色票 -->
   <section class="sec">

@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_FILE = path.join(ROOT, 'src/data/institutions.json');
+const INDEX_DIR = path.join(ROOT, 'public');
 
 const BASE = 'https://data.ntpc.gov.tw/api/datasets';
 const PAGE_SIZE = 500;
@@ -446,6 +447,16 @@ async function main() {
 
   console.log('\n  補充月費與裁罰（民間封存）…');
   const meta = await enrich(institutions);
+
+  // 跟裁罰抓取同一類的防護：上游若改欄位名或資料結構，比對會靜靜地全部落空，
+  // 整站的月費與裁罰就無聲消失。與其發布一個「看起來正常但少了一半資料」的網站，
+  // 不如讓建置失敗。實測正常情況是 100% 對上。
+  const preschoolCount = institutions.filter((i) => i.kind === 'preschool').length;
+  if (meta.archive && meta.enriched < preschoolCount * 0.8) {
+    throw new Error(
+      `封存資料只對上 ${meta.enriched} / ${preschoolCount} 間，低於 80%，疑似上游格式變更，中止建置`,
+    );
+  }
   if (meta.archive) {
     console.log(
       `  對上 ${meta.enriched} 間，其中 ${meta.institutionsWithPenalty} 間有裁罰、共 ${meta.penaltyCount} 筆（封存更新於 ${meta.archive.updatedAt}）`,
@@ -469,6 +480,20 @@ async function main() {
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(payload, null, 2) + '\n');
+
+  // 搜尋索引：只放比對與顯示需要的欄位，鍵名縮到一個字母。
+  // 放 public/ 讓它原樣進 dist，由搜尋頁在使用者互動時才抓，不影響首次載入。
+  const index = institutions.map((i) => ({
+    i: i.id,
+    n: i.name,
+    d: i.district,
+    c: i.category,
+    m: i.monthly || 0,
+  }));
+  await fs.mkdir(INDEX_DIR, { recursive: true });
+  await fs.writeFile(path.join(INDEX_DIR, 'search-index.json'), JSON.stringify(index));
+  const kb = Math.round(Buffer.byteLength(JSON.stringify(index)) / 1024);
+  console.log(`搜尋索引 ${index.length} 筆、${kb} KB → public/search-index.json`);
 
   console.log(`\n共 ${institutions.length} 間、${districts.length} 個行政區 → ${path.relative(ROOT, OUT_FILE)}`);
 }

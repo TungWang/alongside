@@ -59,13 +59,18 @@ g0v 江明宗長期以自動化腳本備份全國教保資訊網，提供政府�
 ## 指令
 
 ```bash
-npm install          # 安裝相依套件
-npm run fetch        # 只抓開放資料，更新 src/data/institutions.json
-npm run dev          # 本機開發伺服器 http://localhost:4321
-npm run build        # 抓資料 + 建置到 dist/
-npm run build:offline # 用現有 institutions.json 建置，不連網
-npm run preview      # 預覽 dist/ 的建置結果
+npm install           # 安裝相依套件
+npm run fetch         # 只抓資料，更新 institutions.json 與搜尋索引
+npm run dev           # 本機開發伺服器 http://localhost:4321
+npm run build         # 抓資料 + 建置 + 驗證
+npm run build:offline # 用現有資料建置 + 驗證，不連網
+npm run verify        # 只驗證 dist/
+npm run preview       # 預覽 dist/ 的建置結果
 ```
+
+`npm run verify` 的每一條檢查都對應一個真的發生過的問題（地址被誤切、罰鍰金額解析錯誤、
+`[hidden]` 被樣式蓋掉導致篩選失效、個資外洩、主管機關連結給錯……），
+不是理論風險。建置與 CI 都會跑，失敗就中止部署。
 
 ## 架構
 
@@ -73,14 +78,29 @@ npm run preview      # 預覽 dist/ 的建置結果
 scripts/fetch-data.js   下載開放資料 + 封存資料 → 正規化 → src/data/institutions.json
 src/lib/site.js         全站設定：網址、標籤配色、官方連結對照表
 src/lib/stats.js        建置期計算所有統計，瀏覽器端不做任何運算
+scripts/verify.js       對建置產物做 23 項回歸檢查
 src/pages/index.astro   首頁（29 個行政區入口 + 全市概覽圖表）
 src/pages/概況.astro     新北市托育概況，完整圖表與資料來源說明
-src/pages/d/[district]  行政區列表頁，共 29 頁
+src/pages/搜尋.astro     機構名稱搜尋（前端比對 public/search-index.json）
+src/pages/授權.astro     資料來源與授權聲明
+src/pages/d/[district]  行政區列表頁，共 29 頁；可依月費排序、依屬性與裁罰篩選
 src/pages/i/[id]        機構頁，共 1,493 頁 ← SEO 主戰場
 dist/                   建置產物，直接部署到 Firebase Hosting
 ```
 
-建置產出 1,525 頁、約 20 MB。`npm run fetch` 約 20 秒（含 422 個裁罰明細檔）。
+建置產出 1,527 頁、約 20 MB。`npm run fetch` 約 20 秒（含 422 個裁罰明細檔）。
+
+### 列表卡片的主要動作是「進內頁」
+
+早期版本把「在 Google 地圖看評價」做成卡片上唯一像按鈕的元素，實測結果是使用者
+全部點它、被帶離網站，從沒發現有整理過的內頁。現在整張卡是進內頁的連結
+（標題連結以 `::after` 覆蓋整張卡），Google 地圖降為右下角的次要小連結。
+
+### 沒有資料時也要說「沒有」
+
+機構頁的收費與裁罰兩個區塊**一律出現**，即使沒有資料。
+「查過、沒有」和「這站根本沒查」對家長是完全不同的資訊——
+早期版本只在有資料時渲染，結果托嬰中心的頁面上什麼都看不到，無從判斷。
 
 ## 兩個容易踩到的地方
 

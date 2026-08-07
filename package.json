@@ -6,8 +6,9 @@
   "scripts": {
     "fetch": "node scripts/fetch-data.js",
     "dev": "astro dev",
-    "build": "npm run fetch && astro build",
-    "build:offline": "astro build",
+    "build": "npm run fetch && astro build && npm run verify",
+    "build:offline": "astro build && npm run verify",
+    "verify": "node scripts/verify.js",
     "preview": "astro preview"
   },
   "dependencies": {
