@@ -58,6 +58,38 @@ const SOURCES = [
 ];
 
 // ---------------------------------------------------------------------------
+// 網路
+// ---------------------------------------------------------------------------
+
+/**
+ * 帶重試的 fetch。整條管線每次建置要打四百多次請求，其中大部分打向 GitHub Pages。
+ * 在 CI 上更容易遇到限流與瞬斷——本機跑得過不代表 CI 跑得過，這件事實際發生過：
+ * 新增分齡收費（4 個 CSV，當時沒有重試）之後第一次 CI 就掛掉，本機與乾淨 checkout
+ * 都重現不出來。所以所有對外請求一律走這裡，不要再有裸 fetch。
+ *
+ * 429 與 5xx 視為可重試；其餘 4xx 直接拋出，因為重試也不會變。
+ */
+async function fetchWithRetry(url, { attempts = 4, label = url } = {}) {
+  let last;
+  for (let i = 0; i < attempts; i++) {
+    if (i) await new Promise((r) => setTimeout(r, 600 * 2 ** (i - 1)));
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+      if (res.status === 404) return res; // 由呼叫端決定 404 的意義
+      if (res.status !== 429 && res.status < 500) {
+        throw new Error(`${label}：HTTP ${res.status}（不重試）`);
+      }
+      last = new Error(`${label}：HTTP ${res.status}`);
+    } catch (err) {
+      if (/不重試/.test(err.message)) throw err;
+      last = err;
+    }
+  }
+  throw new Error(`${label}：重試 ${attempts} 次後仍失敗——${last?.message}`);
+}
+
+// ---------------------------------------------------------------------------
 // 文字清理
 // ---------------------------------------------------------------------------
 
@@ -153,8 +185,7 @@ async function fetchAll(oid) {
   const rows = [];
   for (let page = 0; ; page++) {
     const url = `${BASE}/${oid}/json?page=${page}&size=${PAGE_SIZE}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText} — ${url}`);
+    const res = await fetchWithRetry(url, { label: `開放資料 ${oid} 第 ${page} 頁` });
     const batch = await res.json();
     if (!Array.isArray(batch) || batch.length === 0) break;
     rows.push(...batch);
@@ -314,20 +345,9 @@ async function mapLimit(items, limit, fn) {
 async function fetchPenalties(title) {
   const url = `${ARCHIVE}/data/punish/${encodeURIComponent('新北市')}/${encodeURIComponent(title)}.json`;
 
-  let lastError;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    if (attempt) await new Promise((r) => setTimeout(r, 400 * attempt));
-    try {
-      const res = await fetch(url);
-      if (res.status === 404) return []; // 明確地「這間沒有紀錄」
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const rows = await res.json();
-      return toPenaltyRows(rows);
-    } catch (err) {
-      lastError = err;
-    }
-  }
-  throw new Error(`裁罰明細抓取失敗（${title}）：${lastError?.message}`);
+  const res = await fetchWithRetry(url, { label: `裁罰明細（${title}）` });
+  if (res.status === 404) return []; // 明確地「這間沒有紀錄」
+  return toPenaltyRows(await res.json());
 }
 
 function toPenaltyRows(rows) {
@@ -352,7 +372,7 @@ function toPenaltyRows(rows) {
 }
 
 async function fetchArchive() {
-  const res = await fetch(`${ARCHIVE}/preschools.json`);
+  const res = await fetchWithRetry(`${ARCHIVE}/preschools.json`, { label: '封存主檔' });
   if (!res.ok) throw new Error(`封存資料下載失敗：${res.status}`);
 
   // 上游停更就整批不採用，寧可少顯示也不要給家長過期資訊
@@ -425,7 +445,7 @@ async function fetchFees() {
   const byName = new Map();
   for (const age of FEE_AGES) {
     const url = `${ARCHIVE}/data/summary1/${encodeURIComponent('新北市')}/${age}.csv`;
-    const res = await fetch(url);
+    const res = await fetchWithRetry(url, { label: `分齡收費 ${age} 歲` });
     if (!res.ok) throw new Error(`分齡收費下載失敗（${age} 歲）：${res.status}`);
     for (const row of parseCsv(await res.text())) {
       const monthly = toInt(row.monthly1);
@@ -482,7 +502,7 @@ async function enrich(institutions) {
 
   // 只對標記有裁罰的機構抓明細，省掉九成請求
   const targets = preschools.filter((i) => i._hasPenalty);
-  const results = await mapLimit(targets, 8, async (inst) => {
+  const results = await mapLimit(targets, 5, async (inst) => {
     try {
       return await fetchPenalties(inst.name);
     } catch (err) {
