@@ -6,6 +6,7 @@ import {
   primaryFee,
   feeMonths,
   termLabel,
+  afterHoursFee,
 } from '../lib/site.js';
 
 const { inst } = Astro.props;
@@ -18,6 +19,20 @@ const penaltyCount = inst.penalties?.length || 0;
 const fee = primaryFee(inst);
 // 全年收費／學期制是家長訪談中被點名的資訊：學期制代表寒暑假要另外安排
 const term = termLabel(feeMonths(inst));
+const months = feeMonths(inst);
+// 收藏時要存下比較表需要的欄位，這樣收藏頁不必再抓一次資料
+const saved = {
+  id: inst.id,
+  name: inst.name,
+  district: inst.district,
+  ownership: inst.ownership,
+  ages: inst.ages || [],
+  fee: fee?.monthly || null,
+  feeAge: fee?.age || null,
+  afterHours: afterHoursFee(inst),
+  months,
+  penalties: penaltyCount,
+};
 ---
 
 <li
@@ -56,7 +71,10 @@ const term = termLabel(feeMonths(inst));
 
   <div class="actions">
     <span class="go">看整理後的資料 →</span>
-    <a class="map" href={inst.mapUrl} target="_blank" rel="noopener nofollow">Google 地圖 ↗</a>
+    <span class="side">
+      <button class="savebtn save-toggle" type="button" data-entry={JSON.stringify(saved)}>收藏</button>
+      <a class="map" href={inst.mapUrl} target="_blank" rel="noopener nofollow">Google 地圖 ↗</a>
+    </span>
   </div>
 </li>
 
@@ -72,9 +90,15 @@ const term = termLabel(feeMonths(inst));
     inset: 0;
     border-radius: var(--radius-card);
   }
-  .inst-card .map {
+  .inst-card .map,
+  .inst-card .savebtn {
     position: relative;
     z-index: 1;
+  }
+  .side {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .fee {

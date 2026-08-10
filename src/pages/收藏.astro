@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../lib/site.js';
+
+const title = `我的收藏｜${SITE_NAME}`;
+const description = `把有興趣的幼兒園與托嬰中心收起來並排比較：費用、距離、裁罰紀錄一次看。資料只存在你自己的裝置上。`;
+---
+
+<Base title={title} description={description} path="/收藏/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <h1>我的收藏</h1>
+        <p class="muted">
+          {'把有興趣的幾間收起來並排比較。找托育常常要看好幾週，收藏會留著，下次來還在。'}
+        </p>
+      </div>
+
+      <div class="state" id="empty" hidden>
+        <p><strong>還沒有收藏任何機構。</strong></p>
+        <p>{'在列表或機構頁點「收藏」就會出現在這裡。建議先挑三到五間再來比較。'}</p>
+        <p>
+          <a href="/附近/">找我附近的</a>　·
+          <a href="/搜尋/">用名稱搜尋</a>
+        </p>
+      </div>
+
+      <div id="content" hidden>
+        <div class="listbar">
+          <p class="note" id="count"></p>
+          <button class="btn btn-quiet" type="button" id="clear">全部清除</button>
+        </div>
+        <div class="comparewrap">
+          <table class="compare" id="table"></table>
+        </div>
+      </div>
+
+      <p class="note">
+        {'收藏只存在這台裝置的瀏覽器裡，不會上傳到任何地方——本站沒有伺服器也沒有帳號。換手機或清除瀏覽器資料就會消失。'}
+      </p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { read, remove, clear } from '../scripts/shortlist.js';
+
+  const empty = document.getElementById('empty');
+  const content = document.getElementById('content');
+  const table = document.getElementById('table');
+  const count = document.getElementById('count');
+
+  const money = (n) => (n ? `${Number(n).toLocaleString('en-US')} 元` : '—');
+
+  // 並排比較：機構當欄、欄位當列。手機上橫向捲動比縱向堆疊好比較，
+  // 因為比較的重點就是「同一列的數字互相對照」。
+  const ROWS = [
+    { label: '行政區', get: (x) => x.district || '—' },
+    { label: '屬性', get: (x) => x.ownership || '—' },
+    { label: '收托年齡', get: (x) => (x.ages?.length ? `${Math.min(...x.ages)}–${Math.max(...x.ages)} 歲` : '—') },
+    { label: '每月必繳', get: (x) => (x.fee ? `${money(x.fee)}（${x.feeAge} 歲）` : '—') },
+    { label: '課後延托', get: (x) => money(x.afterHours) },
+    { label: '寒暑假', get: (x) => (x.months ? (x.months >= 12 ? '全年收費' : `學期制 ${x.months} 個月`) : '—') },
+    { label: '裁罰紀錄', get: (x) => (x.penalties ? `${x.penalties} 筆` : '無紀錄') },
+  ];
+
+  function render() {
+    const items = read();
+    empty.hidden = items.length > 0;
+    content.hidden = items.length === 0;
+    if (!items.length) return;
+
+    count.textContent = `已收藏 ${items.length} 間`;
+    table.innerHTML = '';
+
+    const head = table.insertRow();
+    head.insertCell().outerHTML = '<th class="corner"></th>';
+    for (const it of items) {
+      const th = document.createElement('th');
+      const a = document.createElement('a');
+      a.href = `/i/${encodeURIComponent(it.id)}/`;
+      a.textContent = it.name;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'drop';
+      btn.textContent = '移除';
+      btn.addEventListener('click', () => {
+        remove(it.id);
+        render();
+      });
+      th.append(a, btn);
+      head.append(th);
+    }
+
+    for (const row of ROWS) {
+      const tr = table.insertRow();
+      const th = document.createElement('th');
+      th.className = 'rowhead';
+      th.textContent = row.label;
+      tr.append(th);
+      for (const it of items) {
+        const td = tr.insertCell();
+        td.textContent = row.get(it);
+      }
+    }
+  }
+
+  document.getElementById('clear').addEventListener('click', () => {
+    if (confirm('確定要清除全部收藏嗎？')) {
+      clear();
+      render();
+    }
+  });
+
+  window.addEventListener('shortlist:change', render);
+  render();
+</script>
+
+<style>
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,236 @@
+---
+/**
+ * 補助試算。
+ *
+ * 全部在建置期就把各種組合算好寫進 HTML，前端只負責切換顯示——
+ * 出生序 3 種 × 一般／低收 2 種 × 最多 4 個年齡＝ 24 組，直接算完比較單純，
+ * 也不必把補助規則搬到瀏覽器端維護第二份。
+ */
+import { FEE_AGES } from '../lib/stats.js';
+import {
+  BIRTH_ORDERS,
+  estimate,
+  isAffordableCare,
+  SUBSIDY_SOURCES,
+  SUBSIDY_UPDATED,
+} from '../lib/subsidy.js';
+
+const { inst } = Astro.props;
+
+const ages = inst.fees ? FEE_AGES.filter((a) => inst.fees[a]) : [];
+const affordable = isAffordableCare(inst.ownership);
+
+// 每一種組合預先算好
+const cells = [];
+for (const order of BIRTH_ORDERS) {
+  for (const low of [false, true]) {
+    for (const age of ages) {
+      cells.push({
+        key: `${order.key}-${low ? 'low' : 'std'}-${age}`,
+        age,
+        ...estimate(inst.ownership, inst.fees[age].monthly, order.key, low),
+      });
+    }
+  }
+}
+const sample = cells[0];
+---
+
+{
+  ages.length > 0 && (
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>你大概要付多少</h2>
+        <p class="note">
+          {affordable
+            ? `${inst.ownership}幼兒園屬於平價教保服務，家長每月繳費有政策上限，園所收費超過的部分由政府直接補給園所。`
+            : `${inst.ownership}幼兒園沒有參與平價教保服務，家長照付園所收費，但可以另外請領育兒津貼。`}
+        </p>
+      </div>
+
+      <div class="card stack-sm">
+        <div class="picker">
+          <label>
+            孩子排行
+            <select id="birth-order">
+              {BIRTH_ORDERS.map((o) => (
+                <option value={o.key}>{o.label}</option>
+              ))}
+            </select>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="low-income" />
+            低收入戶或中低收入戶
+          </label>
+        </div>
+
+        <table class="subtable">
+          <thead>
+            <tr>
+              <th>年齡</th>
+              <th class="num">園所收費</th>
+              <th class="num">{affordable ? '政府補' : '育兒津貼'}</th>
+              <th class="num">你付</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ages.map((age) => (
+              <tr>
+                <td>{age} 歲</td>
+                <td class="num muted-cell">{inst.fees[age].monthly.toLocaleString('en-US')}</td>
+                <td class="num muted-cell" data-cover={age} />
+                <td class="num pay" data-pay={age} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p class="note" id="sub-note">{sample.note}</p>
+      </div>
+
+      <div class="state">
+        <p>
+          <strong>這是估算，不是帳單</strong>
+        </p>
+        <ul>
+          <li>
+            {'依教育部公告的補助標準與園所申報的收費推算（' + SUBSIDY_UPDATED + '）。實際金額以園所通知與主管機關核定為準。'}
+          </li>
+          <li>
+            {affordable
+              ? '不含學生團體保險費、交通費、家長會費與課後延托費，那些不在減免範圍內。'
+              : '園所收費不含交通費與課後延托費；育兒津貼需符合資格並提出申請，不是自動入帳。'}
+          </li>
+          <li>{'補助以實際就讀為前提。公立與非營利名額有限、需要抽籤，抽不到就用不到這個價格。'}</li>
+        </ul>
+        <p>
+          金額出處：
+          {SUBSIDY_SOURCES.map((s, i) => (
+            <>
+              {i > 0 ? '　·　' : ''}
+              <a href={s.url} target="_blank" rel="noopener nofollow">
+                {s.label} ↗
+              </a>
+            </>
+          ))}
+        </p>
+      </div>
+
+      <script type="application/json" id="subsidy-data" set:html={JSON.stringify(cells)} is:inline />
+    </section>
+  )
+}
+
+<style>
+  .picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    padding-bottom: 4px;
+  }
+  .picker label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .picker select {
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 7px 10px;
+  }
+  .picker .check {
+    cursor: pointer;
+  }
+
+  .subtable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .subtable th,
+  .subtable td {
+    text-align: left;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .subtable th {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .subtable tr:last-child td {
+    border-bottom: 0;
+  }
+  .subtable .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .subtable .muted-cell {
+    color: var(--ink-soft);
+  }
+  .subtable .pay {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent-dark);
+  }
+
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+  .state ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 18px;
+    list-style: disc;
+  }
+</style>
+
+<script>
+  const holder = document.getElementById('subsidy-data');
+  if (holder) {
+    const cells = JSON.parse(holder.textContent);
+    const orderPicker = document.getElementById('birth-order');
+    const lowBox = document.getElementById('low-income');
+    const note = document.getElementById('sub-note');
+    const money = (n) => n.toLocaleString('en-US');
+
+    function render() {
+      const prefix = `${orderPicker.value}-${lowBox.checked ? 'low' : 'std'}-`;
+      for (const cell of cells.filter((c) => c.key.startsWith(prefix))) {
+        const pay = document.querySelector(`[data-pay="${cell.age}"]`);
+        const cover = document.querySelector(`[data-cover="${cell.age}"]`);
+        if (!pay || !cover) continue;
+        pay.textContent = cell.pay === 0 ? '免費' : money(cell.pay);
+        cover.textContent =
+          cell.kind === 'cap' ? (cell.covered ? money(cell.covered) : '—') : money(cell.allowance);
+        note.textContent = cell.note;
+      }
+    }
+
+    orderPicker.addEventListener('change', render);
+    lowBox.addEventListener('change', render);
+    render();
+  }
+</script>

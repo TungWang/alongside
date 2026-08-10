@@ -4,7 +4,7 @@ import BarChart from '../components/BarChart.astro';
 import DataNotice from '../components/DataNotice.astro';
 import data from '../data/institutions.json';
 import { SITE_NAME, districtPath, tagColor, DATASETS } from '../lib/site.js';
-import { byOwnership, chartableFees } from '../lib/stats.js';
+import { byOwnership, chartableFees, ageCoverage } from '../lib/stats.js';
 
 const allSources = [
   ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
@@ -14,6 +14,8 @@ const allSources = [
 ];
 const owners = byOwnership();
 const fees = chartableFees('2');
+const ages = ageCoverage();
+const accepts2 = ages[0].count;
 const publicish = owners
   .filter((x) => ['公立', '非營利'].includes(x.ownership))
   .reduce((s, x) => s + x.count, 0);
@@ -67,6 +69,51 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
           <circle cx="164" cy="22" r="4"></circle>
         </g>
       </svg>
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>孩子多大了？</h2>
+        <p class="note">
+          {'不同年齡能上的機構不一樣，本站能提供的資料也差很多。先選年齡，我們直接說清楚哪一段幫得上忙、哪一段幫不上。'}
+        </p>
+      </div>
+
+      <div class="agepick">
+        <article class="agecard">
+          <h3>未滿 2 歲</h3>
+          <p class="agecard-sub">托嬰中心或居家保母</p>
+          <p class="agecard-body">
+            {`這個年齡只能上托嬰中心（${nurseries} 間）或找居家保母。本站對托嬰中心只有名稱、地址、電話與收托人數——沒有收費、沒有裁罰、也算不了距離，因為政府開放資料就只給到這裡。居家保母受個資法規範，沒有名冊可用。`}
+          </p>
+          <p class="agecard-body">
+            <strong>老實說，這一段我們幫得有限。</strong>
+            {'能做的是幫你把該區的托嬰中心列出來，並直接給你社會局的裁罰與評鑑查詢入口。'}
+          </p>
+          <div class="agecard-links">
+            <a class="btn btn-quiet" href="/搜尋/">找托嬰中心</a>
+            <a class="btn btn-quiet" href="https://lovebaby.sw.ntpc.gov.tw/" target="_blank" rel="noopener nofollow">
+              居家托育服務中心 ↗
+            </a>
+          </div>
+        </article>
+
+        <article class="agecard">
+          <h3>2 歲以上</h3>
+          <p class="agecard-sub">幼兒園幼幼班起</p>
+          <p class="agecard-body">
+            {`滿 2 歲就能上幼兒園的幼幼班。全市 ${preschools.toLocaleString('en-US')} 間幼兒園裡有 ${accepts2} 間收 2 歲，其餘 ${preschools - accepts2} 間要滿 3 歲。`}
+          </p>
+          <p class="agecard-body">
+            <strong>這一段資料最完整。</strong>
+            {'分齡收費、補助後你實際要付多少、裁罰紀錄、離你多遠、收不收 2 歲，都查得到。'}
+          </p>
+          <div class="agecard-links">
+            <a class="btn" href="/附近/">找我附近的</a>
+            <a class="btn btn-quiet" href="/概況/">看全市概況</a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section class="stack">

@@ -39,15 +39,20 @@ const canonical = new URL(path, SITE_URL).href;
           </span>
           {SITE_NAME}
         </a>
-        {
-          back ? (
-            <a class="crumb" href={back.href}>
-              ← {back.label}
-            </a>
-          ) : (
-            <span class="tag tag-outline">新北市</span>
-          )
-        }
+        <span class="head-right">
+          <a class="crumb" href="/收藏/">
+            收藏<span class="countbadge" id="shortlist-count" hidden></span>
+          </a>
+          {
+            back ? (
+              <a class="crumb" href={back.href}>
+                ← {back.label}
+              </a>
+            ) : (
+              <span class="tag tag-outline">新北市</span>
+            )
+          }
+        </span>
       </div>
     </header>
 
@@ -74,6 +79,7 @@ const canonical = new URL(path, SITE_URL).href;
           本站僅整理公開資訊與提供官方查詢入口，不對機構品質作任何評價、排名或背書。
         </p>
         <p class="footlinks">
+          <a href="/收藏/">我的收藏</a>
           <a href="/附近/">找我附近的</a>
           <a href="/搜尋/">搜尋機構</a>
           <a href="/裁罰/">裁罰紀錄一覽</a>
@@ -83,5 +89,25 @@ const canonical = new URL(path, SITE_URL).href;
         </p>
       </div>
     </footer>
+    <script>
+      import { mountCounter, toggle, has } from '../scripts/shortlist.js';
+      mountCounter();
+
+      // 收藏鈕在列表卡與機構頁都會出現，統一在這裡接
+      function paint(btn) {
+        const on = has(JSON.parse(btn.dataset.entry).id);
+        btn.setAttribute('aria-pressed', String(on));
+        btn.textContent = on ? '已收藏' : '收藏';
+      }
+      for (const btn of document.querySelectorAll('.save-toggle')) {
+        paint(btn);
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggle(JSON.parse(btn.dataset.entry));
+          paint(btn);
+        });
+      }
+    </script>
   </body>
 </html>

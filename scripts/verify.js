@@ -334,6 +334,57 @@ check('收費區塊講明未扣補助', () => {
   return h.includes('沒有扣掉任何政府補助') ? true : '收費區塊未聲明補助未扣除';
 });
 
+// 補助金額是政策數字，寫死在 subsidy.js。抄錯會害家長算錯預算，
+// 所以把官方公告的數字釘在測試裡，改動時必須有意識地一起改。
+check('補助金額與官方公告一致', () => {
+  const src = fs.readFileSync(path.join(ROOT, 'src/lib/subsidy.js'), 'utf8');
+  const expect = [
+    ['公立第1胎上限 1000', /公立:\s*\{\s*1:\s*1000,\s*2:\s*0,\s*3:\s*0/],
+    ['非營利第1胎上限 2000', /非營利:\s*\{\s*1:\s*2000,\s*2:\s*1000,\s*3:\s*0/],
+    ['準公共第1胎上限 3000', /準公共:\s*\{\s*1:\s*3000,\s*2:\s*2000,\s*3:\s*1000/],
+    ['育兒津貼 5000/6000/7000', /1:\s*5000,\s*2:\s*6000,\s*3:\s*7000/],
+  ];
+  const bad = expect.filter(([, re]) => !re.test(src)).map(([label]) => label);
+  return bad.length ? `對不上：${bad.join('、')}` : true;
+});
+
+check('機構頁有補助試算且標明是估算', () => {
+  const h = read('i/preschool-悅淨幼兒園-板橋區/index.html');
+  if (!h.includes('你大概要付多少')) return '缺少補助試算區塊';
+  if (!h.includes('這是估算，不是帳單')) return '缺少估算聲明';
+  if (!h.includes('subsidy-data')) return '缺少預先算好的試算資料';
+  return true;
+});
+
+// 曾經：一次只能選一個條件，按了第二個就把第一個取消掉，等於不能用
+check('篩選可疊加', () => {
+  const h = read('d/板橋區/index.html');
+  if (!h.includes('條件可以疊加')) return '缺少疊加說明';
+  // 檢查原始碼而非打包產物——打包會壓縮變數名，比對不到穩定的字串
+  const src = fs.readFileSync(path.join(ROOT, 'src/pages/d/[district].astro'), 'utf8');
+  if (!/const active = new Map\(\)/.test(src)) return '找不到多條件狀態，疑似退回單選';
+  if (!/for \(const \[field, values\] of active\)/.test(src)) return '篩選未以 AND 串接各類條件';
+  return true;
+});
+
+check('收藏功能與比較頁', () => {
+  if (!exists('收藏/index.html')) return '缺少收藏頁';
+  const h = read('d/板橋區/index.html');
+  if (!h.includes('save-toggle')) return '列表卡缺少收藏鈕';
+  if (!h.includes('data-entry=')) return '收藏鈕缺少要存的資料';
+  const i = read('i/preschool-悅淨幼兒園-板橋區/index.html');
+  if (!i.includes('save-toggle')) return '機構頁缺少收藏鈕';
+  const fav = read('收藏/index.html');
+  return fav.includes('只存在這台裝置') ? true : '收藏頁未說明資料存放位置';
+});
+
+check('首頁依年齡分流並誠實說明資料落差', () => {
+  const h = read('index.html');
+  if (!h.includes('孩子多大了')) return '首頁缺少年齡分流';
+  if (!h.includes('這一段我們幫得有限')) return '未誠實說明 0–2 歲的資料限制';
+  return true;
+});
+
 // --- 執行 ---------------------------------------------------------------
 
 let failed = 0;
