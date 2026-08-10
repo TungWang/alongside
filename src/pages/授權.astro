@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME } from '../lib/site.js';
+import { SITE_NAME, datasetsForCity } from '../lib/site.js';
 
 const title = `資料來源與授權聲明｜${SITE_NAME}`;
 const description = `本站使用的資料來源、授權條款、對原始資料所做的加工，以及不收錄的內容。`;
@@ -19,12 +19,24 @@ const description = `本站使用的資料來源、授權條款、對原始資�
     <section class="stack">
       <h2>一、機構基本資料</h2>
       <div class="card stack-sm">
-        <p><strong>來源</strong>　新北市政府資料開放平臺三個資料集：</p>
+        <p><strong>來源</strong>　各縣市政府的開放資料平臺：</p>
         <ul class="bullets">
-          <li>新北市公私立立案幼兒園資料（新北市政府教育局）</li>
-          <li>新北市私立托嬰機構名冊（新北市政府社會局）</li>
-          <li>新北市公共托育中心名冊（新北市政府社會局）</li>
+          {
+            data.cities.flatMap((c) =>
+              datasetsForCity(c.name).map((ds) => (
+                <li>
+                  <a href={ds.url} target="_blank" rel="noopener">
+                    {ds.label} ↗
+                  </a>
+                  {`（${ds.agency}）`}
+                </li>
+              )),
+            )
+          }
         </ul>
+        <p class="note">
+          {`臺北市沒有市府層級的幼兒園開放資料，該市的幼兒園名冊本身就取自下方第二項的民間封存——這代表若該來源停止維護，臺北市的幼兒園會從本站消失，而新北市因為有市府名冊當骨幹，只會失去收費與裁罰欄位。`}
+        </p>
         <p>
           <strong>授權</strong>　<a href="https://data.gov.tw/license" target="_blank" rel="noopener"
             >政府資料開放授權條款－第 1 版</a

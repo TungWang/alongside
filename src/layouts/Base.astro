@@ -1,10 +1,13 @@
 ---
 import '../styles/global.css';
-import { SITE_URL, SITE_NAME, GSC_VERIFICATION } from '../lib/site.js';
+import { SITE_URL, SITE_NAME, GSC_VERIFICATION, cityList } from '../lib/site.js';
 import data from '../data/institutions.json';
 
 const { title, description, path = '/', back = null } = Astro.props;
 const canonical = new URL(path, SITE_URL).href;
+
+// 沒有市府開放資料的縣市，幼兒園完全依賴民間封存。這個韌性差異要對讀者說明白。
+const archiveOnly = data.cities.filter((c) => c.preschoolBackbone === 'archive').map((c) => c.name);
 ---
 
 <!doctype html>
@@ -49,7 +52,7 @@ const canonical = new URL(path, SITE_URL).href;
                 ← {back.label}
               </a>
             ) : (
-              <span class="tag tag-outline">新北市</span>
+              <span class="tag tag-outline">{cityList(data.cities, '·')}</span>
             )
           }
         </span>
@@ -63,7 +66,7 @@ const canonical = new URL(path, SITE_URL).href;
     <footer class="sitefoot">
       <div class="shell stack-sm">
         <p>
-          <strong style="color:var(--ink)">{SITE_NAME} Alongside</strong>　陪你一起看看新北市有哪些托育選擇。
+          <strong style="color:var(--ink)">{SITE_NAME} Alongside</strong>　{`陪你一起看看${cityList(data.cities)}有哪些托育選擇。`}
         </p>
         <p>
           {`站上資料為程式自動整理，可能有誤或未及反映異動——請以官方公告與機構本身的說明為準。機構基本資料擷取時間 ${data.fetchedAt}，共 ${data.total.toLocaleString('en-US')} 間。`}
@@ -71,7 +74,9 @@ const canonical = new URL(path, SITE_URL).href;
         {
           data.archive && (
             <p>
-              {`幼兒園的月費、立案字號與裁罰紀錄來自${data.archive.name}（${data.archive.author}，${data.archive.license} 授權，原始出處為${data.archive.origin}，備份於 ${data.archive.updatedAt}）。該備份可能包含官方已下架的舊紀錄，托嬰中心則無對應資料。`}
+              {`幼兒園的收費、立案字號與裁罰紀錄來自${data.archive.name}（${data.archive.author}，${data.archive.license} 授權，原始出處為${data.archive.origin}，備份於 ${data.archive.updatedAt}）。該備份可能包含官方已下架的舊紀錄，托嬰中心則無對應資料。`}
+              {archiveOnly.length > 0 &&
+                `${archiveOnly.join('、')}的幼兒園名冊本身也只有這個來源——該市沒有市府層級的幼兒園開放資料。`}
             </p>
           )
         }
@@ -83,9 +88,8 @@ const canonical = new URL(path, SITE_URL).href;
           <a href="/附近/">找我附近的</a>
           <a href="/搜尋/">搜尋機構</a>
           <a href="/裁罰/">裁罰紀錄一覽</a>
-          <a href="/概況/">新北市托育概況</a>
+          <a href="/概況/">托育概況</a>
           <a href="/授權/">資料來源與授權聲明</a>
-          <a href="https://data.ntpc.gov.tw/" rel="noopener">新北市政府資料開放平臺</a>
         </p>
       </div>
     </footer>

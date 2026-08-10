@@ -4,7 +4,7 @@ import InstitutionCard from '../../components/InstitutionCard.astro';
 import BarChart from '../../components/BarChart.astro';
 import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
-import { SITE_NAME, tagColor, DATASETS, primaryFee } from '../../lib/site.js';
+import { SITE_NAME, tagColor, datasetFor, primaryFee } from '../../lib/site.js';
 import { byOwnership } from '../../lib/stats.js';
 
 export function getStaticPaths() {
@@ -12,12 +12,13 @@ export function getStaticPaths() {
     params: { district },
     props: {
       district,
+      city: data.institutions.find((i) => i.district === district)?.city || '',
       list: data.institutions.filter((i) => i.district === district),
     },
   }));
 }
 
-const { district, list } = Astro.props;
+const { district, city, list } = Astro.props;
 
 const preschools = list.filter((i) => i.kind === 'preschool').length;
 const nurseries = list.length - preschools;
@@ -32,11 +33,7 @@ const feeCount = list.filter((i) => primaryFee(i)).length;
 const accepts2 = list.filter((i) => i.ages?.includes(2)).length;
 
 const noticeSources = [
-  ...[...new Set(list.map((i) => i.category))].map((c) => ({
-    label: DATASETS[c].label,
-    agency: DATASETS[c].agency,
-    url: DATASETS[c].url,
-  })),
+  ...[...new Set(list.map((i) => i.category))].map((c) => datasetFor(city, c)).filter(Boolean),
   ...(data.archive && preschools
     ? [{ label: data.archive.name, agency: `${data.archive.author}　原始出處：${data.archive.origin}`, url: data.archive.url }]
     : []),
@@ -45,18 +42,18 @@ const noticeSources = [
 // 篩選鈕只列這一區真的存在的屬性，避免家長按了得到空白
 const ownerships = [...new Set(list.map((i) => i.ownership))];
 
-const title = `${district}幼兒園與托嬰中心一覽（共 ${list.length} 間）｜${SITE_NAME}`;
+const title = `${city}${district}幼兒園與托嬰中心一覽（共 ${list.length} 間）｜${SITE_NAME}`;
 const mix = [preschools && `幼兒園 ${preschools} 間`, nurseries && `托嬰中心 ${nurseries} 間`]
   .filter(Boolean)
   .join('、');
-const description = `新北市${district}共 ${list.length} 間立案托育機構：${mix}。附地址、電話、Google 地圖，以及裁罰、評鑑、收退費與補助的官方查詢連結。`;
+const description = `${city}${district}共 ${list.length} 間立案托育機構：${mix}。附地址、電話、Google 地圖，以及裁罰、評鑑、收退費與補助的官方查詢連結。`;
 ---
 
 <Base title={title} description={description} path={`/d/${district}/`} back={{ href: '/', label: '所有行政區' }}>
   <div class="stack-lg">
     <section class="stack">
       <div class="stack-sm">
-        <h1>新北市{district}</h1>
+        <h1>{city}{district}</h1>
         <p class="muted">
           {
             preschools > 0 && nurseries > 0

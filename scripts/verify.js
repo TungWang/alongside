@@ -133,11 +133,14 @@ check('所有外部連結都帶 rel="noopener"', () => {
 
 // --- 裁罰資料的正確性 ---------------------------------------------------
 
-// 曾經：把「停止招生：2026/04/24~2027/04/23」的日期串成 2026042420270423 元
-check('罰鍰金額在合理範圍', () => {
+// 曾經：把「停止招生：2026/04/24~2027/04/23」的日期串成 2026042420270423 元。
+// 門檻只用來擋這類「把日期串成金額」的解析錯誤（會產生 15 位以上的數字），
+// 不是用來認定金額合不合理——實測臺北市有真實的 150 萬元罰鍰，
+// 一開始門檻訂在 100 萬是照新北市最高 60 萬抓的，加入臺北就誤報。
+check('罰鍰金額未被解析成日期', () => {
   const fines = DATA.institutions.flatMap((i) => i.penalties.map((p) => p.fineAmount)).filter(Boolean);
   const max = Math.max(...fines);
-  return max <= 1_000_000 ? true : `最高罰鍰 ${max.toLocaleString('en-US')} 元，疑似解析錯誤`;
+  return max <= 5_000_000 ? true : `最高罰鍰 ${max.toLocaleString('en-US')} 元，疑似把日期串成金額`;
 });
 
 check('非罰鍰的處分不應有金額', () => {
@@ -383,6 +386,63 @@ check('首頁依年齡分流並誠實說明資料落差', () => {
   if (!h.includes('孩子多大了')) return '首頁缺少年齡分流';
   if (!h.includes('這一段我們幫得有限')) return '未誠實說明 0–2 歲的資料限制';
   return true;
+});
+
+// --- 多縣市 ---------------------------------------------------------------
+
+check('兩個縣市都有資料', () => {
+  const want = ['新北市', '臺北市'];
+  const missing = want.filter((c) => !DATA.institutions.some((i) => i.city === c));
+  if (missing.length) return `缺少 ${missing.join('、')}`;
+  const noCity = DATA.institutions.filter((i) => !i.city);
+  return noCity.length ? `${noCity.length} 筆沒有 city 欄位` : true;
+});
+
+// 新北市的 1,493 個網址已提交 Search Console，改動等於全部失效
+check('新北市的機構 ID 未因擴充而改變', () => {
+  const nt = DATA.institutions.filter((i) => i.city === '新北市');
+  if (nt.length !== 1493) return `新北市 ${nt.length} 間，應為 1493`;
+  const sample = [
+    'preschool-悅淨幼兒園-板橋區',
+    'nursery-汐止忠厚公共托育中心-汐止區',
+    'preschool-維珍妮幼兒園-五股區',
+  ];
+  const missing = sample.filter((id) => !nt.some((i) => i.id === id));
+  return missing.length ? `這些既有 ID 消失了：${missing.join('、')}` : true;
+});
+
+check('行政區未跨縣市重複', () => {
+  const owner = new Map();
+  for (const i of DATA.institutions) {
+    const prev = owner.get(i.district);
+    if (prev && prev !== i.city) return `${i.district} 同時屬於 ${prev} 與 ${i.city}`;
+    owner.set(i.district, i.city);
+  }
+  return true;
+});
+
+// 各縣市的托嬰連結完全不同，用標籤文字比對會在加新縣市時默默失效
+check('各縣市的官方連結都給對機關', () => {
+  const tp = htmlFiles.filter((f) => f.includes(`${path.sep}i${path.sep}`) && html(f).includes('臺北市政府'));
+  if (!tp.length) return '找不到任何臺北市的機構頁';
+  const wrongEdu = tp.filter((f) => f.includes('nursery-') && html(f).includes('ap.ece.moe.edu.tw'));
+  const wrongCity = tp.filter((f) => html(f).includes('sw.ntpc.gov.tw') || html(f).includes('kidedu.ntpc'));
+  if (wrongEdu.length) return `${wrongEdu.length} 個臺北托嬰頁誤含教育部連結`;
+  if (wrongCity.length) return `${wrongCity.length} 個臺北市頁面誤含新北市連結`;
+  return true;
+});
+
+check('臺北市頁面說明幼兒園骨幹來自封存', () => {
+  const lic = read('授權/index.html');
+  return lic.includes('臺北市沒有市府層級的幼兒園開放資料')
+    ? true
+    : '授權頁未說明臺北市的資料韌性差異';
+});
+
+// 封存含已停辦與同名重複，兩者都會造成主鍵碰撞
+check('封存骨幹的縣市不含已停辦機構', () => {
+  const closed = DATA.institutions.filter((i) => i.closed);
+  return closed.length ? `${closed.length} 筆已停辦仍被收錄` : true;
 });
 
 // --- 執行 ---------------------------------------------------------------

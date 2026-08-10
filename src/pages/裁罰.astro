@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import DataNotice from '../components/DataNotice.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, tagColor, institutionPath, DATASETS, officialLinks } from '../lib/site.js';
+import { SITE_NAME, tagColor, institutionPath, datasetFor, officialLinks, linkOfKind } from '../lib/site.js';
 import { penalisedInstitutions, penaltyCategories, penaltyStats, UNSPECIFIED } from '../lib/stats.js';
 
 const list = penalisedInstitutions();
@@ -11,10 +11,10 @@ const pen = penaltyStats();
 const districts = [...new Set(list.map((i) => i.district))].sort((a, b) =>
   a.localeCompare(b, 'zh-Hant'),
 );
-const officialUrl = officialLinks('edu').find((l) => l.label.includes('裁罰'));
+const officialUrl = linkOfKind(officialLinks('新北市', 'edu'), 'penalty');
 
 const noticeSources = [
-  { label: DATASETS['幼兒園'].label, agency: DATASETS['幼兒園'].agency, url: DATASETS['幼兒園'].url },
+  ...data.cities.map((c) => datasetFor(c.name, '幼兒園')).filter(Boolean),
   ...(data.archive
     ? [
         {
@@ -27,14 +27,15 @@ const noticeSources = [
   { label: '全國教保資訊網：即時查詢', agency: '裁罰現況以此為準', url: officialUrl.url },
 ];
 
-const title = `新北市幼兒園裁罰紀錄一覽（${list.length} 間）｜${SITE_NAME}`;
-const description = `新北市 ${pen.ofPreschools} 間立案幼兒園中，有 ${list.length} 間在民間備份的全國教保資訊網公告裡查得到裁罰紀錄，合計 ${pen.records} 筆。可依行政區與違規類型查看。`;
+const where = data.cities.map((c) => c.name).join('與');
+const title = `${where}幼兒園裁罰紀錄一覽（${list.length} 間）｜${SITE_NAME}`;
+const description = `${where} ${pen.ofPreschools} 間立案幼兒園中，有 ${list.length} 間在民間備份的全國教保資訊網公告裡查得到裁罰紀錄，合計 ${pen.records} 筆。可依行政區與違規類型查看。`;
 ---
 
 <Base title={title} description={description} path="/裁罰/" back={{ href: '/', label: '首頁' }}>
   <div class="stack-lg">
     <section class="stack">
-      <h1>新北市幼兒園裁罰紀錄</h1>
+      <h1>{where}幼兒園裁罰紀錄</h1>
       <p class="muted">
         {`${pen.ofPreschools.toLocaleString('en-US')} 間立案幼兒園中，有 ${list.length} 間查得到紀錄，合計 ${pen.records.toLocaleString('en-US')} 筆。以最近一次裁罰的時間排序。`}
       </p>
@@ -55,7 +56,7 @@ const description = `新北市 ${pen.ofPreschools} 間立案幼兒園中，有 $
           <li>
             {`沒有出現在這份清單上的 ${(pen.ofPreschools - list.length).toLocaleString('en-US')} 間，不等於從未違規，只表示這份備份裡查不到。`}
           </li>
-          <li>{'托嬰中心（382 間）歸衛生福利部管，沒有對應的備份資料，完全不在這份清單內。'}</li>
+          <li>{`托嬰中心（${data.institutions.filter((i) => i.kind === 'nursery').length} 間）歸衛生福利部管，沒有對應的備份資料，完全不在這份清單內。`}</li>
         </ul>
         <p>
           要確認任何一間的現況，請以

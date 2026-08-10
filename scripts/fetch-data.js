@@ -33,27 +33,40 @@ const ARCHIVE_CREDIT = {
 // 封存超過這個天數就不採用——上游停止維護時要讓資料消失，而不是無聲變舊
 const ARCHIVE_MAX_AGE_DAYS = 120;
 
-const SOURCES = [
+const TAIPEI_DL = 'https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=';
+
+/**
+ * 收錄的縣市。
+ *
+ * 兩類機構的取得方式完全不同，這是擴張成本的來源：
+ *
+ * 幼兒園——全國同源（全國教保資訊網），封存端已整理成統一格式，加一個縣市幾乎零成本。
+ *   但新北市另有市府開放資料，仍以它為骨幹、封存只當加值層：上游若消失，
+ *   新北的幼兒園還在（少了收費與裁罰），不會整批不見。臺北市沒有對應的市府開放資料，
+ *   只能以封存為骨幹——這個差異在頁面上要說清楚，不能假裝兩市一樣穩。
+ *
+ * 托嬰中心——各縣市自己發布，平台、格式、欄位全都不同，每加一個縣市就要寫一段剖析。
+ */
+const CITIES = [
   {
-    key: 'preschool',
-    oid: 'f563b4cd-b850-41f5-9709-b910f2d147e9',
-    label: '幼兒園',
-    kind: 'preschool',
-    authority: 'edu', // 主管機關：教育部／新北市教育局
+    name: '新北市',
+    // 來源資料出現過異體字「巿」（U+5DFF，非 U+5E02），比對時兩種都要吃
+    variants: /新北[市巿]/,
+    // 幼兒園有市府開放資料可當骨幹
+    preschoolOid: 'f563b4cd-b850-41f5-9709-b910f2d147e9',
+    nurseries: [
+      { adapter: 'ntpc', oid: '69cecdb0-7796-48df-84e5-99e4f1274245', label: '托嬰中心' },
+      { adapter: 'ntpc', oid: 'b3faf2aa-e96b-4f2f-b647-da47dc094860', label: '公共托育中心' },
+    ],
   },
   {
-    key: 'nursery',
-    oid: '69cecdb0-7796-48df-84e5-99e4f1274245',
-    label: '托嬰中心',
-    kind: 'nursery',
-    authority: 'social', // 主管機關：衛福部／新北市社會局
-  },
-  {
-    key: 'nursery_pub',
-    oid: 'b3faf2aa-e96b-4f2f-b647-da47dc094860',
-    label: '公共托育中心',
-    kind: 'nursery',
-    authority: 'social',
+    name: '臺北市',
+    variants: /[臺台]北[市巿]/,
+    preschoolOid: null, // 無市府開放資料，幼兒園以封存為骨幹
+    nurseries: [
+      { adapter: 'taipei', rid: 'e7cdaca3-e9da-46f9-b857-395e6e8e06a6', label: '托嬰中心' },
+      { adapter: 'taipei', rid: 'a02ccc34-dd28-4c5d-b527-c5433ec1a453', label: '公設民營托嬰中心' },
+    ],
   },
 ];
 
@@ -98,8 +111,8 @@ function squash(s) {
   return (s || '').replace(/\s+/g, ' ').trim();
 }
 
-// 「新北市」在來源資料中出現過異體字「巿」（U+5DFF，非 U+5E02），一併處理
-const CITY = /新北[市巿]/;
+// 任一縣市名的異體字寫法，用於剝除地址前綴
+const ANY_CITY = /(新北|[臺台]北)[市巿]/;
 
 /**
  * 從來源地址取出「街段」——去掉郵遞區號、縣市、行政區、里鄰。
@@ -115,11 +128,18 @@ const CITY = /新北[市巿]/;
 function toStreet(raw, district) {
   let s = squash(raw);
   s = s.replace(/^\[\d+\]\s*/, ''); // [220]
-  s = s.replace(new RegExp('^' + CITY.source), ''); // 新北市 / 新北巿
+  s = s.replace(/^\d{5,6}\s*/, ''); // 臺北市托嬰的郵遞區號有時直接接在前面
+  s = s.replace(new RegExp('^' + ANY_CITY.source), ''); // 新北市／臺北巿…
   if (district) s = s.replace(new RegExp('^' + escapeRe(district)), ''); // 板橋區
   s = s.replace(/^[一-鿿]{1,4}里/, ''); // 流芳里
   s = s.replace(/^\d+鄰/, ''); // 9鄰
   return s.trim();
+}
+
+// 臺北市的托嬰 CSV 沒有行政區欄位，只能從地址剖析
+function districtFromAddress(raw) {
+  const m = squash(raw).match(/(新北|[臺台]北)[市巿]([一-鿿]{1,3}區)/);
+  return m ? m[2] : '';
 }
 
 function escapeRe(s) {
@@ -129,7 +149,7 @@ function escapeRe(s) {
 // 行政區：三個資料集欄位名與格式都不同
 function toDistrict(row, key) {
   if (key === 'preschool') return squash(row.district); // 「新店區」
-  if (key === 'nursery') return squash(row.area).replace(CITY, ''); // 「新北市板橋區」
+  if (key === 'nursery') return squash(row.area).replace(ANY_CITY, ''); // 「新北市板橋區」
   return squash(row.town); // 公共托育：「汐止區」
 }
 
@@ -151,7 +171,7 @@ function normalizeName(name) {
   return squash(name)
     .replace(/\s/g, '')
     .replace(/[（）()]/g, '')
-    .replace(/^(新北[市巿]|私立|市立|附設)+/, '')
+    .replace(/^((新北|[臺台]北)[市巿]|私立|市立|附設)+/, '')
     .trim();
 }
 
@@ -172,8 +192,8 @@ function makeId(kind, name, district) {
 }
 
 // Google 地圖搜尋連結：地圖、導航、家長評價都靠它，本站不呼叫任何 API
-function mapsUrl(name, district, street) {
-  const query = squash(`${name} 新北市${district}${street}`);
+function mapsUrl(city, name, district, street) {
+  const query = squash(`${name} ${city}${district}${street}`);
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
@@ -195,33 +215,26 @@ async function fetchAll(oid) {
   return rows;
 }
 
-function normalizeRow(row, src) {
-  const name = squash(src.key === 'nursery_pub' ? row.name : row.title);
-  const district = toDistrict(row, src.key);
-  const street = toStreet(row.address, district);
-  const tel = toTel(src.key === 'preschool' ? row.tel : row.localcallservice);
-
-  // 屬性：幼兒園來自 type 欄位（實測 7 種值），托嬰兩個資料集則是固定值
-  const ownership =
-    src.key === 'preschool' ? squash(row.type) || '其他'
-    : src.key === 'nursery_pub' ? '公共托育'
-    : '私立';
-
+/**
+ * 統一的機構結構。各縣市各來源的欄位差異都在呼叫端抹平，這裡只組裝。
+ */
+function makeInstitution({ city, kind, category, name, district, street, tel, ownership, extra = {} }) {
   return {
-    id: makeId(src.kind, name, district),
-    kind: src.kind, // preschool | nursery
-    category: src.label, // 幼兒園 | 托嬰中心 | 公共托育中心
-    authority: src.authority, // edu | social
+    id: makeId(kind, name, district),
+    city,
+    kind, // preschool | nursery
+    category, // 幼兒園 | 托嬰中心 | 公共托育中心…
+    authority: kind === 'preschool' ? 'edu' : 'social',
     name,
     district,
     street,
-    address: `新北市${district}${street}`,
+    address: `${city}${district}${street}`,
     tel: tel.display,
     telHref: tel.href,
     ownership,
-    capacity: src.key === 'nursery' && row.person ? Number(row.person) : null,
-    operator: squash(row.unit) || null, // 公共托育的受託單位
-    mapUrl: mapsUrl(name, district, street),
+    capacity: null,
+    operator: null,
+    mapUrl: mapsUrl(city, name, district, street),
 
     // 以下由 enrich() 從民間封存補上，托嬰中心無對應資料，維持 null
     regNo: null, // 立案／設立許可字號
@@ -235,7 +248,144 @@ function normalizeRow(row, src) {
     floorAreaOut: null, // 戶外活動空間
     lat: null, // 托嬰中心無座標來源，維持 null
     lng: null,
+    ...extra,
   };
+}
+
+/** 新北市開放資料的幼兒園（有市府骨幹的縣市走這條） */
+function fromNtpcPreschool(row, city) {
+  const district = squash(row.district);
+  return makeInstitution({
+    city,
+    kind: 'preschool',
+    category: '幼兒園',
+    name: squash(row.title),
+    district,
+    street: toStreet(row.address, district),
+    tel: toTel(row.tel),
+    ownership: squash(row.type) || '其他', // 實測 7 種值
+  });
+}
+
+/** 新北市開放資料的托嬰／公共托育 */
+function fromNtpcNursery(row, city, label) {
+  const isPublic = label.includes('公共');
+  const name = squash(isPublic ? row.name : row.title);
+  const district = isPublic ? squash(row.town) : squash(row.area).replace(ANY_CITY, '');
+  return makeInstitution({
+    city,
+    kind: 'nursery',
+    category: label,
+    name,
+    district,
+    street: toStreet(row.address, district),
+    tel: toTel(row.localcallservice),
+    ownership: isPublic ? '公共托育' : '私立',
+    extra: {
+      capacity: row.person ? Number(row.person) : null,
+      operator: squash(row.unit) || null,
+    },
+  });
+}
+
+/**
+ * 臺北市開放資料的托嬰。跟新北市的差異：沒有行政區欄位（要從地址剖析）、
+ * 私立那份沒有收托人數、機構類型混在同一個欄位裡。
+ */
+function fromTaipeiNursery(row, city, label) {
+  const raw = squash(row['地址']);
+  const district = districtFromAddress(raw);
+  const type = squash(row['機構類型']);
+  return makeInstitution({
+    city,
+    kind: 'nursery',
+    category: label,
+    name: squash(row['機構名稱']),
+    district,
+    street: toStreet(raw, district),
+    tel: toTel(squash(row['電話'])),
+    ownership: /公設民營|公辦民營/.test(type) ? '公共托育' : '私立',
+    extra: { capacity: toInt(row['收托人數']) },
+  });
+}
+
+async function fetchCsv(url, label) {
+  const res = await fetchWithRetry(url, { label });
+  const buf = Buffer.from(await res.arrayBuffer());
+  return parseCsv(buf.toString('utf8').replace(/^\uFEFF/, '')); // 臺北市的 CSV 帶 BOM
+}
+
+/**
+ * 收集所有縣市的機構。
+ *
+ * archive 可能為 null（上游過期或掛掉）。沒有市府骨幹的縣市在那種情況下
+ * 會完全沒有幼兒園——這是事實而非 bug，頁面上要照實呈現。
+ */
+async function fetchInstitutions(archive) {
+  const all = [];
+
+  for (const city of CITIES) {
+    let preschools = 0;
+
+    if (city.preschoolOid) {
+      for (const row of await fetchAll(city.preschoolOid)) {
+        all.push(fromNtpcPreschool(row, city.name));
+        preschools++;
+      }
+    } else if (archive) {
+      // 封存含已停辦與同名重複，兩者都要處理，否則主鍵會撞：
+      //   已停辦（is_active=0）——家長找托育時一間關掉的園是雜訊，不收錄。
+      //     實測台北有搬遷案例：舊址停辦、新址營運，兩筆同名，濾掉停辦的正好留下正確那筆。
+      //   真重複——同一間園以「臺北市私立X」與「私立X」兩種寫法各出現一次，
+      //     立案字號完全相同，以字號去重。
+      const seenReg = new Set();
+      const rows = (archive.byCity.get(city.name) || []).filter((p) => {
+        if (p.is_active === 0) return false;
+        const reg = squash(p.reg_no);
+        if (reg && seenReg.has(reg)) return false;
+        if (reg) seenReg.add(reg);
+        return true;
+      });
+      for (const p of rows) {
+        const district = squash(p.town);
+        all.push(
+          makeInstitution({
+            city: city.name,
+            kind: 'preschool',
+            category: '幼兒園',
+            name: squash(p.title),
+            district,
+            street: toStreet(p.address, district),
+            tel: toTel(p.tel),
+            ownership: squash(p.type) || '其他',
+            extra: { backboneFromArchive: true },
+          }),
+        );
+        preschools++;
+      }
+    }
+
+    let nurseries = 0;
+    for (const src of city.nurseries) {
+      if (src.adapter === 'ntpc') {
+        for (const row of await fetchAll(src.oid)) {
+          all.push(fromNtpcNursery(row, city.name, src.label));
+          nurseries++;
+        }
+      } else {
+        for (const row of await fetchCsv(TAIPEI_DL + src.rid, `臺北市 ${src.label}`)) {
+          if (!squash(row['機構名稱'])) continue;
+          all.push(fromTaipeiNursery(row, city.name, src.label));
+          nurseries++;
+        }
+      }
+    }
+
+    const via = city.preschoolOid ? '市府開放資料' : '封存';
+    console.log(`  ${city.name}　幼兒園 ${String(preschools).padStart(4)}（${via}）、托嬰 ${nurseries}`);
+  }
+
+  return all;
 }
 
 // ---------------------------------------------------------------------------
@@ -342,8 +492,8 @@ async function mapLimit(items, limit, fn) {
  * 後者若也回空陣列，就會讓一間有紀錄的園所無聲變成清白，那是最糟的失敗方式。
  * 所以非 404 的錯誤會重試，重試完仍失敗就 throw，由呼叫端統計並決定是否中止建置。
  */
-async function fetchPenalties(title) {
-  const url = `${ARCHIVE}/data/punish/${encodeURIComponent('新北市')}/${encodeURIComponent(title)}.json`;
+async function fetchPenalties(city, title) {
+  const url = `${ARCHIVE}/data/punish/${encodeURIComponent(city)}/${encodeURIComponent(title)}.json`;
 
   const res = await fetchWithRetry(url, { label: `裁罰明細（${title}）` });
   if (res.status === 404) return []; // 明確地「這間沒有紀錄」
@@ -385,18 +535,27 @@ async function fetchArchive() {
   }
 
   const geo = await res.json();
+  const wanted = new Set(CITIES.map((c) => c.name));
   const byName = new Map();
+  const byCity = new Map(CITIES.map((c) => [c.name, []]));
   for (const feature of geo.features || []) {
     const p = feature.properties || {};
-    if (p.city !== '新北市') continue;
+    if (!wanted.has(p.city)) continue;
+    byCity.get(p.city).push(p);
     // 座標來自封存端以國土測繪中心 API 做的 geocoding（GeoJSON 為 [lng, lat] 順序）。
     // 原規劃文件說「三個資料集全都沒有經緯度所以不做地圖」——那是指政府開放資料，
     // 封存端補上了，因此距離排序現在做得到，且完全不需要呼叫任何地圖 API。
     const c = feature.geometry?.coordinates;
-    byName.set(matchKey(p.title), { ...p, _lng: c?.[0], _lat: c?.[1] });
+    const key = matchKey(p.title);
+    // 同名機構會互相覆蓋。實測臺北市有搬遷案例：舊址已停辦、新址營運中，兩筆同名，
+    // 後寫入的若是停辦那筆，就會把停辦的座標、立案字號與收費掛到營運中的機構上。
+    // 一律以營運中的那筆為準。
+    const prev = byName.get(key);
+    if (prev && prev.is_active === 1 && p.is_active !== 1) continue;
+    byName.set(key, { ...p, _lng: c?.[0], _lat: c?.[1] });
   }
 
-  return { byName, updatedAt: updatedAt.toISOString().slice(0, 10), ageDays };
+  return { byName, byCity, updatedAt: updatedAt.toISOString().slice(0, 10), ageDays };
 }
 
 /**
@@ -443,10 +602,11 @@ const FEE_AGES = ['2', '3', '4', '5'];
 
 async function fetchFees() {
   const byName = new Map();
+  for (const city of CITIES) {
   for (const age of FEE_AGES) {
-    const url = `${ARCHIVE}/data/summary1/${encodeURIComponent('新北市')}/${age}.csv`;
-    const res = await fetchWithRetry(url, { label: `分齡收費 ${age} 歲` });
-    if (!res.ok) throw new Error(`分齡收費下載失敗（${age} 歲）：${res.status}`);
+    const url = `${ARCHIVE}/data/summary1/${encodeURIComponent(city.name)}/${age}.csv`;
+    const res = await fetchWithRetry(url, { label: `${city.name} 分齡收費 ${age} 歲` });
+    if (!res.ok) throw new Error(`分齡收費下載失敗（${city.name} ${age} 歲）：${res.status}`);
     for (const row of parseCsv(await res.text())) {
       const monthly = toInt(row.monthly1);
       if (!row.point || !monthly) continue;
@@ -460,12 +620,12 @@ async function fetchFees() {
       };
     }
   }
+  }
   return byName;
 }
 
-async function enrich(institutions) {
-  const archive = await fetchArchive();
-  if (!archive) return { enriched: 0, penaltyCount: 0, archive: null };
+async function enrich(institutions, archive) {
+  if (!archive) return { enriched: 0, withFees: 0, penaltyCount: 0, archive: null };
 
   const fees = await fetchFees();
   const preschools = institutions.filter((i) => i.kind === 'preschool');
@@ -504,7 +664,7 @@ async function enrich(institutions) {
   const targets = preschools.filter((i) => i._hasPenalty);
   const results = await mapLimit(targets, 5, async (inst) => {
     try {
-      return await fetchPenalties(inst.name);
+      return await fetchPenalties(inst.city, inst.name);
     } catch (err) {
       return err; // 先收集，全部跑完再一起判斷，避免一筆失敗就中斷四百多次請求
     }
@@ -543,13 +703,11 @@ async function enrich(institutions) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const institutions = [];
+  // 封存要先抓：沒有市府開放資料的縣市（臺北市）拿它當幼兒園骨幹
+  console.log('  下載民間封存…');
+  const archive = await fetchArchive();
 
-  for (const src of SOURCES) {
-    const rows = await fetchAll(src.oid);
-    console.log(`  ${src.label.padEnd(6, '　')} ${String(rows.length).padStart(5)} 筆`);
-    for (const row of rows) institutions.push(normalizeRow(row, src));
-  }
+  const institutions = await fetchInstitutions(archive);
 
   // 主鍵唯一性：靜態站一個 id 對應一個檔案，撞名會靜默覆蓋，必須擋在建置前
   const seen = new Map();
@@ -565,7 +723,7 @@ async function main() {
   }
 
   console.log('\n  補充月費與裁罰（民間封存）…');
-  const meta = await enrich(institutions);
+  const meta = await enrich(institutions, archive);
 
   // 跟裁罰抓取同一類的防護：上游若改欄位名或資料結構，比對會靜靜地全部落空，
   // 整站的月費與裁罰就無聲消失。與其發布一個「看起來正常但少了一半資料」的網站，
@@ -582,16 +740,35 @@ async function main() {
     );
   }
 
-  institutions.sort((a, b) => a.district.localeCompare(b.district, 'zh-Hant') || a.name.localeCompare(b.name, 'zh-Hant'));
+  institutions.sort(
+    (a, b) =>
+      a.city.localeCompare(b.city, 'zh-Hant') ||
+      a.district.localeCompare(b.district, 'zh-Hant') ||
+      a.name.localeCompare(b.name, 'zh-Hant'),
+  );
 
   const districts = [...new Set(institutions.map((i) => i.district))].sort((a, b) =>
     a.localeCompare(b, 'zh-Hant'),
   );
 
+  // 每個縣市的幼兒園骨幹來自哪裡，頁面上要照實說明資料韌性的差異
+  const cities = CITIES.map((c) => {
+    const list = institutions.filter((i) => i.city === c.name);
+    return {
+      name: c.name,
+      total: list.length,
+      preschools: list.filter((i) => i.kind === 'preschool').length,
+      nurseries: list.filter((i) => i.kind === 'nursery').length,
+      districts: [...new Set(list.map((i) => i.district))].sort((a, b) => a.localeCompare(b, 'zh-Hant')),
+      preschoolBackbone: c.preschoolOid ? 'open-data' : 'archive',
+    };
+  }).filter((c) => c.total > 0);
+
   const payload = {
     // 資料擷取時間會顯示在每一頁，是本站對家長的誠實聲明，不可省略
     fetchedAt: new Date().toISOString().slice(0, 10),
     total: institutions.length,
+    cities,
     districts,
     archive: meta.archive, // 民間封存的出處與更新日；為 null 表示本次未採用
     institutions,
@@ -606,6 +783,7 @@ async function main() {
     i: i.id,
     n: i.name,
     d: i.district,
+    ct: i.city,
     c: i.category,
     o: i.ownership,
     m: primaryFee(i)?.monthly || 0,
@@ -619,7 +797,9 @@ async function main() {
   const geocoded = institutions.filter((i) => i.lat).length;
   console.log(`搜尋索引 ${index.length} 筆、${kb} KB（含座標 ${geocoded} 筆）→ public/search-index.json`);
 
-  console.log(`\n共 ${institutions.length} 間、${districts.length} 個行政區 → ${path.relative(ROOT, OUT_FILE)}`);
+  console.log(
+    `\n共 ${institutions.length} 間、${cities.length} 個縣市、${districts.length} 個行政區 → ${path.relative(ROOT, OUT_FILE)}`,
+  );
 }
 
 main().catch((err) => {

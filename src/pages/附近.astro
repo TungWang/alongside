@@ -2,13 +2,13 @@
 import Base from '../layouts/Base.astro';
 import DataNotice from '../components/DataNotice.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, districtPath, DATASETS } from '../lib/site.js';
+import { SITE_NAME, districtPath, datasetsForCity, cityList } from '../lib/site.js';
 
 const withCoords = data.institutions.filter((i) => i.lat).length;
 const nurseries = data.institutions.filter((i) => i.kind === 'nursery').length;
 
 const noticeSources = [
-  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...data.cities.flatMap((c) => datasetsForCity(c.name)),
   ...(data.archive
     ? [
         {
@@ -21,7 +21,7 @@ const noticeSources = [
 ];
 
 const title = `找我附近的幼兒園｜${SITE_NAME}`;
-const description = `用你目前的位置，找出新北市離你最近的立案幼兒園，依直線距離排序。不跨行政區限制——住在交界處時，隔壁區可能更近。`;
+const description = `用你目前的位置，找出${cityList(data.cities)}離你最近的立案幼兒園，依直線距離排序。不跨行政區限制——住在交界處時，隔壁區可能更近。`;
 ---
 
 <Base title={title} description={description} path="/附近/" back={{ href: '/', label: '首頁' }}>
@@ -157,9 +157,9 @@ const description = `用你目前的位置，找出新北市離你最近的立�
             .map((it) => ({ ...it, _km: haversine(coords.latitude, coords.longitude, it.y, it.x) }))
             .sort((a, b) => a._km - b._km);
 
-          // 離最近一間超過 30 公里，多半是人不在新北市，直說比給一堆無用結果好
+          // 離最近一間超過 30 公里，多半是人不在雙北，直說比給一堆無用結果好
           if (near[0]._km > 30) {
-            say(`離你最近的幼兒園在 ${fmt(near[0]._km)} 外，你可能不在新北市。本站目前只收錄新北市。`);
+            say(`離你最近的幼兒園在 ${fmt(near[0]._km)} 外，你可能不在收錄範圍內。本站目前只收錄雙北。`);
             results.innerHTML = '';
             return;
           }

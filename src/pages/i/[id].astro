@@ -13,6 +13,7 @@ import {
   fullType,
   needsCategoryTag,
   datasetFor,
+  linkOfKind,
   primaryFee,
   feeMonths,
   afterHoursFee,
@@ -26,15 +27,16 @@ export function getStaticPaths() {
 }
 
 const { inst } = Astro.props;
-const links = officialLinks(inst.authority);
+const links = officialLinks(inst.city, inst.authority);
 const needsName = links.some((l) => l.needsName);
 
-const authorityName = inst.authority === 'edu' ? '新北市政府教育局' : '新北市政府社會局';
+const cityShort = inst.city.replace(/[市巿]$/, '市');
+const authorityName = `${cityShort}政府${inst.authority === 'edu' ? '教育局' : '社會局'}`;
 
 // 月費與裁罰來自民間封存，只有幼兒園有；archive 為 null 表示本次建置未採用該來源
 const enriched = data.archive && inst.kind === 'preschool';
-const penaltyLink = links.find((l) => l.label.includes('裁罰'));
-const feeLink = links.find((l) => l.label.includes('收'));
+const penaltyLink = linkOfKind(links, 'penalty');
+const feeLink = linkOfKind(links, 'fee');
 
 const fee = primaryFee(inst);
 const saved = {
@@ -50,7 +52,7 @@ const saved = {
   penalties: inst.penalties.length,
 };
 
-const dataset = datasetFor(inst.category);
+const dataset = datasetFor(inst.city, inst.category);
 const noticeSources = [
   { label: dataset.label, agency: dataset.agency, url: dataset.url },
   ...(enriched
@@ -65,8 +67,8 @@ const noticeSources = [
   { label: `${penaltyLink.source}：即時查詢`, agency: '裁罰與評鑑以此為準', url: penaltyLink.url },
 ];
 
-const title = `${inst.name}｜${inst.district}${inst.category}－${SITE_NAME}`;
-const description = `${inst.name}位於新北市${inst.district}${inst.street}，電話 ${inst.tel}，屬性為${inst.ownership}。附 Google 地圖連結，以及裁罰紀錄、評鑑結果、收退費與育兒補助的官方查詢入口。`;
+const title = `${inst.name}｜${inst.city}${inst.district}${inst.category}－${SITE_NAME}`;
+const description = `${inst.name}位於${inst.city}${inst.district}${inst.street}，電話 ${inst.tel}，屬性為${inst.ownership}。附 Google 地圖連結，以及裁罰紀錄、評鑑結果、收退費與育兒補助的官方查詢入口。`;
 
 // 結構化資料讓 Google 認得這是一間托育機構，而不只是一頁文字
 const jsonLd = {
@@ -77,7 +79,7 @@ const jsonLd = {
   address: {
     '@type': 'PostalAddress',
     addressCountry: 'TW',
-    addressRegion: '新北市',
+    addressRegion: inst.city,
     addressLocality: inst.district,
     streetAddress: inst.street,
   },
@@ -101,7 +103,7 @@ const jsonLd = {
           {needsCategoryTag(inst) && <span class="tag tag-outline">{inst.category}</span>}
         </div>
         <h1>{inst.name}</h1>
-        <p class="muted">新北市{inst.district}　主管機關：{authorityName}</p>
+        <p class="muted">{inst.city}{inst.district}　主管機關：{authorityName}</p>
       </div>
 
       <div class="head-actions">

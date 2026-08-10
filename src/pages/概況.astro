@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import BarChart from '../components/BarChart.astro';
+import data from '../data/institutions.json';
 import DataNotice from '../components/DataNotice.astro';
-import { SITE_NAME, tagColor, districtPath, DATASETS } from '../lib/site.js';
+import { SITE_NAME, tagColor, districtPath, datasetsForCity, cityList } from '../lib/site.js';
 import {
   overview,
   byOwnership,
@@ -31,20 +32,21 @@ const flatTypes = fees.filter((f) => f.flat && f.count >= 3).map((f) => f.owners
 const hidden = fees.filter((f) => f.count < CHART_MIN_SAMPLE);
 const least = districts[districts.length - 1];
 const noticeSources = [
-  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...data.cities.flatMap((c) => datasetsForCity(c.name)),
   ...(archive
     ? [{ label: archive.name, agency: `${archive.author}　原始出處：${archive.origin}　備份於 ${archive.updatedAt}`, url: archive.url }]
     : []),
 ];
 
-const title = `新北市托育概況：${o.total} 間機構的數字整理｜${SITE_NAME}`;
-const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立案幼兒園與托嬰中心的統計：各區分布、公私立組成、各類型月費中位數與裁罰紀錄概況。資料來自政府開放平台與民間封存。`;
+const where = cityList(data.cities);
+const title = `${where}托育概況：${o.total} 間機構的數字整理｜${SITE_NAME}`;
+const description = `${where} ${o.districts} 個行政區共 ${o.total} 間立案幼兒園與托嬰中心的統計：各區分布、公私立組成、各類型月費中位數與裁罰紀錄概況。資料來自政府開放平台與民間封存。`;
 ---
 
 <Base title={title} description={description} path="/概況/" back={{ href: '/', label: '首頁' }}>
   <div class="stack-lg">
     <section class="stack">
-      <h1>新北市托育概況</h1>
+      <h1>{where}托育概況</h1>
       <p class="muted">
         {`把 ${o.total.toLocaleString('en-US')} 間機構的資料攤開來看，比一間一間點更快抓到全貌。以下數字全部由開放資料自動計算，每月隨資料更新。`}
       </p>

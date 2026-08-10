@@ -1,10 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, districtPath } from '../lib/site.js';
+import { SITE_NAME, districtPath, cityList } from '../lib/site.js';
 
 const title = `搜尋機構｜${SITE_NAME}`;
-const description = `直接輸入機構名稱，在新北市 ${data.total} 間立案幼兒園與托嬰中心中尋找。`;
+const description = `直接輸入機構名稱，在${cityList(data.cities)} ${data.total} 間立案幼兒園與托嬰中心中尋找。`;
 ---
 
 <Base title={title} description={description} path="/搜尋/" back={{ href: '/', label: '首頁' }}>

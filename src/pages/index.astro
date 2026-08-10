@@ -3,11 +3,11 @@ import Base from '../layouts/Base.astro';
 import BarChart from '../components/BarChart.astro';
 import DataNotice from '../components/DataNotice.astro';
 import data from '../data/institutions.json';
-import { SITE_NAME, districtPath, tagColor, DATASETS } from '../lib/site.js';
+import { SITE_NAME, districtPath, tagColor, datasetsForCity, cityList } from '../lib/site.js';
 import { byOwnership, chartableFees, ageCoverage } from '../lib/stats.js';
 
 const allSources = [
-  ...Object.values(DATASETS).map((d) => ({ label: d.label, agency: d.agency, url: d.url })),
+  ...data.cities.flatMap((c) => datasetsForCity(c.name)),
   ...(data.archive
     ? [{ label: data.archive.name, agency: `${data.archive.author}　原始出處：${data.archive.origin}`, url: data.archive.url }]
     : []),
@@ -33,8 +33,9 @@ const ordered = [...districts].sort((a, b) => countByDistrict[b] - countByDistri
 const preschools = institutions.filter((i) => i.kind === 'preschool').length;
 const nurseries = total - preschools;
 
-const title = `新北市幼兒園與托嬰中心一覽｜${SITE_NAME}`;
-const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒園與托嬰中心的基本資料，並附上裁罰、評鑑、收退費與補助的官方查詢連結。資料來自政府開放平台。`;
+const where = cityList(data.cities);
+const title = `${where}幼兒園與托嬰中心一覽｜${SITE_NAME}`;
+const description = `整理${where} ${data.districts.length} 個行政區共 ${total} 間立案幼兒園與托嬰中心的基本資料，並附上裁罰、評鑑、收退費與補助的官方查詢連結。資料來自政府開放平台。`;
 ---
 
 <Base title={title} description={description} path="/">
@@ -42,7 +43,7 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
     <section class="stack">
       <h1>一起看看<br />附近有哪些托育選擇</h1>
       <p class="muted">
-        新北市 {total.toLocaleString('en-US')} 間立案幼兒園與托嬰中心，資料來自政府開放平台。慢慢比較，不用急。
+        {`${where} ${total.toLocaleString('en-US')} 間立案幼兒園與托嬰中心。慢慢比較，不用急。`}
       </p>
 
       <svg
@@ -120,30 +121,42 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
       <div class="stack-sm">
         <h2>想找哪一區？</h2>
         <p class="note">
-          幼兒園 {preschools.toLocaleString('en-US')} 間、托嬰中心 {nurseries} 間，可在各區頁面再篩選。
+          {`幼兒園 ${preschools.toLocaleString('en-US')} 間、托嬰中心 ${nurseries} 間，可在各區頁面再篩選。`}
         </p>
       </div>
       <div class="entry-actions">
         <a class="btn" href="/附近/">找我附近的幼兒園</a>
         <a class="btn btn-quiet" href="/搜尋/">已經知道名字？直接搜尋 →</a>
       </div>
-      <nav class="district-grid" aria-label="行政區">
-        {
-          ordered.map((d) => (
-            <a href={districtPath(d)}>
-              {d}
-              <span class="n">{countByDistrict[d]}</span>
-            </a>
-          ))
-        }
-      </nav>
+      {
+        data.cities.map((c) => (
+          <div class="citygroup">
+            <h3 class="cityname">
+              {c.name}
+              <span class="citymeta">
+                {`幼兒園 ${c.preschools.toLocaleString('en-US')}　托嬰 ${c.nurseries}`}
+              </span>
+            </h3>
+            <nav class="district-grid" aria-label={`${c.name}行政區`}>
+              {[...c.districts]
+                .sort((a, b) => countByDistrict[b] - countByDistrict[a])
+                .map((d) => (
+                  <a href={districtPath(d)}>
+                    {d}
+                    <span class="n">{countByDistrict[d]}</span>
+                  </a>
+                ))}
+            </nav>
+          </div>
+        ))
+      }
     </section>
 
     <section class="stack">
       <div class="stack-sm">
         <h2>先看全市的樣子</h2>
         <p class="note">
-          {`新北市的幼兒園裡，公立與非營利加起來只有 ${publicish} 間，不到三分之一——這也是為什麼公立要抽籤。`}
+          {`兩市的幼兒園裡，公立與非營利加起來只有 ${publicish} 間，不到三分之一——這也是為什麼公立要抽籤。`}
         </p>
       </div>
       <div class="card">
@@ -168,7 +181,7 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
         )
       }
       <a class="btn btn-quiet" href="/概況/" style="align-self:flex-start">
-        看完整的新北市托育概況 →
+        看完整的托育概況 →
       </a>
     </section>
 
