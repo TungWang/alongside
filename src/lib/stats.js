@@ -52,16 +52,21 @@ export function byOwnership(list = institutions) {
     .map(([ownership, count]) => ({ ownership, count }));
 }
 
+export const FEE_AGES = ['2', '3', '4', '5'];
+
 /**
- * 各屬性的月費。只有幼兒園有這筆資料，且來自民間封存。
+ * 各屬性在特定年齡的月費。只有幼兒園有，且來自民間封存。
  * 用中位數而非平均——私立的範圍極寬，平均會被極端值拉走。
+ *
+ * 一定要指定年齡：各齡價差可達三千以上，混在一起算出來的數字沒有意義。
  */
-export function feeByOwnership() {
+export function feeByOwnership(age = '2') {
   const groups = new Map();
   for (const i of preschools) {
-    if (!i.monthly) continue;
+    const fee = i.fees?.[age]?.monthly;
+    if (!fee) continue;
     if (!groups.has(i.ownership)) groups.set(i.ownership, []);
-    groups.get(i.ownership).push(i.monthly);
+    groups.get(i.ownership).push(fee);
   }
   return [...groups]
     .sort((a, b) => sortByOwnership(a[0], b[0]))
@@ -83,7 +88,29 @@ export function feeByOwnership() {
 
 /** 適合畫成圖表的月費資料：家數太少的類型畫出來會誤導，只留在表格裡 */
 export const CHART_MIN_SAMPLE = 10;
-export const chartableFees = () => feeByOwnership().filter((f) => f.count >= CHART_MIN_SAMPLE);
+export const chartableFees = (age = '2') =>
+  feeByOwnership(age).filter((f) => f.count >= CHART_MIN_SAMPLE);
+
+/** 各年齡的收費概況，供概況頁比較 */
+export function feeByAge() {
+  return FEE_AGES.map((age) => {
+    const all = preschools.map((i) => i.fees?.[age]?.monthly).filter(Boolean);
+    const sorted = [...all].sort((a, b) => a - b);
+    return {
+      age,
+      count: all.length,
+      median: sorted.length ? sorted[Math.floor(sorted.length / 2)] : null,
+    };
+  });
+}
+
+/** 收托年齡分布——對 0–3 歲家長，「這間收不收 2 歲」是最關鍵的篩選條件 */
+export function ageCoverage() {
+  return FEE_AGES.map((age) => ({
+    age,
+    count: preschools.filter((i) => i.fees?.[age]).length,
+  }));
+}
 
 /**
  * 裁罰的違規分類。

@@ -125,6 +125,14 @@ const jsonLd = {
           )
         }
         {
+          enriched && inst.ages?.length > 0 && (
+            <div>
+              <dt>收托年齡</dt>
+              <dd>{Math.min(...inst.ages)} 至 {Math.max(...inst.ages)} 歲</dd>
+            </div>
+          )
+        }
+        {
           enriched && inst.approvedCount && (
             <div>
               <dt>核定招收</dt>
@@ -170,13 +178,13 @@ const jsonLd = {
         }
       </dl>
       {
-        enriched && (inst.monthly || inst.regNo) && (
+        enriched && (inst.fees || inst.regNo) && (
           <p class="source">
-            月費、立案字號、核定人數與面積來自<a
+            收費、立案字號、核定人數與面積來自<a
               href={data.archive.url}
               target="_blank"
               rel="noopener nofollow">{data.archive.name} ↗</a
-            >{`（${data.archive.author}，${data.archive.license} 授權），原始出處為${data.archive.origin}，該備份更新於 ${data.archive.updatedAt}。月費為推算值，實際收費請直接向園所確認。`}
+            >{`（${data.archive.author}，${data.archive.license} 授權），原始出處為${data.archive.origin}，該備份更新於 ${data.archive.updatedAt}。`}
           </p>
         )
       }

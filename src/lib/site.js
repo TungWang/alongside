@@ -142,3 +142,48 @@ export const needsCategoryTag = (inst) => !inst.category.startsWith(inst.ownersh
 
 export const districtPath = (district) => `/d/${encodeURIComponent(district)}/`;
 export const institutionPath = (id) => `/i/${encodeURIComponent(id)}/`;
+
+/**
+ * 卡片與清單顯示哪一個年齡的費用：一律用「有資料的最小年齡」。
+ *
+ * 本站對象是 0–3 歲家長，最小年齡跟他們最相關；而各齡價差可達三千以上，
+ * 給一個沒標年齡的數字等於沒說。所以回傳一定帶 age，UI 必須把年齡印出來。
+ */
+export function primaryFee(inst) {
+  if (!inst.fees) return null;
+  for (const age of ['2', '3', '4', '5']) {
+    if (inst.fees[age]) return { age: Number(age), ...inst.fees[age] };
+  }
+  return null;
+}
+
+export const acceptsAge = (inst, age) => Boolean(inst.fees?.[String(age)]);
+
+/**
+ * 課後延托費（選繳）。家長訪談中被點名為關鍵資訊，資料本來就在，只是沒突顯。
+ * 各齡通常同價，取第一個有值的即可。
+ */
+export function afterHoursFee(inst) {
+  if (!inst.fees) return null;
+  for (const age of ['2', '3', '4', '5']) {
+    const v = inst.fees[age]?.afterHours;
+    if (v) return v;
+  }
+  return null;
+}
+
+/**
+ * 收費月數，用來回答「有沒有寒暑假」。
+ *
+ * 注意這是代理指標，不是直接答案：來源的收費明細表只有上下學期，沒有寒暑假班欄位。
+ * 收費 12 個月代表全年收費（寒暑假多半照常收托），9 個月代表只收學期間
+ * （寒暑假通常另外安排或另外收費）。要確定仍得問園所。
+ */
+export function feeMonths(inst) {
+  if (!inst.fees) return null;
+  const months = Object.values(inst.fees).map((f) => f.months).filter(Boolean);
+  return months.length ? Math.max(...months) : null;
+}
+
+export const termLabel = (months) =>
+  months == null ? null : months >= 12 ? '全年收費' : `學期制 ${months} 個月`;

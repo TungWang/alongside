@@ -10,6 +10,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { primaryFee } from '../src/lib/site.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_FILE = path.join(ROOT, 'src/data/institutions.json');
@@ -194,7 +195,8 @@ function normalizeRow(row, src) {
     // 以下由 enrich() 從民間封存補上，托嬰中心無對應資料，維持 null
     regNo: null, // 立案／設立許可字號
     approvedCount: null, // 核定招收人數
-    monthly: null, // 平均月費
+    fees: null, // 分齡收費，見 fetchFees()
+    ages: [], // 有收費資料的年齡＝有收這個年齡
     floorArea: null,
     website: null,
     closed: false,
@@ -212,6 +214,11 @@ function normalizeRow(row, src) {
 // 比對用：封存端與開放資料端的機構名稱寫法略有出入，去掉空白與括號後可 100% 對上
 const matchKey = (name) => squash(name).replace(/\s/g, '').replace(/[（）()]/g, '');
 
+/**
+ * 卡片與清單上顯示哪一個年齡的費用：一律用「有資料的最小年齡」。
+ * 本站的對象是 0–3 歲家長，最小年齡跟他們最相關；而且各齡價差可達三千以上，
+ * 給一個沒標年齡的數字等於沒說。回傳一定帶 age，UI 必須把年齡印出來。
+ */
 const inRange = (v, lo, hi) => typeof v === 'number' && v >= lo && v <= hi;
 const round6 = (v) => Math.round(v * 1e6) / 1e6; // 約 0.1 公尺精度，足夠且省檔案大小
 
@@ -372,12 +379,78 @@ async function fetchArchive() {
   return { byName, updatedAt: updatedAt.toISOString().slice(0, 10), ageDays };
 }
 
+/**
+ * 極簡 CSV 解析。來源是政府彙總資料，欄位單純，但機構名稱可能含逗號，
+ * 所以還是要處理雙引號包住的欄位。
+ */
+function parseCsv(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const head = lines[0].split(',');
+  return lines.slice(1).map((line) => {
+    const cells = [];
+    let cur = '';
+    let quoted = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') quoted = !quoted;
+      else if (ch === ',' && !quoted) {
+        cells.push(cur);
+        cur = '';
+      } else cur += ch;
+    }
+    cells.push(cur);
+    return Object.fromEntries(head.map((h, i) => [h.trim(), (cells[i] || '').trim()]));
+  });
+}
+
+/**
+ * 分齡收費。
+ *
+ * 欄位語意是用封存端的收費明細表（slip114，園所依法申報的原始文件）反推並驗證的：
+ *   monthly1 = total1 ÷ months                    （40/40 樣本成立）
+ *   全學期總收費 = 學費＋雜費＋材料費＋活動費＋午餐費＋點心費（20/20 成立）
+ *   total1 = 上學期總收費 × 2                      （19/20 成立）
+ *   total2 = 課後延托費 × 2                        （17/20 成立）
+ *
+ * 所以 monthly1 是「每月必繳費用」，未扣任何政府補助，不含交通費與課後延托費；
+ * monthly2 是課後延托費的月攤，屬選繳——一開始誤以為那是補助，驗證後推翻。
+ *
+ * 之所以改用這份而不用封存 GeoJSON 的 monthly 欄位：後者對 1,057 間中的 782 間
+ * （74%）對不上任何年齡的實際收費，也不是各齡平均，來源無法解釋。
+ * 一個講不出根據的金額不該掛在家長要拿來評估預算的頁面上。
+ */
+const FEE_AGES = ['2', '3', '4', '5'];
+
+async function fetchFees() {
+  const byName = new Map();
+  for (const age of FEE_AGES) {
+    const url = `${ARCHIVE}/data/summary1/${encodeURIComponent('新北市')}/${age}.csv`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`分齡收費下載失敗（${age} 歲）：${res.status}`);
+    for (const row of parseCsv(await res.text())) {
+      const monthly = toInt(row.monthly1);
+      if (!row.point || !monthly) continue;
+      const key = matchKey(row.point);
+      if (!byName.has(key)) byName.set(key, {});
+      byName.get(key)[age] = {
+        monthly, // 每月必繳
+        months: Number(row.months) || null, // 一年收費幾個月
+        yearly: toInt(row.total1), // 全年必繳
+        afterHours: toInt(row.monthly2), // 課後延托，選繳
+      };
+    }
+  }
+  return byName;
+}
+
 async function enrich(institutions) {
   const archive = await fetchArchive();
   if (!archive) return { enriched: 0, penaltyCount: 0, archive: null };
 
+  const fees = await fetchFees();
   const preschools = institutions.filter((i) => i.kind === 'preschool');
   let enriched = 0;
+  let withFees = 0;
 
   for (const inst of preschools) {
     const p = archive.byName.get(matchKey(inst.name));
@@ -385,7 +458,7 @@ async function enrich(institutions) {
     enriched++;
     inst.regNo = squash(p.reg_docno) || squash(p.reg_no) || null;
     inst.approvedCount = toInt(p.count_approved);
-    inst.monthly = toInt(p.monthly);
+
     inst.floorArea = squash(p.size) || null;
     inst.website = safeWebsite(p.url);
     inst.closed = p.is_active === 0;
@@ -396,6 +469,15 @@ async function enrich(institutions) {
       inst.lng = round6(p._lng);
     }
     inst._hasPenalty = squash(p.penalty) !== '' && squash(p.penalty) !== '無';
+  }
+
+  for (const inst of preschools) {
+    const f = fees.get(matchKey(inst.name));
+    if (!f) continue;
+    withFees++;
+    inst.fees = f;
+    // 有這個年齡的收費資料，就代表這間收這個年齡的孩子
+    inst.ages = FEE_AGES.filter((a) => f[a]).map(Number);
   }
 
   // 只對標記有裁罰的機構抓明細，省掉九成請求
@@ -429,6 +511,7 @@ async function enrich(institutions) {
 
   return {
     enriched,
+    withFees,
     penaltyCount,
     institutionsWithPenalty: targets.filter((i) => i.penalties.length).length,
     archive: { ...ARCHIVE_CREDIT, updatedAt: archive.updatedAt },
@@ -475,7 +558,7 @@ async function main() {
   }
   if (meta.archive) {
     console.log(
-      `  對上 ${meta.enriched} 間，其中 ${meta.institutionsWithPenalty} 間有裁罰、共 ${meta.penaltyCount} 筆（封存更新於 ${meta.archive.updatedAt}）`,
+      `  對上 ${meta.enriched} 間，其中 ${meta.withFees} 間有分齡收費、${meta.institutionsWithPenalty} 間有裁罰共 ${meta.penaltyCount} 筆（封存更新於 ${meta.archive.updatedAt}）`,
     );
   }
 
@@ -505,7 +588,8 @@ async function main() {
     d: i.district,
     c: i.category,
     o: i.ownership,
-    m: i.monthly || 0,
+    m: primaryFee(i)?.monthly || 0,
+    a: primaryFee(i)?.age || 0,
     p: i.penalties.length,
     ...(i.lat ? { y: i.lat, x: i.lng } : {}),
   }));

@@ -2,39 +2,105 @@
 /**
  * 收費。同樣是「沒有資料時也要出現並說明原因」——
  * 家長點進來最想知道的兩件事就是收費和裁罰，兩者都不能只是默默不顯示。
+ *
+ * 分齡呈現，不給單一數字：2 歲與 5 歲的收費可以差三千以上，
+ * 而本站對象是 0–3 歲家長，給一個混齡的平均反而讓他們低估預算。
  */
 import data from '../data/institutions.json';
+import { FEE_AGES } from '../lib/stats.js';
+import { afterHoursFee, feeMonths } from '../lib/site.js';
 
 const { inst, feeLink } = Astro.props;
 
 const available = Boolean(data.archive && inst.kind === 'preschool');
+const rows = available && inst.fees ? FEE_AGES.filter((a) => inst.fees[a]) : [];
 const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
+const afterHours = afterHoursFee(inst);
+const months = feeMonths(inst);
 ---
 
 <section class="stack">
   <h2>收費</h2>
 
   {
-    available && inst.monthly ? (
-      <div class="card stack-sm">
-        <p class="figure">
-          <strong>{inst.monthly.toLocaleString('en-US')}</strong> 元 <span>／ 每月平均</span>
-        </p>
-        <p class="note">
-          {flatCap
-            ? `${inst.ownership}幼兒園的收費由政策訂定上限，全市同類型都是這個數字，不是這間園的實際結算金額。`
-            : '依註冊繳費單推算的每月平均，含月費與代辦費。實際繳費會因學期、餐點、才藝、延托而不同。'}
-        </p>
-        {feeLink && (
-          <p class="note">
-            官方收費規定見
-            <a href={feeLink.url} target="_blank" rel="noopener nofollow">
-              {feeLink.source} ↗
-            </a>
-            ，確切金額請直接向園所確認。
+    rows.length > 0 ? (
+      <>
+        <div class="card">
+          <table class="feetable">
+            <thead>
+              <tr>
+                <th>年齡</th>
+                <th class="num">每月必繳</th>
+                <th class="num">全年</th>
+                <th class="num">收費月數</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((a) => (
+                <tr>
+                  <td>{a} 歲</td>
+                  <td class="num strong">{inst.fees[a].monthly.toLocaleString('en-US')}</td>
+                  <td class="num">
+                    {inst.fees[a].yearly ? inst.fees[a].yearly.toLocaleString('en-US') : '—'}
+                  </td>
+                  <td class="num">{inst.fees[a].months ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <dl class="extras">
+          <div>
+            <dt>課後延托費</dt>
+            <dd>
+              {afterHours ? `每月約 ${afterHours.toLocaleString('en-US')} 元（選繳）` : '這間沒有申報延托費用'}
+            </dd>
+          </div>
+          <div>
+            <dt>寒暑假</dt>
+            <dd>
+              {months == null
+                ? '無資料'
+                : months >= 12
+                  ? `全年收費 ${months} 個月，寒暑假多半照常收托`
+                  : `一年只收費 ${months} 個月，寒暑假通常另外安排或另外收費——要確定請直接問園所`}
+            </dd>
+          </div>
+        </dl>
+
+        <div class="state">
+          <p>
+            <strong>這些數字包含什麼、不包含什麼</strong>
           </p>
-        )}
-      </div>
+          <ul>
+            <li>
+              {'包含學費、雜費、材料費、活動費、午餐費、點心費——也就是園所申報的必繳項目。'}
+            </li>
+            <li>
+              <strong>沒有扣掉任何政府補助。</strong>
+              {'這是園所的收費，不是你實際要付的金額。準公共與公立有就學補助，實付會低不少，請以主管機關公告的補助標準為準。'}
+            </li>
+            <li>{'不含交通費與課後延托費，那些屬選繳項目，另列於上方。'}</li>
+            <li>
+              {'上下課的實際時間本站沒有——來源的收費明細表只區分半日班與全日班，沒有時刻。請直接問園所。'}
+            </li>
+            {flatCap && (
+              <li>{`${inst.ownership}幼兒園的收費由政策訂定上限，同類型的園所數字多半一致，不是這間的個別結算。`}</li>
+            )}
+            <li>{'依園所申報的收費明細表推算，實際繳費仍請直接向園所確認。'}</li>
+          </ul>
+          {feeLink && (
+            <p>
+              官方收費規定見
+              <a href={feeLink.url} target="_blank" rel="noopener nofollow">
+                {feeLink.source} ↗
+              </a>
+              。
+            </p>
+          )}
+        </div>
+      </>
     ) : (
       <div class="state">
         <p>
@@ -46,8 +112,8 @@ const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
         </p>
         <p>
           {inst.kind === 'preschool'
-            ? '民間備份的資料裡查不到這間園的繳費單，可能是尚未申報或格式無法解析。'
-            : '幼兒園的收費有民間備份的繳費單資料可用，托嬰中心目前沒有任何結構化來源，本站無法整理。'}
+            ? '民間備份的資料裡查不到這間園申報的收費明細表，可能是尚未申報或格式無法解析。'
+            : '幼兒園有依法申報的收費明細表可用，托嬰中心目前沒有任何結構化來源，本站無法整理。'}
         </p>
         {feeLink && (
           <p>
@@ -64,20 +130,60 @@ const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
 </section>
 
 <style>
-  .figure {
-    margin: 0;
-    color: var(--ink-soft);
+  .feetable {
+    width: 100%;
+    border-collapse: collapse;
     font-size: 14px;
   }
-  .figure strong {
-    font-size: 30px;
-    color: var(--ink);
+  .feetable th,
+  .feetable td {
+    text-align: left;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .feetable th {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .feetable tr:last-child td {
+    border-bottom: 0;
+  }
+  .feetable .num {
+    text-align: right;
     font-variant-numeric: tabular-nums;
-    line-height: 1.2;
   }
-  .figure span {
+  .feetable .strong {
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .extras {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+  .extras > div {
+    display: grid;
+    grid-template-columns: 6.4em 1fr;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+  }
+  .extras > div:last-child {
+    border-bottom: 0;
+  }
+  .extras dt {
+    color: var(--ink-soft);
     font-size: 13px;
+    margin: 0;
   }
+  .extras dd {
+    margin: 0;
+    line-height: 1.6;
+  }
+
   .state {
     background: #f3ece0;
     border-radius: var(--radius-card);
@@ -94,5 +200,12 @@ const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
   }
   .state strong {
     color: var(--ink);
+  }
+  .state ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 18px;
+    list-style: disc;
   }
 </style>

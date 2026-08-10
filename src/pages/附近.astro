@@ -130,7 +130,7 @@ const description = `用你目前的位置，找出新北市離你最近的立�
       sub.className = 'sub';
       sub.textContent =
         `${it.d}　${it.o}` +
-        (it.m ? `　平均月費 ${it.m.toLocaleString('en-US')} 元` : '') +
+        (it.m ? `　${it.a} 歲每月必繳 ${it.m.toLocaleString('en-US')} 元` : '') +
         (it.p ? `　裁罰 ${it.p} 筆` : '');
       body.append(nm, sub);
 

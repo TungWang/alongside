@@ -13,7 +13,7 @@ const allSources = [
     : []),
 ];
 const owners = byOwnership();
-const fees = chartableFees();
+const fees = chartableFees('2');
 const publicish = owners
   .filter((x) => ['公立', '非營利'].includes(x.ownership))
   .reduce((s, x) => s + x.count, 0);
@@ -115,7 +115,7 @@ const description = `整理新北市 29 個行政區共 ${total} 間立案幼兒
                 display: `${f.median.toLocaleString('en-US')} 元`,
                 color: tagColor(f.ownership),
               }))}
-              caption="各類型幼兒園的月費中位數，依註冊繳費單推算。資料來源、限制與注意事項見托育概況頁。"
+              caption="各類型幼兒園收 2 歲的每月必繳中位數，未扣政府補助。資料來源與注意事項見托育概況頁。"
             />
           </div>
         )

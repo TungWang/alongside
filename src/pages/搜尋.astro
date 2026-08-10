@@ -101,7 +101,8 @@ const description = `直接輸入機構名稱，在新北市 ${data.total} 間�
       nm.textContent = it.n;
       const sub = document.createElement('span');
       sub.className = 'sub';
-      sub.textContent = `${it.d}　${it.c}${it.m ? `　平均月費 ${it.m.toLocaleString('en-US')} 元` : ''}`;
+      sub.textContent =
+        `${it.d}　${it.c}` + (it.m ? `　${it.a} 歲每月必繳 ${it.m.toLocaleString('en-US')} 元` : '');
       a.append(nm, sub);
       frag.append(a);
     }

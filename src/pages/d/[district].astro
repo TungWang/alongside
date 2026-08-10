@@ -4,7 +4,7 @@ import InstitutionCard from '../../components/InstitutionCard.astro';
 import BarChart from '../../components/BarChart.astro';
 import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
-import { SITE_NAME, tagColor, DATASETS } from '../../lib/site.js';
+import { SITE_NAME, tagColor, DATASETS, primaryFee } from '../../lib/site.js';
 import { byOwnership } from '../../lib/stats.js';
 
 export function getStaticPaths() {
@@ -23,10 +23,13 @@ const preschools = list.filter((i) => i.kind === 'preschool').length;
 const nurseries = list.length - preschools;
 const composition = byOwnership(list);
 
-const fees = list.map((i) => i.monthly).filter(Boolean).sort((a, b) => a - b);
-const feeMedian = fees.length ? fees[Math.floor(fees.length / 2)] : null;
+// 中位數固定用 2 歲：本站對象是 0–3 歲家長，而各齡價差可達三千以上，
+// 混齡算出來的中位數兩邊都不代表。
+const fees2 = list.map((i) => i.fees?.['2']?.monthly).filter(Boolean).sort((a, b) => a - b);
+const feeMedian = fees2.length ? fees2[Math.floor(fees2.length / 2)] : null;
 const penalised = list.filter((i) => i.penalties.length).length;
-const feeCount = list.filter((i) => i.monthly).length;
+const feeCount = list.filter((i) => primaryFee(i)).length;
+const accepts2 = list.filter((i) => i.ages?.includes(2)).length;
 
 const noticeSources = [
   ...[...new Set(list.map((i) => i.category))].map((c) => ({
@@ -81,7 +84,7 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
           <details class="composition">
             <summary>
               這一區的組成
-              {feeMedian ? `　·　幼兒園月費中位數 ${feeMedian.toLocaleString('en-US')} 元` : ''}
+              {feeMedian ? `　·　2 歲月費中位數 ${feeMedian.toLocaleString('en-US')} 元` : ''}
             </summary>
             <div class="composition-body">
               <BarChart
@@ -113,6 +116,7 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
             </button>
           ))
         }
+        {accepts2 > 0 && <button type="button" data-filter="age:2" aria-pressed="false">收 2 歲 {accepts2}</button>}
         {penalised > 0 && <button type="button" data-filter="flag:penalty" aria-pressed="false">有裁罰紀錄 {penalised}</button>}
       </div>
 
@@ -124,8 +128,8 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
               排序
               <select id="sort">
                 <option value="name">機構名稱</option>
-                <option value="fee-asc">月費：低到高</option>
-                <option value="fee-desc">月費：高到低</option>
+                <option value="fee-asc">費用：低到高</option>
+                <option value="fee-desc">費用：高到低</option>
               </select>
             </label>
           )
@@ -170,6 +174,7 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
     if (field === 'kind') return card.dataset.kind === value;
     if (field === 'ownership') return card.dataset.ownership === value;
     if (field === 'flag') return Number(card.dataset.penalties) > 0;
+    if (field === 'age') return (card.dataset.ages || '').split('|').includes(value);
     return true;
   }
 
@@ -204,7 +209,10 @@ const description = `新北市${district}共 ${list.length} 間立案托育機�
       btn.setAttribute('aria-pressed', String(btn.dataset.filter === activeFilter));
     }
 
-    const label = mode === 'name' ? '依名稱排序' : mode === 'fee-asc' ? '依月費由低到高' : '依月費由高到低';
+    const label =
+      mode === 'name' ? '依名稱排序'
+      : mode === 'fee-asc' ? '依費用由低到高'
+      : '依費用由高到低';
     counter.textContent = shown ? `${label}，共 ${shown} 間` : '';
     emptyState.hidden = shown > 0;
   }

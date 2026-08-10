@@ -8,6 +8,8 @@ import {
   byOwnership,
   feeByOwnership,
   chartableFees,
+  feeByAge,
+  ageCoverage,
   CHART_MIN_SAMPLE,
   penaltyStats,
   districtStats,
@@ -17,8 +19,10 @@ import {
 
 const o = overview();
 const owners = byOwnership();
-const fees = feeByOwnership();
-const feeChart = chartableFees();
+const fees = feeByOwnership('2');
+const feeChart = chartableFees('2');
+const byAge = feeByAge();
+const ages = ageCoverage();
 const pen = penaltyStats();
 const districts = districtStats();
 
@@ -92,9 +96,9 @@ const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立�
       fees.length > 0 && (
         <section class="stack">
           <div class="stack-sm">
-            <h2>各類型的月費差多少</h2>
+            <h2>2 歲的收費差多少</h2>
             <p class="note">
-              {`私立幼兒園的月費中位數是 ${fee('私立')?.median.toLocaleString('en-US')} 元，公立是 ${fee('公立')?.median.toLocaleString('en-US')} 元。用中位數而不是平均，因為私立的範圍從 ${fee('私立')?.min.toLocaleString('en-US')} 到 ${fee('私立')?.max.toLocaleString('en-US')} 元都有，平均會被少數高價園拉走。`}
+              {`私立幼兒園收 2 歲的每月必繳中位數是 ${fee('私立')?.median.toLocaleString('en-US')} 元，公立是 ${fee('公立')?.median.toLocaleString('en-US')} 元。用中位數而不是平均，因為私立的範圍從 ${fee('私立')?.min.toLocaleString('en-US')} 到 ${fee('私立')?.max.toLocaleString('en-US')} 元都有，平均會被少數高價園拉走。`}
             </p>
           </div>
           <div class="card">
@@ -105,13 +109,37 @@ const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立�
                 display: `${f.median.toLocaleString('en-US')} 元`,
                 color: tagColor(f.ownership),
               }))}
-              caption={`每一類的月費中位數。家數少於 ${CHART_MIN_SAMPLE} 間的類型不畫進圖表——樣本太少的「中位數」不具代表性，數字仍列在下方表格。`}
+              caption={`收 2 歲的每月必繳中位數。家數少於 ${CHART_MIN_SAMPLE} 間的類型不畫進圖表——樣本太少的「中位數」不具代表性，數字仍列在下方表格。`}
+            />
+          </div>
+
+          <div class="card stack-sm">
+            <h3>年齡越小越貴</h3>
+            <BarChart
+              items={byAge.filter((a) => a.median).map((a) => ({
+                label: `${a.age} 歲`,
+                value: a.median,
+                display: `${a.median.toLocaleString('en-US')} 元`,
+              }))}
+              caption={`全體幼兒園各年齡的每月必繳中位數。2 歲比 5 歲貴 ${(byAge[0].median - byAge[3].median).toLocaleString('en-US')} 元——先前只給一個混齡數字時，0–3 歲家長會嚴重低估預算。`}
+            />
+          </div>
+
+          <div class="card stack-sm">
+            <h3>收哪些年齡</h3>
+            <BarChart
+              items={ages.map((a) => ({ label: `${a.age} 歲`, value: a.count }))}
+              caption={`有申報該年齡收費的園所數。對 0–3 歲家長最關鍵：${ages[0].count} 間收 2 歲，其餘 ${o.preschools - ages[0].count} 間不收，可在各行政區頁用「收 2 歲」篩選。`}
             />
           </div>
 
           <div class="caveat">
-            <p><strong>月費這組數字要注意</strong></p>
+            <p><strong>收費這組數字要注意</strong></p>
             <ul>
+              <li>
+                <strong>這是園所的收費，不是你實際要付的金額。</strong>
+                {'包含學費、雜費、材料費、活動費、午餐費、點心費六項必繳，但沒有扣掉任何政府補助——準公共與公立有就學補助，實付會低不少。也不含交通費與課後延托費。'}
+              </li>
               {
                 flatTypes.length > 0 && (
                   <li>
@@ -119,7 +147,7 @@ const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立�
                   </li>
                 )
               }
-              <li>這是依註冊繳費單推算的<strong>每月平均</strong>，含月費與代辦費。實際繳費會因學期、餐點、才藝、延托而不同。</li>
+              <li>{'依園所依法申報的收費明細表推算：全年必繳總額除以收費月數。欄位語意是用同一份來源的收費明細表交叉驗證出來的，不是猜測。'}</li>
               <li>公立與非營利要抽籤，名額有限；準公共與私立雖然隨時可談，但價差極大。<strong>便宜不等於好，貴也不等於好</strong>，這組數字只幫你抓預算範圍。</li>
               {
                 hidden.length > 0 && (
@@ -131,7 +159,7 @@ const description = `新北市 ${o.districts} 個行政區共 ${o.total} 間立�
           <div class="card">
             <table class="datatable">
               <thead>
-                <tr><th>類型</th><th>園數</th><th>中位數</th><th>範圍</th></tr>
+                <tr><th>類型</th><th>園數</th><th>2 歲中位</th><th>範圍</th></tr>
               </thead>
               <tbody>
                 {fees.map((f) => (

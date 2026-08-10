@@ -1,5 +1,12 @@
 ---
-import { tagColor, institutionPath, needsCategoryTag } from '../lib/site.js';
+import {
+  tagColor,
+  institutionPath,
+  needsCategoryTag,
+  primaryFee,
+  feeMonths,
+  termLabel,
+} from '../lib/site.js';
 
 const { inst } = Astro.props;
 
@@ -7,13 +14,18 @@ const { inst } = Astro.props;
 // 先前把 Google 地圖做成唯一看起來可點的元素，結果家長全被帶離站外，
 // 從沒發現內頁。現在整張卡都是進內頁的連結，地圖降為次要小連結。
 const penaltyCount = inst.penalties?.length || 0;
+// 一定要標年齡：2 歲與 5 歲的收費可以差三千以上，沒標年齡的金額等於沒說
+const fee = primaryFee(inst);
+// 全年收費／學期制是家長訪談中被點名的資訊：學期制代表寒暑假要另外安排
+const term = termLabel(feeMonths(inst));
 ---
 
 <li
   class="inst-card"
   data-kind={inst.kind}
   data-ownership={inst.ownership}
-  data-monthly={inst.monthly || ''}
+  data-monthly={fee?.monthly || ''}
+  data-ages={(inst.ages || []).join('|')}
   data-penalties={penaltyCount}
   data-name={inst.name}
 >
@@ -21,6 +33,8 @@ const penaltyCount = inst.penalties?.length || 0;
     <span class="tag" style={`background:${tagColor(inst.ownership)}`}>{inst.ownership}</span>
     {needsCategoryTag(inst) && <span class="tag tag-outline">{inst.category}</span>}
     {inst.capacity && <span class="tag tag-outline">收托 {inst.capacity} 人</span>}
+    {inst.ages?.length > 0 && <span class="tag tag-outline">收 {Math.min(...inst.ages)}–{Math.max(...inst.ages)} 歲</span>}
+    {term && <span class="tag tag-outline">{term}</span>}
     {penaltyCount > 0 && <span class="tag tag-flag">裁罰 {penaltyCount} 筆</span>}
   </div>
 
@@ -32,10 +46,10 @@ const penaltyCount = inst.penalties?.length || 0;
   </div>
 
   {
-    inst.monthly && (
+    fee && (
       <p class="fee">
-        平均月費 <strong>{inst.monthly.toLocaleString('en-US')}</strong> 元
-        <span class="fee-note">推算值</span>
+        {fee.age} 歲每月必繳 <strong>{fee.monthly.toLocaleString('en-US')}</strong> 元
+        <span class="fee-note">未扣補助</span>
       </p>
     )
   }

@@ -284,6 +284,56 @@ check('附近清單的樣式在全域 CSS 而非 scoped', () => {
   return /data-astro-cid/.test(rule[0]) ? '.near-list a 被 scoped，動態節點吃不到' : true;
 });
 
+// 曾經：封存 GeoJSON 的 monthly 欄位對 74% 的機構對不上任何年齡的實際收費，
+// 來源無法解釋。改用可交叉驗證的分齡資料後，這個欄位不該再出現。
+check('已無來源不明的 monthly 欄位', () => {
+  const bad = DATA.institutions.filter((i) => 'monthly' in i);
+  return bad.length ? `${bad.length} 筆仍帶 monthly 欄位` : true;
+});
+
+check('分齡收費覆蓋率與內部一致性', () => {
+  const pre = DATA.institutions.filter((i) => i.kind === 'preschool');
+  const withFees = pre.filter((i) => i.fees);
+  if (withFees.length < pre.length * 0.9) {
+    return `只有 ${withFees.length}/${pre.length} 有分齡收費`;
+  }
+  for (const i of withFees) {
+    for (const [age, f] of Object.entries(i.fees)) {
+      if (!f.monthly || f.monthly < 500 || f.monthly > 80000) {
+        return `${i.name} ${age} 歲收費 ${f.monthly} 不合理`;
+      }
+      // monthly1 = total1 ÷ months，這是反推欄位語意時驗證過的等式，必須持續成立
+      if (f.yearly && f.months && Math.abs(f.yearly / f.months - f.monthly) > 2) {
+        return `${i.name} ${age} 歲：全年 ${f.yearly} ÷ ${f.months} 個月 ≠ 每月 ${f.monthly}`;
+      }
+      if (!i.ages.includes(Number(age))) return `${i.name} 有 ${age} 歲收費卻不在 ages 裡`;
+    }
+  }
+  return true;
+});
+
+check('收托年齡可用於篩選', () => {
+  const accepts2 = DATA.institutions.filter((i) => i.ages?.includes(2)).length;
+  if (accepts2 < 300) return `只有 ${accepts2} 間標示收 2 歲，疑似資料異常`;
+  const sample = 'd/板橋區/index.html';
+  const h = read(sample);
+  if (!h.includes('data-ages=')) return '行政區頁的卡片缺少 data-ages';
+  if (!h.includes('收 2 歲')) return '行政區頁缺少「收 2 歲」篩選鈕';
+  return true;
+});
+
+// 卡片與清單上的金額一律要標年齡：2 歲與 5 歲可差三千以上
+check('顯示金額處都標了年齡', () => {
+  const h = read('d/板橋區/index.html');
+  if (/平均月費/.test(h)) return '仍有未標年齡的「平均月費」字樣';
+  return /歲每月必繳/.test(h) ? true : '卡片上找不到標了年齡的費用';
+});
+
+check('收費區塊講明未扣補助', () => {
+  const h = read('i/preschool-悅淨幼兒園-板橋區/index.html');
+  return h.includes('沒有扣掉任何政府補助') ? true : '收費區塊未聲明補助未扣除';
+});
+
 // --- 執行 ---------------------------------------------------------------
 
 let failed = 0;
