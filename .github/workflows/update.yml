@@ -22,9 +22,16 @@ jobs:
 
       - run: npm ci
 
-      # 抓開放資料 → 產生 src/data/institutions.json → 建置成靜態頁
-      # 主鍵碰撞時 fetch-data.js 會 exit 1，建置直接失敗，不會把壞資料部署上線
-      - run: npm run build
+      # 拆成三步，這樣失敗時光看步驟名稱就知道是抓資料、建置還是驗證出問題——
+      # 完整 log 需要 repo 管理權限才讀得到，但步驟結果是公開的。
+      - name: 抓資料
+        run: npm run fetch
+
+      - name: 建置
+        run: npx astro build
+
+      - name: 驗證
+        run: npm run verify
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
