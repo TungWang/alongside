@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/institutions.json'), 'utf8'));
+const { PRESCHOOL, NURSERY, VERIFIED_ON, isStale } = await import('../src/lib/admission.js');
 
 const read = (p) => fs.readFileSync(path.join(DIST, p), 'utf8');
 const exists = (p) => fs.existsSync(path.join(DIST, p));
@@ -503,6 +504,60 @@ check('概覽的金額與補助試算一致', () => {
   const cell = cells.find((c) => c.key === `1-std-${youngest}`);
   const shown = cell.pay === 0 ? '免費' : cell.pay.toLocaleString('en-US');
   return h.includes(shown) ? true : `概覽顯示的金額與試算的 ${shown} 對不上`;
+});
+
+check('招生時程的每個官方連結都有出現在頁面上', () => {
+  // 這頁的價值全在「連得到官方報名系統」。少一個連結，家長就得自己去找。
+  const h = read('招生時程/index.html');
+  const urls = [
+    ...PRESCHOOL.flatMap((s) => [s.official, s.handbook.url, ...s.stages.map((t) => t.url)]),
+    ...NURSERY.flatMap((n) => n.links.map((l) => l.url)),
+  ].filter(Boolean);
+  const missing = urls.filter((u) => !h.includes(u));
+  return missing.length === 0 ? true : `頁面少了 ${missing.join('、')}`;
+});
+
+check('招生時程的日期會自己過期，不會把舊日期當成今年的', () => {
+  // 這是全站唯一寫死日期的地方。舊日期看起來像今年的，家長就會錯過登記。
+  const h = read('招生時程/index.html');
+  const stale = PRESCHOOL.every((s) => isStale(s, DATA.fetchedAt));
+  if (stale) {
+    if (!h.includes('招生已經結束')) return '日期已全部過期，頁面卻沒有提出警示';
+    // 過期時不能只說「過期了」，還要告訴家長現在能做什麼
+    if (!h.includes('那現在可以做什麼')) return '過期警示沒有給出可行動的替代方案';
+    return true;
+  }
+  if (!h.includes(VERIFIED_ON)) return '未過期時應標示日期的核對日';
+  return true;
+});
+
+check('招生時程沒有抄錄只存在於 PDF 的日期', () => {
+  // 抽籤與報到日只寫在簡章 PDF 裡，抄錯的代價是家長白跑一趟——刻意不抄。
+  const ntpc = PRESCHOOL.find((s) => s.city === '新北市');
+  const draw = ntpc.stages.find((s) => s.name.includes('抽籤'));
+  if (!draw) return '新北市少了抽籤階段';
+  return /簡章/.test(draw.detail) && draw.note ? true : '抽籤階段應說明日期以簡章為準';
+});
+
+check('招生時程的階段日期順序合理', () => {
+  for (const s of PRESCHOOL) {
+    for (const t of s.stages) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(t.start) || !/^\d{4}-\d{2}-\d{2}$/.test(t.end)) {
+        return `${s.city}「${t.name}」的日期格式不對`;
+      }
+      if (t.end < t.start) return `${s.city}「${t.name}」的結束早於開始`;
+    }
+    const main = s.stages.filter((t) => t.key);
+    if (main.length !== 1) return `${s.city}應該剛好標出一個主要登記階段`;
+  }
+  return true;
+});
+
+check('招生時程頁在首頁與頁尾都找得到', () => {
+  // 這頁是時效性內容，藏起來等於沒做。
+  const home = read('index.html');
+  if ((home.match(/href="\/招生時程\//g) || []).length < 2) return '首頁的兩張年齡卡都應該有入口';
+  return read('搜尋/index.html').includes('href="/招生時程/"') ? true : '頁尾少了招生時程連結';
 });
 
 // --- 執行 ---------------------------------------------------------------

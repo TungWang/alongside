@@ -1,0 +1,408 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/institutions.json';
+import { SITE_NAME, cityList } from '../lib/site.js';
+import {
+  PRESCHOOL,
+  NURSERY,
+  ALWAYS_OPEN,
+  VERIFIED_ON,
+  NEXT_ROUND_HINT,
+  MEANWHILE,
+  stageStatus,
+  isStale,
+} from '../lib/admission.js';
+
+// 以建置日判斷各階段的狀態。網站每月自動重建，狀態會跟著更新。
+const today = data.fetchedAt;
+const schedules = PRESCHOOL.map((s) => ({
+  ...s,
+  stale: isStale(s, today),
+  stages: s.stages.map((st) => ({ ...st, status: stageStatus(st, today) })),
+}));
+const allStale = schedules.every((s) => s.stale);
+
+const where = cityList(data.cities);
+const title = `公立幼兒園什麼時候登記？${where}招生時程一覽｜${SITE_NAME}`;
+const description = `${where}公立與非營利幼兒園的登記、抽籤、報到時間，以及公共托育中心的候補登記方式。兩市時程差很多，附官方報名網址。`;
+---
+
+<Base title={title} description={description} path="/招生時程/" back={{ href: '/', label: '首頁' }}>
+  <div class="stack-lg">
+    <section class="stack">
+      <div class="stack-sm">
+        <h1>什麼時候要登記</h1>
+        <p class="muted">
+          {'公立與非營利幼兒園一年只招生一次，錯過就要等明年。這頁把兩市的時程與報名網址整理在一起——它們差很多，不要用同一套記。'}
+        </p>
+      </div>
+
+      {
+        allStale ? (
+          <div class="alert">
+            <p>
+              <strong>{`${schedules[0].year}的公立幼兒園招生已經結束了。`}</strong>
+            </p>
+            <p>{`下面列的日期到 ${today} 為止都已過期，留著是讓你知道每年的節奏。${NEXT_ROUND_HINT}`}</p>
+            <p><strong>那現在可以做什麼</strong></p>
+            <ul>
+              {MEANWHILE.map((m) => (
+                <li>{m}</li>
+              ))}
+            </ul>
+            <p>{'安排行程前一律以官方頁面的最新公告為準，不要依據這頁的舊日期。'}</p>
+          </div>
+        ) : (
+          <div class="state">
+            <p>
+              {`日期於 ${VERIFIED_ON} 對照官方公告抄錄，每年都會變動。安排行程前請點各段的官方連結再確認一次——本站是整理者不是公告者。`}
+            </p>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>公立與非營利幼兒園（2 歲以上）</h2>
+        <p class="note">
+          {'這兩類要抽籤，名額有限。私立與準公共不在這個時程內，見本頁最後。'}
+        </p>
+      </div>
+
+      {
+        schedules.map((s) => (
+          <div class="sched">
+            <div class="sched-head">
+              <h3>
+                {s.city}
+                <span class="sched-year">{s.year}</span>
+              </h3>
+              {s.stale && <span class="badge-stale">日期已過期</span>}
+            </div>
+
+            <ol class="timeline">
+              {s.stages.map((st) => (
+                <li class={`tl-item tl-${st.status}`}>
+                  <span class="tl-dot" aria-hidden="true" />
+                  <div class="tl-body">
+                    <p class="tl-name">
+                      {st.name}
+                      {st.key && <span class="tl-key">最多人要的就是這一段</span>}
+                      {st.status === 'now' && <span class="tl-now">進行中</span>}
+                      {st.status === 'past' && <span class="tl-past">已結束</span>}
+                    </p>
+                    <p class="tl-date">{st.detail}</p>
+                    {st.url && (
+                      <p class="tl-link">
+                        <a href={st.url} target="_blank" rel="noopener nofollow">
+                          {st.urlLabel} ↗
+                        </a>
+                      </p>
+                    )}
+                    {st.note && <p class="tl-note">{st.note}</p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <div class="sched-foot">
+              <p>
+                <a href={s.official} target="_blank" rel="noopener nofollow">
+                  {s.officialLabel} ↗
+                </a>
+              </p>
+              <p>
+                <a href={s.handbook.url} target="_blank" rel="noopener nofollow">
+                  {s.handbook.label} ↗
+                </a>
+              </p>
+              <p class="tl-note">{s.contact}</p>
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="stack">
+      <div class="stack-sm">
+        <h2>公共托育中心（未滿 2 歲）</h2>
+        <p class="note">
+          {'跟幼兒園完全不同：不是一年一次的抽籤，而是候補排隊。而且兩市的做法不一樣，這是最常被搞混的地方。'}
+        </p>
+      </div>
+
+      <div class="pair">
+        {
+          NURSERY.map((n) => (
+            <div class="card stack-sm">
+              <h3>
+                {n.city}
+                <span class="rhythm">{n.rhythm}</span>
+              </h3>
+              <p class="body">{n.summary}</p>
+              <p class="note">{n.detail}</p>
+              <div class="stack-sm">
+                {n.links.map((l) => (
+                  <a class="linkrow" href={l.url} target="_blank" rel="noopener nofollow">
+                    <span>{l.label}</span>
+                    <span class="src">↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="card stack-sm">
+        <h2>{ALWAYS_OPEN.title}</h2>
+        <p class="body">{ALWAYS_OPEN.body}</p>
+        <p class="note">
+          {'想知道哪些園所收你孩子的年齡、大概要付多少，可以先用下面兩個入口挑出名單再一間間問。'}
+        </p>
+        <div class="entry-actions">
+          <a class="btn" href="/附近/">找我附近的</a>
+          <a class="btn btn-quiet" href="/搜尋/">用名稱搜尋</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="stack-sm">
+      <div class="state">
+        <p>
+          <strong>本站沒有的東西</strong>
+        </p>
+        <p>
+          {'每間園所還有幾個名額、往年抽籤的錄取率、備取要等多久——這些沒有任何公開資料，本站查不到，也不打算用推測填補。請直接問園所或看該市的招生簡章。'}
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .alert {
+    background: #f6e7dd;
+    border-left: 3px solid #8a5a3c;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .alert p {
+    margin: 0;
+  }
+  .alert strong {
+    color: #8a5a3c;
+  }
+  /* 不能用 flex：li 一旦變成 flex item 就不畫項目符號了 */
+  .alert ul {
+    padding-left: 20px;
+    margin: 0;
+    list-style: disc;
+  }
+  .alert li {
+    margin-bottom: 6px;
+  }
+  .alert li:last-child {
+    margin-bottom: 0;
+  }
+
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+
+  .sched {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sched-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sched-head h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 18px;
+  }
+  .sched-year {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+  .badge-stale {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #8a5a3c;
+    border: 1px solid #c9a889;
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+
+  /* 時間軸：一條線串起各階段，已結束的淡掉，進行中的標出來 */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 12px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+  .tl-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 16px;
+    bottom: 0;
+    width: 2px;
+    background: var(--line-soft);
+  }
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 5px;
+    margin-left: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  .tl-past .tl-dot {
+    background: var(--line);
+  }
+  .tl-now .tl-dot {
+    box-shadow: 0 0 0 4px rgba(148, 110, 75, 0.18);
+  }
+  .tl-past .tl-body {
+    opacity: 0.62;
+  }
+  .tl-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .tl-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tl-key,
+  .tl-now,
+  .tl-past {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+  }
+  .tl-key {
+    background: var(--accent);
+    color: #fffdf9;
+  }
+  .tl-now {
+    background: #6b7a62;
+    color: #fffdf9;
+  }
+  .tl-past {
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .tl-date {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .tl-link {
+    margin: 2px 0 0;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .tl-note {
+    margin: 2px 0 0;
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .sched-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 13px;
+  }
+  .sched-foot p {
+    margin: 0;
+  }
+
+  .pair {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 700px) {
+    .pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .pair h3 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 17px;
+  }
+  .rhythm {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fffdf9;
+    background: var(--accent);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+  .body {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+</style>
