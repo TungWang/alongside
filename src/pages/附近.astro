@@ -103,9 +103,10 @@ const description = `用你目前的位置，找出${cityList(data.cities)}離�
 
   async function loadIndex() {
     if (index) return index;
-    const res = await fetch('/search-index.json');
+    // 專用的座標索引：只含有座標的機構，也不帶搜尋才需要的縣市與類別欄位
+    const res = await fetch('/geo-index.json');
     if (!res.ok) throw new Error('索引載入失敗');
-    index = (await res.json()).filter((it) => it.y);
+    index = await res.json();
     return index;
   }
 

@@ -13,6 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -20,7 +21,21 @@ const DIST = path.join(ROOT, 'dist');
 const FREE_GB = 10; // Firebase Hosting Spark：每月 10 GB 傳輸，超過網站停用至下月
 
 const KB = 1024;
-const size = (p) => (fs.existsSync(p) ? fs.statSync(p).size : 0);
+
+/**
+ * 量壓縮後的大小，不是檔案大小。
+ *
+ * 這裡踩過一次：第一版直接用 fs.statSync 的位元組數，算出來的天花板比實際
+ * 悲觀 8.6 倍（每日 457 vs 3,927 人次）。Firebase Hosting 會自動以 Brotli 傳輸，
+ * 而 HTML 與 JSON 都是高度重複的文字，壓縮率極高——520 KB 的搜尋索引實際只傳 44 KB。
+ * 用錯的數字會導出錯的優化決策，所以一律以壓縮後計算。
+ */
+const size = (p) => {
+  if (!fs.existsSync(p)) return 0;
+  return zlib.brotliCompressSync(fs.readFileSync(p), {
+    params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 },
+  }).length;
+};
 const dirSizes = (glob) =>
   fs.existsSync(path.join(DIST, glob))
     ? fs
@@ -36,6 +51,7 @@ const avgDistrict = distSizes.reduce((a, b) => a + b, 0) / distSizes.length / KB
 const maxDistrict = Math.max(...distSizes) / KB;
 const home = size(path.join(DIST, 'index.html')) / KB;
 const index = size(path.join(DIST, 'search-index.json')) / KB;
+const geo = size(path.join(DIST, 'geo-index.json')) / KB;
 
 const assets = fs.existsSync(path.join(DIST, '_astro'))
   ? fs
@@ -51,16 +67,18 @@ const assets = fs.existsSync(path.join(DIST, '_astro'))
 const journeys = [
   { label: '看一頁就離開', kb: home + assets },
   { label: '首頁→行政區→3 間機構', kb: home + assets + avgDistrict + avgInst * 3 },
-  { label: '同上，再用一次搜尋或「附近」', kb: home + assets + avgDistrict + avgInst * 3 + index },
+  { label: '同上，再用一次搜尋', kb: home + assets + avgDistrict + avgInst * 3 + index },
+  { label: '同上，改用「附近」', kb: home + assets + avgDistrict + avgInst * 3 + (geo || index) },
 ];
 
 const fmt = (n) => n.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
-console.log('\n  建置產物的傳輸成本');
+console.log('\n  建置產物的傳輸成本（Brotli 壓縮後，即實際傳輸量）');
 console.log(`    機構頁平均 ${fmt(avgInst)} KB（${instSizes.length} 頁）`);
 console.log(`    行政區頁平均 ${fmt(avgDistrict)} KB，最大 ${fmt(maxDistrict)} KB（${distSizes.length} 頁）`);
 console.log(`    CSS+JS ${fmt(assets)} KB（首次載入後由瀏覽器快取）`);
-console.log(`    搜尋索引 ${fmt(index)} KB ← 點搜尋框或開「附近」就整包下載`);
+console.log(`    搜尋索引 ${fmt(index)} KB ← 點搜尋框才載`);
+if (geo) console.log(`    座標索引 ${fmt(geo)} KB ← 開「附近」才載`);
 
 console.log(`\n  免費額度 ${FREE_GB} GB/月　可服務人次（超過網站會被停用到下個月）`);
 let tightest = Infinity;
@@ -72,11 +90,15 @@ for (const j of journeys) {
   );
 }
 
-// 搜尋索引一旦大到蓋過頁面本身，就該分片了——這是擴張時第一個會撞到的牆
-const indexShare = index / journeys[2].kb;
-console.log(`\n  搜尋索引佔「有用搜尋」那條路徑的 ${Math.round(indexShare * 100)}%`);
-if (indexShare > 0.5) {
-  console.log('    ⚠ 已超過一半。再擴充收錄範圍前應先把索引改成分縣市載入，否則額度會被它吃光。');
+// 索引已依用途拆成兩包（搜尋不含座標、座標包不含搜尋欄位）。
+// 量過：按縣市再分片幾乎沒用——Brotli 對重複的中文壓縮率極高，拆了省不到幾 KB。
+// 下一個有意義的做法是把大型行政區頁分頁，或讓索引改成前綴分片，
+// 但那要等真的接近上限再說，現在做是過早優化。
+const heaviest = Math.max(...journeys.map((j) => j.kb));
+const indexShare = Math.max(index, geo) / heaviest;
+console.log(`\n  索引佔最重路徑的 ${Math.round(indexShare * 100)}%（兩包已依用途拆開）`);
+if (indexShare > 0.6) {
+  console.log('    ⚠ 索引又變成主要開銷了，該考慮前綴分片或只載入使用者所在縣市。');
 }
 console.log(`\n  最保守估計：每日約 ${fmt(tightest)} 人次觸及免費上限`);
 console.log('    Spark 方案無法設定用量警示，請定期到 Firebase 主控台 → Hosting → 用量 查看實際數字。\n');

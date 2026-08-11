@@ -251,12 +251,42 @@ check('無全形標點後的多餘空白', () => {
 
 // --- 搜尋 ---------------------------------------------------------------
 
-check('搜尋索引存在且筆數相符', () => {
-  if (!exists('search-index.json')) return '缺少 search-index.json';
+check('兩包索引都存在且筆數相符', () => {
+  for (const f of ['search-index.json', 'geo-index.json']) {
+    if (!exists(f)) return `缺少 ${f}`;
+  }
   const idx = JSON.parse(read('search-index.json'));
-  if (idx.length !== DATA.total) return `索引 ${idx.length} 筆，應為 ${DATA.total}`;
-  const missing = idx.filter((it) => !exists(`i/${it.i}/index.html`));
+  const geo = JSON.parse(read('geo-index.json'));
+  if (idx.length !== DATA.total) return `搜尋索引 ${idx.length} 筆，應為 ${DATA.total}`;
+  const withCoords = DATA.institutions.filter((i) => i.lat).length;
+  if (geo.length !== withCoords) return `座標索引 ${geo.length} 筆，應為 ${withCoords}`;
+  const missing = [...idx, ...geo].filter((it) => !exists(`i/${it.i}/index.html`));
   return missing.length ? `${missing.length} 筆索引指向不存在的頁面` : true;
+});
+
+// 拆索引的目的就是「搜尋頁不要下載它用不到的座標」，退回混在一起就白做了
+check('搜尋索引不含座標，座標索引不含搜尋專用欄位', () => {
+  const idx = JSON.parse(read('search-index.json'));
+  if (idx.some((it) => it.y || it.x)) return '搜尋索引仍帶座標';
+  const geo = JSON.parse(read('geo-index.json'));
+  if (geo.some((it) => it.c || it.ct)) return '座標索引仍帶類別／縣市';
+  if (geo.some((it) => !it.y || !it.x)) return '座標索引有缺座標的紀錄';
+  return true;
+});
+
+// Astro 會把短腳本內嵌進 HTML 而不是產生獨立的 .js，所以兩邊都要找
+check('兩個頁面各自抓對的索引', () => {
+  const all = [...htmlFiles, ...allFiles.filter((f) => f.endsWith('.js'))]
+    .map((f) => fs.readFileSync(f, 'utf8'))
+    .join('');
+  if (!all.includes('/geo-index.json')) return '找不到抓 geo-index 的程式，「附近」可能仍用搜尋索引';
+  if (!all.includes('/search-index.json')) return '找不到抓 search-index 的程式';
+  // 附近頁不該再抓搜尋索引，否則等於白拆
+  const near = read('附近/index.html');
+  if (near.includes('search-index.json')) return '「附近」頁仍在抓搜尋索引';
+  const search = read('搜尋/index.html');
+  if (search.includes('geo-index.json')) return '搜尋頁抓了它用不到的座標索引';
+  return true;
 });
 
 check('座標覆蓋與範圍', () => {
@@ -272,10 +302,9 @@ check('座標覆蓋與範圍', () => {
   return out.length ? `${out.length} 筆座標落在新北市範圍外` : true;
 });
 
-check('搜尋索引含座標，供距離排序使用', () => {
-  const idx = JSON.parse(read('search-index.json'));
-  const withGeo = idx.filter((it) => it.y && it.x);
-  return withGeo.length >= 1000 ? true : `索引只有 ${withGeo.length} 筆帶座標`;
+check('座標索引足以支撐距離排序', () => {
+  const geo = JSON.parse(read('geo-index.json'));
+  return geo.length >= 1500 ? true : `座標索引只有 ${geo.length} 筆`;
 });
 
 // 動態產生的節點拿不到 Astro 的 data-astro-cid 屬性，樣式必須在全域，

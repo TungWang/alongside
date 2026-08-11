@@ -777,25 +777,39 @@ async function main() {
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(payload, null, 2) + '\n');
 
-  // 搜尋索引：只放比對與顯示需要的欄位，鍵名縮到一個字母。
-  // 放 public/ 讓它原樣進 dist，由搜尋頁在使用者互動時才抓，不影響首次載入。
-  const index = institutions.map((i) => ({
+  /**
+   * 索引依「用途」拆成兩包，不是依縣市。
+   *
+   * 量過才知道：按縣市分片幾乎沒用——Brotli 對重複的中文壓縮率極高，
+   * 整包 520 KB 壓完只有 44 KB，拆成兩市各一包省不到幾 KB。
+   * 真正的浪費是搜尋頁一直在下載它從來不用的座標（2,488 筆各兩個浮點數，
+   * 而浮點數正好是壓縮率最差的東西）。
+   *
+   * 所以搜尋索引不含座標，座標索引只含有座標的那些，兩邊各拿各的。
+   * 兩包都放 public/，由頁面在使用者互動時才抓，不影響首次載入。
+   */
+  const common = (i) => ({
     i: i.id,
     n: i.name,
     d: i.district,
-    ct: i.city,
-    c: i.category,
     o: i.ownership,
     m: primaryFee(i)?.monthly || 0,
     a: primaryFee(i)?.age || 0,
     p: i.penalties.length,
-    ...(i.lat ? { y: i.lat, x: i.lng } : {}),
-  }));
+  });
+
+  const index = institutions.map((i) => ({ ...common(i), ct: i.city, c: i.category }));
+  const geoIndex = institutions
+    .filter((i) => i.lat)
+    .map((i) => ({ ...common(i), y: i.lat, x: i.lng }));
   await fs.mkdir(INDEX_DIR, { recursive: true });
   await fs.writeFile(path.join(INDEX_DIR, 'search-index.json'), JSON.stringify(index));
+  await fs.writeFile(path.join(INDEX_DIR, 'geo-index.json'), JSON.stringify(geoIndex));
   const kb = Math.round(Buffer.byteLength(JSON.stringify(index)) / 1024);
-  const geocoded = institutions.filter((i) => i.lat).length;
-  console.log(`搜尋索引 ${index.length} 筆、${kb} KB（含座標 ${geocoded} 筆）→ public/search-index.json`);
+  const geoKb = Math.round(Buffer.byteLength(JSON.stringify(geoIndex)) / 1024);
+  console.log(
+    `搜尋索引 ${index.length} 筆 ${kb} KB、座標索引 ${geoIndex.length} 筆 ${geoKb} KB（未壓縮）`,
+  );
 
   console.log(
     `\n共 ${institutions.length} 間、${cities.length} 個縣市、${districts.length} 個行政區 → ${path.relative(ROOT, OUT_FILE)}`,
