@@ -6,10 +6,11 @@
   "scripts": {
     "fetch": "node scripts/fetch-data.js",
     "dev": "astro dev",
-    "build": "npm run fetch && astro build && npm run verify",
-    "build:offline": "astro build && npm run verify",
+    "build": "npm run fetch && astro build && npm run verify && npm run cost",
+    "build:offline": "astro build && npm run verify && npm run cost",
     "verify": "node scripts/verify.js",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "cost": "node scripts/cost.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -1,0 +1,169 @@
+---
+/**
+ * 機構概覽：進頁面五秒內回答「這間值不值得我再看下去」。
+ *
+ * 頁面往下有收費表、補助試算、裁罰明細、官方連結四大段，每一段都完整但也都要讀。
+ * 家長比較三五間時不會每間都讀完，需要先看到幾個關鍵數字再決定要不要細看。
+ *
+ * 選這幾項的理由，依家長實際的篩選順序：
+ *   1. 補助後你大概付多少——最常問，也是本站唯一有換算的地方
+ *   2. 收不收我的孩子——收托年齡對不上，其餘都不用看了
+ *   3. 有沒有裁罰——不是為了嚇人，是為了讓人知道值不值得往下看那一段
+ *   4. 寒暑假與規模——雙薪家庭與在意班級大小的人會先看這個
+ *
+ * 沒有資料的欄位一樣要出現並說明，理由跟收費／裁罰兩段相同：
+ * 「查過、沒有」和「這站根本沒查」對家長是完全不同的資訊。
+ */
+import { primaryFee, feeMonths, termLabel } from '../lib/site.js';
+import { estimate, isAffordableCare } from '../lib/subsidy.js';
+
+const { inst, enriched } = Astro.props;
+
+const fee = primaryFee(inst);
+// 概覽固定用第 1 胎、非低收——最常見的情況；其他組合在下方試算區可以切換
+const est = fee ? estimate(inst.ownership, fee.monthly, '1', false) : null;
+const months = feeMonths(inst);
+const term = termLabel(months);
+const penalties = inst.penalties?.length || 0;
+
+const money = (n) => n.toLocaleString('en-US');
+
+const items = [];
+
+if (est) {
+  items.push({
+    key: 'pay',
+    label: `${fee.age} 歲每月大約付`,
+    value: est.pay === 0 ? '免費' : `${money(est.pay)} 元`,
+    note: isAffordableCare(inst.ownership)
+      ? `園所收 ${money(fee.monthly)}，其餘由政府補`
+      : `園所收 ${money(fee.monthly)}，扣育兒津貼 ${money(est.allowance)}`,
+    strong: true,
+  });
+} else if (enriched) {
+  items.push({ key: 'pay', label: '收費', value: '無資料', note: '這間沒有申報收費明細表' });
+} else {
+  items.push({ key: 'pay', label: '收費', value: '本站沒有', note: `${inst.category}無結構化來源` });
+}
+
+if (inst.ages?.length) {
+  items.push({
+    key: 'age',
+    label: '收托年齡',
+    value: `${Math.min(...inst.ages)}–${Math.max(...inst.ages)} 歲`,
+    note: inst.ages.includes(2) ? '收 2 歲幼幼班' : '要滿 3 歲才收',
+  });
+} else if (inst.kind === 'nursery') {
+  items.push({ key: 'age', label: '收托年齡', value: '0–2 歲', note: '托嬰中心的法定收托範圍' });
+}
+
+items.push(
+  penalties > 0
+    ? {
+        key: 'penalty',
+        label: '裁罰紀錄',
+        value: `${penalties} 筆`,
+        note: '輕重差很多，往下看內容再判斷',
+        flag: true,
+      }
+    : enriched
+      ? { key: 'penalty', label: '裁罰紀錄', value: '查無', note: '備份資料裡沒有，不等於從未違規' }
+      : { key: 'penalty', label: '裁罰紀錄', value: '本站沒有', note: '請用下方官方連結查詢' },
+);
+
+if (term) {
+  items.push({
+    key: 'term',
+    label: '寒暑假',
+    value: months >= 12 ? '照常收托' : '需另外安排',
+    note: months >= 12 ? `全年收費 ${months} 個月` : `一年只收費 ${months} 個月`,
+  });
+}
+
+const capacity = inst.approvedCount || inst.capacity;
+if (capacity) {
+  items.push({ key: 'size', label: '核定收托', value: `${capacity} 人`, note: '全園上限，不是班級人數' });
+}
+---
+
+<section class="overview" aria-label="重點概覽">
+  <ul class="ov-grid">
+    {
+      items.map((it) => (
+        <li class={it.strong ? 'ov-item ov-strong' : it.flag ? 'ov-item ov-flag' : 'ov-item'}>
+          <span class="ov-label">{it.label}</span>
+          <span class="ov-value">{it.value}</span>
+          <span class="ov-note">{it.note}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="ov-foot">
+    {est
+      ? '「大約付」是以第 1 胎、非低收入戶估算，往下可以切換排行與身分。以下每一段都有完整說明與出處。'
+      : '以下每一段都有完整說明與出處，包含本站為什麼沒有某些資料。'}
+  </p>
+</section>
+
+<style>
+  .overview {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ov-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .ov-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 11px;
+    border-left: 2px solid var(--line);
+  }
+  .ov-strong {
+    border-left-color: var(--accent);
+  }
+  .ov-flag {
+    border-left-color: #c9a889;
+  }
+  .ov-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .ov-value {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
+  .ov-strong .ov-value {
+    font-size: 22px;
+    color: var(--accent-dark);
+  }
+  .ov-flag .ov-value {
+    color: #8a5a3c;
+  }
+  .ov-note {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .ov-foot {
+    margin: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+</style>

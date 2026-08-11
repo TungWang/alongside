@@ -445,6 +445,37 @@ check('封存骨幹的縣市不含已停辦機構', () => {
   return closed.length ? `${closed.length} 筆已停辦仍被收錄` : true;
 });
 
+// 概覽的用途是「五秒內決定要不要往下看」，沒有資料時也要出現並說明原因——
+// 跟收費、裁罰兩段同一個原則
+check('每個機構頁都有概覽，含資料稀疏者', () => {
+  const sample = [
+    'i/preschool-維珍妮幼兒園-五股區/index.html', // 資料最完整
+    'i/nursery-大安托嬰中心-大安區/index.html', // 臺北托嬰，最稀疏
+    'i/nursery-汐止忠厚公共托育中心-汐止區/index.html',
+  ];
+  for (const p of sample) {
+    if (!exists(p)) return `找不到 ${p}`;
+    const h = read(p);
+    if (!h.includes('aria-label="重點概覽"')) return `${p} 缺少概覽`;
+    if (!/ov-value/.test(h)) return `${p} 概覽沒有任何欄位`;
+  }
+  // 稀疏的那頁必須明講沒有，而不是留白
+  const sparse = read('i/nursery-大安托嬰中心-大安區/index.html');
+  return sparse.includes('本站沒有') ? true : '稀疏頁的概覽沒有說明缺什麼';
+});
+
+check('概覽的金額與補助試算一致', () => {
+  const h = read('i/preschool-維珍妮幼兒園-五股區/index.html');
+  const m = h.match(/id="subsidy-data"[^>]*>(.*?)<\/script>/s);
+  if (!m) return '找不到補助試算資料';
+  const cells = JSON.parse(m[1]);
+  // 概覽固定顯示第 1 胎、非低收、最小年齡
+  const youngest = Math.min(...cells.filter((c) => c.key.startsWith('1-std-')).map((c) => Number(c.age)));
+  const cell = cells.find((c) => c.key === `1-std-${youngest}`);
+  const shown = cell.pay === 0 ? '免費' : cell.pay.toLocaleString('en-US');
+  return h.includes(shown) ? true : `概覽顯示的金額與試算的 ${shown} 對不上`;
+});
+
 // --- 執行 ---------------------------------------------------------------
 
 let failed = 0;

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import OverviewBlock from '../../components/OverviewBlock.astro';
 import PenaltyList from '../../components/PenaltyList.astro';
 import FeeBlock from '../../components/FeeBlock.astro';
 import SubsidyBlock from '../../components/SubsidyBlock.astro';
@@ -105,6 +106,8 @@ const jsonLd = {
         <h1>{inst.name}</h1>
         <p class="muted">{inst.city}{inst.district}　主管機關：{authorityName}</p>
       </div>
+
+      <OverviewBlock inst={inst} enriched={enriched} />
 
       <div class="head-actions">
         <a class="btn" href={inst.mapUrl} target="_blank" rel="noopener nofollow">
