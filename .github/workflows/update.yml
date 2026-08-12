@@ -9,6 +9,11 @@ on:
   push:
     branches: [main]
 
+# 排程跑完要把資料寫回 repo（見下面「保活」），偵測到問題要開待辦，兩者都需要寫入權限。
+permissions:
+  contents: write
+  issues: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -22,10 +27,15 @@ jobs:
 
       - run: npm ci
 
-      # 拆成三步，這樣失敗時光看步驟名稱就知道是抓資料、建置還是驗證出問題——
+      # 拆成多步，這樣失敗時光看步驟名稱就知道是哪一段出問題——
       # 完整 log 需要 repo 管理權限才讀得到，但步驟結果是公開的。
       - name: 抓資料
         run: npm run fetch
+
+      # 刻意不擋建置：擋下來不會讓線上那份錯金額消失，只會讓其他沒問題的資料
+      # 一起停止更新。偵測到的問題由站上警語與 GitHub 待辦負責通知。
+      - name: 核對補助費率
+        run: npm run check
 
       - name: 建置
         run: npx astro build
@@ -39,3 +49,48 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ALONGSIDE_53F07 }}
           projectId: alongside-53f07
           channelId: live
+
+      # 到這裡為止，沒有任何一步看過 https://alongside-53f07.web.app 究竟回了什麼。
+      # 驗證檢查的是 dist/ 裡的檔案，部署步驟只回報「上傳沒有出錯」。
+      - name: 確認網站真的活著
+        run: npm run smoke
+
+      - name: 通知需要人處理的事
+        if: always()
+        run: npm run report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      # --- 保活 -------------------------------------------------------------
+      #
+      # GitHub 會在 repo 連續 60 天沒有任何改動時自動停用排程。
+      # 而「網站運作良好」正好等於「沒有理由改動」——所以這件事會剛好在一切順利時發生，
+      # 而且不會有任何錯誤通知，因為工作流程根本沒被叫醒。上面每一步的防護在那種情況下
+      # 一條都不會響。每月寫回一次資料，這個動作本身就算 repo 活動，計時器永遠歸零。
+      #
+      # 只有排程執行才寫回：手動推程式觸發的那次也寫的話，你每次 push 完本機就落後一版。
+      # 用 GITHUB_TOKEN 推送不會再觸發本工作流程（GitHub 內建的防迴圈），不會無限跑。
+      - name: 存檔並保活（成功）
+        if: success() && github.event_name == 'schedule'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/data/institutions.json src/data/checks.json public/search-index.json public/geo-index.json
+          git diff --cached --quiet || git commit -m "資料自動更新 $(date -u +%Y-%m-%d)"
+          git push
+
+      # 失敗時不把壞資料寫進去——repo 裡那份快照要永遠是已知良好的，
+      # 本機 build:offline 與「上游掛掉時的備份」這兩個用途才成立。
+      # 但仍然要留下一筆改動，否則「管線壞了」會連帶變成「排程也被停用了」，
+      # 而第二個問題是靜默的。
+      - name: 保活紀錄（失敗）
+        if: failure() && github.event_name == 'schedule'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -- . || true
+          echo "$(date -u +%Y-%m-%d) 失敗：${{ github.run_id }}" >> .github/run-log
+          git add .github/run-log
+          git commit -m "自動更新失敗紀錄 $(date -u +%Y-%m-%d)"
+          git push

@@ -13,6 +13,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/institutions.json'), 'utf8'));
 const { PRESCHOOL, NURSERY, VERIFIED_ON, isStale } = await import('../src/lib/admission.js');
+const { estimate } = await import('../src/lib/subsidy.js');
+const SUB = await import('./check-subsidy.js');
+const STALE = await import('../src/scripts/staleness.js');
 
 const read = (p) => fs.readFileSync(path.join(DIST, p), 'utf8');
 const exists = (p) => fs.existsSync(path.join(DIST, p));
@@ -558,6 +561,188 @@ check('招生時程頁在首頁與頁尾都找得到', () => {
   const home = read('index.html');
   if ((home.match(/href="\/招生時程\//g) || []).length < 2) return '首頁的兩張年齡卡都應該有入口';
   return read('搜尋/index.html').includes('href="/招生時程/"') ? true : '頁尾少了招生時程連結';
+});
+
+// --- 看門狗自己的測試 ---------------------------------------------------
+//
+// 這三隻狗平常完全靜默，而「壞掉的偵測器」跟「正常的偵測器」從外面看一模一樣——
+// 那正是它們要消滅的失敗模式，只是往上搬了一層。所以要餵假資料進去確認會響。
+
+// 官方表格的真實結構：多欄歷次調整，現行金額在最後一欄。
+// 抄自實際頁面（已壓平空白），改動任何數字都應該被偵測到。
+const FIX_CAPS =
+  '類型 幼兒出生次序/屬性 107.8 ~110.7 110.8 ~111.7 111.8以後 ' +
+  '公立幼兒園 第 1 胎 不超過 2,500元 /月 不超過 1,500元 /月 不超過 1,000元 /月 ' +
+  '第 2 胎 不超過 2,500元 /月 免費 免費 第 3 胎(含)以上 不超過 2,500元 /月 免費 免費 ' +
+  '非營利幼兒園 政府機關(構)與公營公司委託辦 理之職場互助教保服務中心 ' +
+  '第 1 胎 不超過 3,500元 /月 不超過 2,500元 /月 不超過 2,000元 /月 ' +
+  '第 2 胎 不超過 3,500元 /月 不超過 1,500元 /月 不超過 1,000元 /月 ' +
+  '第 3 胎(含)以上 不超過 2,500元 /月 免費 免費 低收、中低收入家庭子女 免費 免費 免費 備註';
+
+const FIX_QUASI =
+  '類型 幼兒出生次序/屬性 107.8 ~110.7 110.8 ~111.7 111.8以後 ' +
+  '準公共幼兒園 第 1 胎 不超過 4,500元 /月 不超過 3,500元 /月 不超過 3,000元 /月 ' +
+  '第 2 胎 不超過 4,500元 /月 不超過 2,500元 /月 不超過 2,000元 /月 ' +
+  '第 3 胎(含)以上 不超過 3,500元 /月 不超過 1,500元 /月 不超過 1,000元 /月 ' +
+  '低收、中低收入家庭子女 免費 免費 免費 備註';
+
+const FIX_ALLOW =
+  '107年8月1日~110年7月31日 3,500元(每月) 4,000元(每月) 4,500元(每月) ' +
+  '111年8月1日起 5,000元(每月) 6,000元(每月) 7,000元(每月) 撥付時間';
+
+const parseAll = (caps, quasi, allow) => ({
+  capsTable: SUB.readFeeTable(caps, ['公立幼兒園', '非營利幼兒園']),
+  quasiTable: SUB.readFeeTable(quasi, ['準公共幼兒園']),
+  allowance: SUB.readAllowance(allow),
+});
+
+check('補助偵測：餵正確的官方表格不會誤報', () => {
+  const bad = SUB.diff(parseAll(FIX_CAPS, FIX_QUASI, FIX_ALLOW));
+  return bad.length === 0 ? true : `不該報卻報了：${bad.join('；')}`;
+});
+
+check('補助偵測：金額被改掉一定會響', () => {
+  // 逐一把每個現行金額改掉，全部都必須被抓到。只驗一個數字等於只測了一格。
+  const cases = [
+    ['公立第1胎', FIX_CAPS.replace('不超過 1,000元 /月 第 2 胎', '不超過 1,200元 /月 第 2 胎'), FIX_QUASI, FIX_ALLOW],
+    ['非營利第1胎', FIX_CAPS.replace('不超過 2,000元', '不超過 2,500元'), FIX_QUASI, FIX_ALLOW],
+    ['準公共第1胎', FIX_CAPS, FIX_QUASI.replace('不超過 3,000元', '不超過 2,800元'), FIX_ALLOW],
+    ['育兒津貼第1胎', FIX_CAPS, FIX_QUASI, FIX_ALLOW.replace('5,000元(每月)', '5,500元(每月)')],
+  ];
+  for (const [name, a, b, c] of cases) {
+    if (SUB.diff(parseAll(a, b, c)).length === 0) return `${name} 被改掉卻沒有響`;
+  }
+  return true;
+});
+
+check('補助偵測：官方多加一欄（政策調整）一定會響', () => {
+  // 這是比金額比對更早、更明確的訊號：政策一調整，表格就會多一個適用期間。
+  const caps = FIX_CAPS.replace('111.8以後', '111.8 ~115.7 115.8以後').replace(
+    /第 1 胎 不超過 2,500元 \/月 不超過 1,500元 \/月 不超過 1,000元 \/月/,
+    '第 1 胎 不超過 2,500元 /月 不超過 1,500元 /月 不超過 1,000元 /月 不超過 800元 /月',
+  );
+  let bad;
+  try {
+    bad = SUB.diff(parseAll(caps, FIX_QUASI, FIX_ALLOW));
+  } catch (err) {
+    // 欄數對不上而丟 UnreadableError 也算響——會開待辦，只是講法不同
+    return err instanceof SUB.UnreadableError ? true : `丟了非預期的錯誤：${err.message}`;
+  }
+  return bad.length > 0 ? true : '多了一欄卻沒有響';
+});
+
+check('補助偵測：官網改版導致讀不到時，丟的是可辨識的錯誤', () => {
+  // 必須是 UnreadableError 而不是隨便一個 TypeError，否則呼叫端無法把
+  // 「看不懂」跟「數字不同」分開處理，三級分類就退化成一級。
+  for (const broken of ['完全不相干的內容', FIX_CAPS.replace('幼兒出生次序/屬性', '收費一覽')]) {
+    try {
+      SUB.readFeeTable(broken, ['公立幼兒園', '非營利幼兒園']);
+      return '讀不到卻沒有丟錯誤';
+    } catch (err) {
+      if (!(err instanceof SUB.UnreadableError)) return `丟的是 ${err.constructor.name}，不是 UnreadableError`;
+    }
+  }
+  return true;
+});
+
+check('補助偵測：連不上不會洗掉連續失敗的計數', () => {
+  // 官網掛一天就把計數歸零的話，「連續兩個月」的升級規則永遠不會觸發。
+  const prev = { status: 'unreadable', consecutiveUnreadable: 1, checkedAt: '2026-07-01' };
+  const after = SUB.merge(prev, { status: 'unreachable', detail: 'timeout' }, '2026-08-01');
+  if (after.consecutiveUnreadable !== 1) return `計數被改成 ${after.consecutiveUnreadable}`;
+  if (after.status !== 'unreadable') return '連不上時不該改變既有結論';
+  return true;
+});
+
+check('補助偵測：升級規則是連續兩次，不是一次', () => {
+  const once = SUB.merge(null, { status: 'unreadable', detail: 'x' }, '2026-08-01');
+  if (SUB.shouldWarnOnSite(once)) return '第一次讀不到就上站，會變成官網一改版就嚇家長';
+  const twice = SUB.merge(once, { status: 'unreadable', detail: 'x' }, '2026-09-01');
+  if (!SUB.shouldWarnOnSite(twice)) return '連續兩次仍未上站';
+  if (!SUB.shouldWarnOnSite({ status: 'mismatch' })) return '數字不同必須立刻上站';
+  if (SUB.shouldWarnOnSite({ status: 'ok', consecutiveUnreadable: 0 })) return '正常時不該上站';
+  // 修好之後要能恢復
+  const fixed = SUB.merge(twice, { status: 'ok' }, '2026-10-01');
+  return SUB.shouldWarnOnSite(fixed) ? '恢復正常後警語沒有消失' : true;
+});
+
+check('補助偵測的期望值與 subsidy.js 實際採用的一致', () => {
+  // 兩個檔案各存一份數字，只改一邊就會讓偵測器對著錯的基準核對——
+  // 那比沒有偵測器更糟，因為它會回報「一切正常」。
+  const HUGE = 999999;
+  const pairs = [
+    ['公立幼兒園', '公立'],
+    ['非營利幼兒園', '非營利'],
+    ['準公共幼兒園', '準公共'],
+  ];
+  for (const [label, ownership] of pairs) {
+    for (const order of ['1', '2', '3']) {
+      const want = SUB.EXPECTED[label][order];
+      const got = estimate(ownership, HUGE, order, false).pay;
+      if (got !== want) return `${label} 第 ${order} 胎：check-subsidy 寫 ${want}，subsidy.js 算出 ${got}`;
+    }
+  }
+  for (const order of ['1', '2', '3']) {
+    const got = estimate('私立', HUGE, order, false).allowance;
+    if (got !== SUB.EXPECTED.育兒津貼[order]) {
+      return `育兒津貼第 ${order} 胎：check-subsidy 寫 ${SUB.EXPECTED.育兒津貼[order]}，subsidy.js 是 ${got}`;
+    }
+  }
+  // 職場互助在官方表格與非營利同列，金額必須一致，否則核對非營利等於沒核對職場互助
+  for (const order of ['1', '2', '3']) {
+    if (estimate('職場互助', HUGE, order, false).pay !== estimate('非營利', HUGE, order, false).pay) {
+      return `職場互助第 ${order} 胎與非營利不同，但官方表格把兩者併成一列`;
+    }
+  }
+  return true;
+});
+
+check('老舊警示：門檻正確且會擋住錯亂的系統時鐘', () => {
+  const day = 86400000;
+  const at = (n) => STALE.ageInDays('2026-01-01', Date.parse('2026-01-01T00:00:00Z') + n * day);
+  if (at(44) !== 44 || STALE.levelFor(at(44)) !== 'fresh') return '44 天不該提醒';
+  if (STALE.levelFor(at(45)) !== 'soft') return '45 天應該在頁尾提醒';
+  if (STALE.levelFor(at(89)) !== 'soft') return '89 天不該置頂';
+  if (STALE.levelFor(at(90)) !== 'loud') return '90 天應該置頂橫幅';
+  // 訪客時鐘走錯是真的會發生的，顯示「已 -30 天」或「已 19,000 天」只會嚇跑人
+  if (at(-30) !== null) return '時鐘早於擷取日時應該安靜';
+  if (at(3000) !== null) return '天數大到不合理時應該安靜';
+  if (STALE.levelFor(null) !== 'fresh') return '無法判斷時不該顯示任何東西';
+  return true;
+});
+
+check('老舊警示的判斷發生在瀏覽器端，不是建置期', () => {
+  // 這隻狗要警告的正是「頁面沒有被重新產生」。若判斷寫死在建置期，
+  // 那時候整站凍結，這句話本身也會跟著凍結，等於完全失效。
+  const h = read('index.html');
+  const m = h.match(/id="stale-banner"[^>]*data-fetched="([^"]+)"/);
+  if (!m) return '首頁沒有 stale-banner 或缺少 data-fetched';
+  if (m[1] !== DATA.fetchedAt) return `data-fetched 是 ${m[1]}，與資料的 ${DATA.fetchedAt} 不符`;
+  if (!/id="stale-banner"[^>]*\shidden/.test(h)) return 'banner 預設應該是隱藏的';
+  const js = allFiles.filter((f) => f.endsWith('.js')).map((f) => fs.readFileSync(f, 'utf8'));
+  const shipped = js.some((c) => /stale-banner/.test(c)) || /stale-banner/.test(h.replace(m[0], ''));
+  return shipped ? true : '判斷邏輯沒有被送到瀏覽器';
+});
+
+check('保活機制的檔案與設定都在', () => {
+  // 少了任何一個，排程都會在 60 天無活動後被 GitHub 停用，而且是靜默的。
+  const wf = fs.readFileSync(path.join(ROOT, '.github/workflows/update.yml'), 'utf8');
+  if (!/permissions:[\s\S]*contents:\s*write/.test(wf)) return 'workflow 缺少 contents: write，推不回去';
+  if (!/issues:\s*write/.test(wf)) return 'workflow 缺少 issues: write，開不了待辦';
+  if (!/if:\s*success\(\)[^\n]*schedule/.test(wf)) return '缺少排程成功時的存檔步驟';
+  if (!/if:\s*failure\(\)[^\n]*schedule/.test(wf)) return '缺少排程失敗時的保活紀錄——管線壞掉會連帶讓排程被停用';
+  if (!fs.existsSync(path.join(ROOT, '.github/run-log'))) return '缺少 .github/run-log';
+  return true;
+});
+
+check('checks.json 在版控中，站上才讀得到核對結果', () => {
+  const f = path.join(ROOT, 'src/data/checks.json');
+  if (!fs.existsSync(f)) return '缺少 src/data/checks.json';
+  const s = JSON.parse(fs.readFileSync(f, 'utf8')).subsidy;
+  if (!s?.status) return 'checks.json 沒有 subsidy.status';
+  return ['ok', 'unreachable', 'unreadable', 'mismatch'].includes(s.status)
+    ? true
+    : `未知的狀態 ${s.status}`;
 });
 
 // --- 執行 ---------------------------------------------------------------

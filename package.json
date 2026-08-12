@@ -6,11 +6,14 @@
   "scripts": {
     "fetch": "node scripts/fetch-data.js",
     "dev": "astro dev",
-    "build": "npm run fetch && astro build && npm run verify && npm run cost",
+    "build": "npm run fetch && npm run check && astro build && npm run verify && npm run cost",
     "build:offline": "astro build && npm run verify && npm run cost",
     "verify": "node scripts/verify.js",
     "preview": "astro preview",
-    "cost": "node scripts/cost.js"
+    "cost": "node scripts/cost.js",
+    "check": "node scripts/check-subsidy.js",
+    "smoke": "node scripts/smoke.js",
+    "report": "node scripts/report-checks.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

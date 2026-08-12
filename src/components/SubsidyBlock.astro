@@ -14,8 +14,10 @@ import {
   SUBSIDY_SOURCES,
   SUBSIDY_UPDATED,
 } from '../lib/subsidy.js';
+import { subsidyWarning } from '../lib/checks.js';
 
 const { inst } = Astro.props;
+const warning = subsidyWarning();
 
 const ages = inst.fees ? FEE_AGES.filter((a) => inst.fees[a]) : [];
 const affordable = isAffordableCare(inst.ownership);
@@ -47,6 +49,13 @@ const sample = cells[0];
             : `${inst.ownership}幼兒園沒有參與平價教保服務，家長照付園所收費，但可以另外請領育兒津貼。`}
         </p>
       </div>
+
+      {warning && (
+        <div class="rate-alert">
+          <p><strong>{warning.title}</strong></p>
+          <p>{warning.body}</p>
+        </div>
+      )}
 
       <div class="card stack-sm">
         <div class="picker">
@@ -122,6 +131,27 @@ const sample = cells[0];
 }
 
 <style>
+  /* 補助金額是家長拿來做決定的數字，核對不過時警語必須在試算表格「之前」出現，
+     而不是藏在下面的註解裡——看到數字才看到警語就太晚了。 */
+  .rate-alert {
+    background: #f6e7dd;
+    border-left: 3px solid #8a5a3c;
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .rate-alert p {
+    margin: 0;
+  }
+  .rate-alert strong {
+    color: #8a5a3c;
+  }
+
   .picker {
     display: flex;
     flex-wrap: wrap;

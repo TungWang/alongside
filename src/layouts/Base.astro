@@ -32,6 +32,10 @@ const archiveOnly = data.cities.filter((c) => c.preschoolBackbone === 'archive')
     <slot name="head" />
   </head>
   <body>
+    {/* 內容由 staleness.js 在瀏覽器端填入——建置期算不出「建置沒有在跑」這件事 */}
+    <div id="stale-banner" class="stale-banner" data-fetched={data.fetchedAt} role="status" hidden>
+    </div>
+
     <header class="shell">
       <div class="masthead">
         <a class="brandmark" href="/">
@@ -69,7 +73,10 @@ const archiveOnly = data.cities.filter((c) => c.preschoolBackbone === 'archive')
           <strong style="color:var(--ink)">{SITE_NAME} Alongside</strong>　{`陪你一起看看${cityList(data.cities)}有哪些托育選擇。`}
         </p>
         <p>
-          {`站上資料為程式自動整理，可能有誤或未及反映異動——請以官方公告與機構本身的說明為準。機構基本資料擷取時間 ${data.fetchedAt}，共 ${data.total.toLocaleString('en-US')} 間。`}
+          {`站上資料為程式自動整理，可能有誤或未及反映異動——請以官方公告與機構本身的說明為準。機構基本資料擷取時間 ${data.fetchedAt}`}<span
+            id="data-age"
+            class="age-badge"
+            hidden></span>{`，共 ${data.total.toLocaleString('en-US')} 間。`}
         </p>
         {
           data.archive && (
@@ -96,7 +103,9 @@ const archiveOnly = data.cities.filter((c) => c.preschoolBackbone === 'archive')
     </footer>
     <script>
       import { mountCounter, toggle, has } from '../scripts/shortlist.js';
+      import { mount as mountStaleness } from '../scripts/staleness.js';
       mountCounter();
+      mountStaleness();
 
       // 收藏鈕在列表卡與機構頁都會出現，統一在這裡接
       function paint(btn) {
