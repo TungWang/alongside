@@ -50,7 +50,7 @@ export const EXPECTED = {
 
 /** 現行費率所在的那一欄。政策一調整，官方表格就會多一欄，這個字串是最靈敏的哨兵 */
 export const CURRENT_PERIOD = '111.8以後';
-export const CURRENT_ALLOWANCE_SINCE = '110年8月1日起'; // ← 警報測試用，測完改回 111年8月1日起
+export const CURRENT_ALLOWANCE_SINCE = '111年8月1日起';
 
 /** 把 HTML 壓成一行純文字。表格結構在文字順序裡仍然成立，不需要 DOM */
 export function flatten(html) {

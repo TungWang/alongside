@@ -1,7 +1,7 @@
 {
   "subsidy": {
-    "status": "mismatch",
-    "detail": "育兒津貼最後一列生效日是「111年8月1日起」，站上依據的是「110年8月1日起」",
+    "status": "ok",
+    "detail": null,
     "checkedAt": "2026-08-12",
     "lastAttempt": "2026-08-12",
     "consecutiveUnreadable": 0
