@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-08-11",
-  "total": 2488,
+  "fetchedAt": "2026-08-17",
+  "total": 2489,
   "cities": [
     {
       "name": "新北市",
@@ -42,8 +42,8 @@
     },
     {
       "name": "臺北市",
-      "total": 995,
-      "preschools": 743,
+      "total": 996,
+      "preschools": 744,
       "nurseries": 252,
       "districts": [
         "士林區",
@@ -111,7 +111,7 @@
     "url": "https://github.com/kiang/ap.ece.moe.edu.tw",
     "license": "MIT",
     "origin": "全國教保資訊網",
-    "updatedAt": "2026-08-10"
+    "updatedAt": "2026-08-16"
   },
   "institutions": [
     {
@@ -50833,7 +50833,18 @@
       "floorArea": "2,123.68平方公尺",
       "website": null,
       "closed": false,
-      "penalties": [],
+      "penalties": [
+        {
+          "date": "2026/08/14",
+          "docNo": "新北府教幼字第1151596387號",
+          "statute": "幼兒教育及照顧法第59條第2款(111/6/29修正公布)",
+          "description": "第31條第1項教保服務機構未於幼兒進入及離開教保服務機構時實施保護措施。",
+          "role": "負責人",
+          "sanction": "罰鍰：3,000元",
+          "sanctionKind": "罰鍰",
+          "fineAmount": 3000
+        }
+      ],
       "floorAreaOut": "726平方公尺",
       "lat": 25.075903,
       "lng": 121.380957
@@ -50881,11 +50892,11 @@
         4,
         5
       ],
-      "floorArea": null,
+      "floorArea": "1,179平方公尺",
       "website": "http://www.lkes.ntpc.edu.tw/",
       "closed": false,
       "penalties": [],
-      "floorAreaOut": null,
+      "floorAreaOut": "456平方公尺",
       "lat": 25.079999,
       "lng": 121.389957
     },
@@ -57551,7 +57562,7 @@
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8C%97%E5%B8%82%E6%B7%A1%E6%B0%B4%E5%8D%80%E6%96%B0%E8%88%88%E5%9C%8B%E6%B0%91%E5%B0%8F%E5%AD%B8%E9%99%84%E8%A8%AD%E5%B9%BC%E5%85%92%E5%9C%92%20%E6%96%B0%E5%8C%97%E5%B8%82%E6%B7%A1%E6%B0%B4%E5%8D%80%E6%96%B0%E8%88%88%E8%A1%97123%E8%99%9F",
       "regNo": "八四北府教三字第343045號",
-      "approvedCount": 90,
+      "approvedCount": 106,
       "fees": {
         "3": {
           "monthly": 3706,
@@ -81347,7 +81358,7 @@
         4,
         5
       ],
-      "floorArea": "127.6平方公尺",
+      "floorArea": "133.66平方公尺",
       "website": null,
       "closed": false,
       "penalties": [
@@ -86853,7 +86864,7 @@
       "address": "臺北市士林區福港街107巷16、18、20號1樓",
       "tel": "(02) 2880-2380",
       "telHref": "+886-2-28802380",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E5%A4%A9%E6%89%8D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A6%8F%E6%B8%AF%E8%A1%97107%E5%B7%B716%E3%80%8118%E3%80%8120%E8%99%9F1%E6%A8%93",
@@ -86898,7 +86909,8 @@
       "floorAreaOut": null,
       "lat": 25.088031,
       "lng": 121.518606,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-幼天才托嬰中心-士林區",
@@ -86940,7 +86952,7 @@
       "address": "臺北市士林區中正路335巷18號",
       "tel": "(02) 2881-5581",
       "telHref": "+886-2-28815581",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E5%BF%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E6%AD%A3%E8%B7%AF335%E5%B7%B718%E8%99%9F",
@@ -86996,7 +87008,8 @@
       "floorAreaOut": "505平方公尺",
       "lat": 25.093837,
       "lng": 121.522902,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-幼安幼兒園-士林區",
@@ -87010,7 +87023,7 @@
       "address": "臺北市士林區社中街231巷27號1樓",
       "tel": "(02) 8811-5787",
       "telHref": "+886-2-88115787",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E5%AE%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A4%BE%E4%B8%AD%E8%A1%97231%E5%B7%B727%E8%99%9F1%E6%A8%93",
@@ -87055,7 +87068,8 @@
       "floorAreaOut": null,
       "lat": 25.090357,
       "lng": 121.507672,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-弘明幼兒園-士林區",
@@ -87069,7 +87083,7 @@
       "address": "臺北市士林區中山北路7段114巷11號",
       "tel": "(02) 2872-6200",
       "telHref": "+886-2-28726200",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BC%98%E6%98%8E%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF7%E6%AE%B5114%E5%B7%B711%E8%99%9F",
@@ -87135,7 +87149,8 @@
       "floorAreaOut": "277.62平方公尺",
       "lat": 25.122128,
       "lng": 121.533226,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-民華幼兒園-士林區",
@@ -87149,7 +87164,7 @@
       "address": "臺北市士林區華齡街211號1、2、3樓",
       "tel": "(02) 2882-3000",
       "telHref": "+886-2-28823000",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B0%91%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E8%8F%AF%E9%BD%A1%E8%A1%97211%E8%99%9F1%E3%80%812%E3%80%813%E6%A8%93",
@@ -87245,7 +87260,8 @@
       "floorAreaOut": "368.68平方公尺",
       "lat": 25.088332,
       "lng": 121.519685,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-多多種子幼兒園-士林區",
@@ -87405,6 +87421,35 @@
       "backboneFromArchive": true
     },
     {
+      "id": "preschool-好來忠誠幼兒園-士林區",
+      "city": "臺北市",
+      "kind": "preschool",
+      "category": "幼兒園",
+      "authority": "edu",
+      "name": "臺北市私立好來忠誠幼兒園",
+      "district": "士林區",
+      "street": "忠誠路二段166巷31號1、2樓",
+      "address": "臺北市士林區忠誠路二段166巷31號1、2樓",
+      "tel": "(02)2871-8698",
+      "telHref": "0228718698",
+      "ownership": "私立",
+      "capacity": null,
+      "operator": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A5%BD%E4%BE%86%E5%BF%A0%E8%AA%A0%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%BF%A0%E8%AA%A0%E8%B7%AF%E4%BA%8C%E6%AE%B5166%E5%B7%B731%E8%99%9F1%E3%80%812%E6%A8%93",
+      "regNo": "北市教前字第11530879841號",
+      "approvedCount": 20,
+      "fees": null,
+      "ages": [],
+      "floorArea": null,
+      "website": null,
+      "closed": false,
+      "penalties": [],
+      "floorAreaOut": null,
+      "lat": 25.115918,
+      "lng": 121.532189,
+      "backboneFromArchive": true
+    },
+    {
       "id": "preschool-有緣蒙特梭利幼兒園-士林區",
       "city": "臺北市",
       "kind": "preschool",
@@ -87416,7 +87461,7 @@
       "address": "臺北市士林區忠誠路2段32巷11號1樓",
       "tel": "(02) 2832-0290",
       "telHref": "+886-2-28320290",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%9C%89%E7%B7%A3%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%BF%A0%E8%AA%A0%E8%B7%AF2%E6%AE%B532%E5%B7%B711%E8%99%9F1%E6%A8%93",
@@ -87461,7 +87506,8 @@
       "floorAreaOut": null,
       "lat": 25.109336,
       "lng": 121.529443,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-何嘉仁士林幼兒園-士林區",
@@ -87685,7 +87731,7 @@
       "address": "臺北市士林區通河東街一段136巷24.26號1樓",
       "tel": "(02) 2882-8069",
       "telHref": "+886-2-28828069",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B1%82%E7%9C%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E9%80%9A%E6%B2%B3%E6%9D%B1%E8%A1%97%E4%B8%80%E6%AE%B5136%E5%B7%B724.26%E8%99%9F1%E6%A8%93",
@@ -87730,7 +87776,8 @@
       "floorAreaOut": null,
       "lat": 25.087133,
       "lng": 121.517111,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-佳嬰幼兒園-士林區",
@@ -87744,7 +87791,7 @@
       "address": "臺北市士林區大東路126號1樓",
       "tel": "(02) 2880-7575",
       "telHref": "+886-2-28807575",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BD%B3%E5%AC%B0%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%A4%A7%E6%9D%B1%E8%B7%AF126%E8%99%9F1%E6%A8%93",
@@ -87789,7 +87836,8 @@
       "floorAreaOut": null,
       "lat": 25.091689,
       "lng": 121.525563,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-忠義幼兒園-士林區",
@@ -87803,7 +87851,7 @@
       "address": "臺北市士林區士東路54巷11、19、21號",
       "tel": "(02) 2831-0788",
       "telHref": "+886-2-28310788",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BF%A0%E7%BE%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%A3%AB%E6%9D%B1%E8%B7%AF54%E5%B7%B711%E3%80%8119%E3%80%8121%E8%99%9F",
@@ -87879,7 +87927,8 @@
       "floorAreaOut": "300平方公尺",
       "lat": 25.111437,
       "lng": 121.528382,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-怡寶士林官邸托嬰中心-士林區",
@@ -87921,7 +87970,7 @@
       "address": "臺北市士林區中山北路六段2巷33號1樓",
       "tel": "(02) 2836-4720",
       "telHref": "+886-2-28364720",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%80%A1%E5%AF%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF%E5%85%AD%E6%AE%B52%E5%B7%B733%E8%99%9F1%E6%A8%93",
@@ -87966,7 +88015,8 @@
       "floorAreaOut": null,
       "lat": 25.103482,
       "lng": 121.527557,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-怡寶托嬰中心-士林區",
@@ -88036,7 +88086,7 @@
       "address": "臺北市士林區中山北路六段2巷39號1、2樓",
       "tel": "(02) 2836-4720",
       "telHref": "+886-2-28364720",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%80%A1%E5%AF%B6%E8%B3%87%E5%84%AA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF%E5%85%AD%E6%AE%B52%E5%B7%B739%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -88081,7 +88131,8 @@
       "floorAreaOut": null,
       "lat": 25.103557,
       "lng": 121.527798,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-怡寶資優托嬰中心-士林區",
@@ -88179,7 +88230,7 @@
       "address": "臺北市士林區福港街259巷4號1樓至2樓及6號1樓",
       "tel": "(02) 2882-2302",
       "telHref": "+886-2-28822302",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%AC%A3%E5%85%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A6%8F%E6%B8%AF%E8%A1%97259%E5%B7%B74%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93%E5%8F%8A6%E8%99%9F1%E6%A8%93",
@@ -88224,7 +88275,8 @@
       "floorAreaOut": "250平方公尺",
       "lat": 25.083806,
       "lng": 121.517953,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-社中幼兒園-士林區",
@@ -88238,7 +88290,7 @@
       "address": "臺北市士林區社中街424號1,2樓",
       "tel": "(02) 2812-6797",
       "telHref": "+886-2-28126797",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%A4%BE%E4%B8%AD%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A4%BE%E4%B8%AD%E8%A1%97424%E8%99%9F1%2C2%E6%A8%93",
@@ -88283,7 +88335,8 @@
       "floorAreaOut": null,
       "lat": 25.09193,
       "lng": 121.502569,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-育成幼兒園-士林區",
@@ -88297,7 +88350,7 @@
       "address": "臺北市士林區承德路四段12巷10.12.14號1樓",
       "tel": "(02) 2885-8002",
       "telHref": "+886-2-28858002",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E6%88%90%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E6%89%BF%E5%BE%B7%E8%B7%AF%E5%9B%9B%E6%AE%B512%E5%B7%B710.12.14%E8%99%9F1%E6%A8%93",
@@ -88393,7 +88446,8 @@
       "floorAreaOut": "115平方公尺",
       "lat": 25.080011,
       "lng": 121.521295,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-育強幼兒園-士林區",
@@ -88407,7 +88461,7 @@
       "address": "臺北市士林區社正路45巷12號1、2樓",
       "tel": "(02) 2812-8829",
       "telHref": "+886-2-28128829",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E5%BC%B7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A4%BE%E6%AD%A3%E8%B7%AF45%E5%B7%B712%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -88463,7 +88517,8 @@
       "floorAreaOut": "185平方公尺",
       "lat": 25.089632,
       "lng": 121.509698,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-長藤幼苗托嬰中心-士林區",
@@ -88561,7 +88616,7 @@
       "address": "臺北市士林區承德路四段185號1、2樓、2樓之1及187號2樓、2樓之1",
       "tel": "(02) 2888-1541",
       "telHref": "+886-2-28881541",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AD%A9%E5%AD%90%E5%9C%8B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E6%89%BF%E5%BE%B7%E8%B7%AF%E5%9B%9B%E6%AE%B5185%E8%99%9F1%E3%80%812%E6%A8%93%E3%80%812%E6%A8%93%E4%B9%8B1%E5%8F%8A187%E8%99%9F2%E6%A8%93%E3%80%812%E6%A8%93%E4%B9%8B1",
@@ -88606,7 +88661,8 @@
       "floorAreaOut": null,
       "lat": 25.087928,
       "lng": 121.522469,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-孩子國萌寶托嬰中心-士林區",
@@ -88648,7 +88704,7 @@
       "address": "臺北市士林區社中街289、291號1樓",
       "tel": "(02) 2812-6386",
       "telHref": "+886-2-28126386",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%98%9F%E8%8E%86%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A4%BE%E4%B8%AD%E8%A1%97289%E3%80%81291%E8%99%9F1%E6%A8%93",
@@ -88693,7 +88749,8 @@
       "floorAreaOut": null,
       "lat": 25.092002,
       "lng": 121.505947,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-春田天母托嬰中心-士林區",
@@ -88873,7 +88930,7 @@
       "address": "臺北市士林區延平北路六段210號1樓、2樓之1、2樓之2及212號1樓",
       "tel": "(02) 2811-3351",
       "telHref": "+886-2-28113351",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%A3%9B%E9%81%94%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%BB%B6%E5%B9%B3%E5%8C%97%E8%B7%AF%E5%85%AD%E6%AE%B5210%E8%99%9F1%E6%A8%93%E3%80%812%E6%A8%93%E4%B9%8B1%E3%80%812%E6%A8%93%E4%B9%8B2%E5%8F%8A212%E8%99%9F1%E6%A8%93",
@@ -88959,7 +89016,8 @@
       "floorAreaOut": "64.17平方公尺",
       "lat": 25.089467,
       "lng": 121.504902,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-師達幼兒園-士林區",
@@ -89032,7 +89090,7 @@
       "address": "臺北市士林區中山北路五段八二九巷14.16號",
       "tel": "(02) 2831-4281",
       "telHref": "+886-2-28314281",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B3%B0%E5%AE%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF%E4%BA%94%E6%AE%B5%E5%85%AB%E4%BA%8C%E4%B9%9D%E5%B7%B714.16%E8%99%9F",
@@ -89088,7 +89146,8 @@
       "floorAreaOut": "80平方公尺",
       "lat": 25.101727,
       "lng": 121.525106,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-浩恩幼兒園-士林區",
@@ -89232,7 +89291,7 @@
       "address": "臺北市士林區承德路四段57號一樓,53號二樓,55號二樓,.57號二樓",
       "tel": "(02) 2886-1858",
       "telHref": "+886-2-28861858",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B7%98%E5%85%92%E5%9C%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E6%89%BF%E5%BE%B7%E8%B7%AF%E5%9B%9B%E6%AE%B557%E8%99%9F%E4%B8%80%E6%A8%93%2C53%E8%99%9F%E4%BA%8C%E6%A8%93%2C55%E8%99%9F%E4%BA%8C%E6%A8%93%2C.57%E8%99%9F%E4%BA%8C%E6%A8%93",
@@ -89277,7 +89336,8 @@
       "floorAreaOut": null,
       "lat": 25.081494,
       "lng": 121.523089,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-凱斯幼兒園-士林區",
@@ -89671,7 +89731,7 @@
       "address": "臺北市士林區東山路135號1樓",
       "tel": "(02) 2836-4687",
       "telHref": "+886-2-28364687",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8F%AF%E8%82%B2%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E6%9D%B1%E5%B1%B1%E8%B7%AF135%E8%99%9F1%E6%A8%93",
@@ -89716,7 +89776,8 @@
       "floorAreaOut": "630.65平方公尺",
       "lat": 25.112228,
       "lng": 121.539851,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-華邇街幼兒園-士林區",
@@ -89730,7 +89791,7 @@
       "address": "臺北市士林區中山北路六段290巷7弄8號1,2樓",
       "tel": "(02) 2836-3379",
       "telHref": "+886-2-28363379",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8F%AF%E9%82%87%E8%A1%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF%E5%85%AD%E6%AE%B5290%E5%B7%B77%E5%BC%848%E8%99%9F1%2C2%E6%A8%93",
@@ -89775,7 +89836,8 @@
       "floorAreaOut": "358.18平方公尺",
       "lat": 25.110008,
       "lng": 121.527138,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-萌語天母托嬰中心-士林區",
@@ -90005,7 +90067,7 @@
       "address": "臺北市士林區社子街63巷8號1樓",
       "tel": "(02) 8811-1398",
       "telHref": "+886-2-88111398",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%91%9E%E6%AF%94%E7%89%B9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E7%A4%BE%E5%AD%90%E8%A1%9763%E5%B7%B78%E8%99%9F1%E6%A8%93",
@@ -90054,7 +90116,8 @@
       "floorAreaOut": null,
       "lat": 25.087798,
       "lng": 121.50684,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-道思幼兒園-士林區",
@@ -90148,7 +90211,7 @@
       "address": "臺北市士林區永平街46巷3弄7,9號1樓及9號2樓",
       "tel": "(02) 2811-3589",
       "telHref": "+886-2-28113589",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%85%88%E6%9A%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E6%B0%B8%E5%B9%B3%E8%A1%9746%E5%B7%B73%E5%BC%847%2C9%E8%99%9F1%E6%A8%93%E5%8F%8A9%E8%99%9F2%E6%A8%93",
@@ -90204,7 +90267,8 @@
       "floorAreaOut": null,
       "lat": 25.091036,
       "lng": 121.505859,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-熊寶貝幼兒園-士林區",
@@ -90218,7 +90282,7 @@
       "address": "臺北市士林區士東路46巷26號1樓",
       "tel": "(02) 2836-3868",
       "telHref": "+886-2-28363868",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%86%8A%E5%AF%B6%E8%B2%9D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A3%AB%E6%9E%97%E5%8D%80%E5%A3%AB%E6%9D%B1%E8%B7%AF46%E5%B7%B726%E8%99%9F1%E6%A8%93",
@@ -90263,7 +90327,8 @@
       "floorAreaOut": "500.12平方公尺",
       "lat": 25.110611,
       "lng": 121.527373,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-種籽幼兒園-士林區",
@@ -90964,7 +91029,7 @@
       "address": "臺北市大同區迪化街二段243巷2號1樓",
       "tel": "(02) 2594-2628",
       "telHref": "+886-2-25942628",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E7%8E%8B%E6%B0%8F%E5%A4%AA%E5%8E%9F%E5%A0%82%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%AA%E5%8E%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E8%BF%AA%E5%8C%96%E8%A1%97%E4%BA%8C%E6%AE%B5243%E5%B7%B72%E8%99%9F1%E6%A8%93",
@@ -91050,7 +91115,8 @@
       "floorAreaOut": "2,100.27平方公尺",
       "lat": 25.071716,
       "lng": 121.512697,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人陳德星堂附設臺北市私立德星幼兒園-大同區",
@@ -91064,7 +91130,7 @@
       "address": "臺北市大同區寧夏路27號1樓",
       "tel": "(02)25567150#16",
       "telHref": "022556715016",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E9%99%B3%E5%BE%B7%E6%98%9F%E5%A0%82%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BE%B7%E6%98%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E5%AF%A7%E5%A4%8F%E8%B7%AF27%E8%99%9F1%E6%A8%93",
@@ -91140,7 +91206,8 @@
       "floorAreaOut": "3,066.4平方公尺",
       "lat": 25.055544,
       "lng": 121.516367,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-大同托嬰中心-大同區",
@@ -91852,7 +91919,7 @@
       "address": "臺北市大同區延平北路二段272巷7號1樓",
       "tel": "(02) 2553-5198",
       "telHref": "+886-2-25535198",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B0%B4%E6%99%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E5%BB%B6%E5%B9%B3%E5%8C%97%E8%B7%AF%E4%BA%8C%E6%AE%B5272%E5%B7%B77%E8%99%9F1%E6%A8%93",
@@ -91908,7 +91975,8 @@
       "floorAreaOut": "22.16平方公尺",
       "lat": 25.062224,
       "lng": 121.510793,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-功文成長幼兒園-大同區",
@@ -92096,7 +92164,7 @@
       "address": "臺北市大同區民族西路162巷3號1樓",
       "tel": "(02) 2598-6967",
       "telHref": "+886-2-25986967",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E5%AD%B8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E6%B0%91%E6%97%8F%E8%A5%BF%E8%B7%AF162%E5%B7%B73%E8%99%9F1%E6%A8%93",
@@ -92162,7 +92230,8 @@
       "floorAreaOut": null,
       "lat": 25.068218,
       "lng": 121.515462,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-海王子托嬰中心-大同區",
@@ -92204,7 +92273,7 @@
       "address": "臺北市大同區延平北路二段280之1號1樓",
       "tel": "(02) 2553-5198",
       "telHref": "+886-2-25535198",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B5%B7%E6%A0%BC%E6%96%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E5%BB%B6%E5%B9%B3%E5%8C%97%E8%B7%AF%E4%BA%8C%E6%AE%B5280%E4%B9%8B1%E8%99%9F1%E6%A8%93",
@@ -92270,7 +92339,8 @@
       "floorAreaOut": "64.58平方公尺",
       "lat": 25.062348,
       "lng": 121.511138,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-海桔斯幼兒園-大同區",
@@ -92284,7 +92354,7 @@
       "address": "臺北市大同區延平北路二段286、286之1、286之2、286之3、286之4號1樓",
       "tel": "(02) 2553-2687",
       "telHref": "+886-2-25532687",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B5%B7%E6%A1%94%E6%96%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E5%BB%B6%E5%B9%B3%E5%8C%97%E8%B7%AF%E4%BA%8C%E6%AE%B5286%E3%80%81286%E4%B9%8B1%E3%80%81286%E4%B9%8B2%E3%80%81286%E4%B9%8B3%E3%80%81286%E4%B9%8B4%E8%99%9F1%E6%A8%93",
@@ -92370,7 +92440,8 @@
       "floorAreaOut": null,
       "lat": 25.062616,
       "lng": 121.510763,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-甜甜屋幼兒園-大同區",
@@ -92562,7 +92633,7 @@
       "address": "臺北市大同區承德路2段47號2樓及47號2樓之1",
       "tel": "(02)2559-0888",
       "telHref": "0225590888",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%A6%AA%E5%85%92%E5%9C%92%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E6%89%BF%E5%BE%B7%E8%B7%AF2%E6%AE%B547%E8%99%9F2%E6%A8%93%E5%8F%8A47%E8%99%9F2%E6%A8%93%E4%B9%8B1",
@@ -92658,7 +92729,8 @@
       "floorAreaOut": null,
       "lat": 25.055131,
       "lng": 121.518397,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-明倫托嬰中心-大同區",
@@ -92779,7 +92851,7 @@
       "address": "臺北市大安區新生南路二段32號1樓(南新樓1樓)",
       "tel": "(02)33931799#591",
       "telHref": "0233931799591",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%9C%89%E9%99%90%E8%B2%AC%E4%BB%BB%E8%87%BA%E5%8C%97%E5%B8%82%E7%AB%8B%E9%87%91%E8%8F%AF%E5%9C%8B%E6%B0%91%E4%B8%AD%E5%AD%B8%E5%93%A1%E7%94%9F%E6%B6%88%E8%B2%BB%E5%90%88%E4%BD%9C%E7%A4%BE%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%93%A1%E5%B7%A5%E5%AD%90%E5%A5%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%96%B0%E7%94%9F%E5%8D%97%E8%B7%AF%E4%BA%8C%E6%AE%B532%E8%99%9F1%E6%A8%93(%E5%8D%97%E6%96%B0%E6%A8%931%E6%A8%93)",
@@ -92817,7 +92889,8 @@
       "floorAreaOut": null,
       "lat": 25.030542,
       "lng": 121.531565,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人中國文化大學附設臺北市私立文化幼兒園-大安區",
@@ -93256,7 +93329,7 @@
       "address": "臺北市大安區復興南路二段280號",
       "tel": "(02) 2732-7334",
       "telHref": "+886-2-27327334",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E5%8F%B0%E7%81%A3%E8%81%96%E5%85%AC%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E7%B4%84%E7%BF%B0%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%BE%A9%E8%88%88%E5%8D%97%E8%B7%AF%E4%BA%8C%E6%AE%B5280%E8%99%9F",
@@ -93312,7 +93385,8 @@
       "floorAreaOut": "435.6平方公尺",
       "lat": 25.02426,
       "lng": 121.54306,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人臺北市私立立人國際國民中小學附設臺北市私立幼兒園-大安區",
@@ -93406,7 +93480,7 @@
       "address": "臺北市大安區杭州南路二段1號1樓",
       "tel": "(02) 3393-1683",
       "telHref": "+886-2-33931683",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%87%91%E7%94%8C%E5%A5%B3%E5%AD%90%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%9D%AD%E5%B7%9E%E5%8D%97%E8%B7%AF%E4%BA%8C%E6%AE%B51%E8%99%9F1%E6%A8%93",
@@ -93482,7 +93556,8 @@
       "floorAreaOut": "218平方公尺",
       "lat": 25.034994,
       "lng": 121.524345,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人臺北市私立復興實驗高級中學附設臺北市私立幼兒園-大安區",
@@ -94669,7 +94744,7 @@
       "address": "臺北市大安區四維路154巷19號1樓",
       "tel": "(02) 2704-1113",
       "telHref": "+886-2-27041113",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BA%BA%E5%AE%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%9B%9B%E7%B6%AD%E8%B7%AF154%E5%B7%B719%E8%99%9F1%E6%A8%93",
@@ -94765,7 +94840,8 @@
       "floorAreaOut": null,
       "lat": 25.031075,
       "lng": 121.547057,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-人愛托嬰中心-大安區",
@@ -94995,7 +95071,7 @@
       "address": "臺北市大安區雲和街8號1樓",
       "tel": "(02) 2369-7443",
       "telHref": "+886-2-23697443",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%A7%E6%88%90%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%9B%B2%E5%92%8C%E8%A1%978%E8%99%9F1%E6%A8%93",
@@ -95040,7 +95116,8 @@
       "floorAreaOut": null,
       "lat": 25.023622,
       "lng": 121.527691,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-小天心幼兒園-大安區",
@@ -95054,7 +95131,7 @@
       "address": "臺北市大安區潮州街57號1樓",
       "tel": "(02) 2356-8960",
       "telHref": "+886-2-23568960",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%8F%E5%A4%A9%E5%BF%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%BD%AE%E5%B7%9E%E8%A1%9757%E8%99%9F1%E6%A8%93",
@@ -95099,7 +95176,8 @@
       "floorAreaOut": null,
       "lat": 25.029342,
       "lng": 121.524156,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-小天心托嬰中心-大安區",
@@ -95141,7 +95219,7 @@
       "address": "臺北市大安區永康街14巷8號1樓",
       "tel": "(02) 3322-2123",
       "telHref": "+886-2-33222123",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%8F%E5%A4%A9%E5%BF%83%E5%AE%B8%E5%AE%B8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%B0%B8%E5%BA%B7%E8%A1%9714%E5%B7%B78%E8%99%9F1%E6%A8%93",
@@ -95186,7 +95264,8 @@
       "floorAreaOut": null,
       "lat": 25.031241,
       "lng": 121.529098,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-小天心茜茜幼兒園-大安區",
@@ -95200,7 +95279,7 @@
       "address": "臺北市大安區泰順街26巷39號1樓",
       "tel": "(02) 2363-7770",
       "telHref": "+886-2-23637770",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%8F%E5%A4%A9%E5%BF%83%E8%8C%9C%E8%8C%9C%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%B3%B0%E9%A0%86%E8%A1%9726%E5%B7%B739%E8%99%9F1%E6%A8%93",
@@ -95238,7 +95317,8 @@
       "floorAreaOut": "30.65平方公尺",
       "lat": 25.025094,
       "lng": 121.529873,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-小磊心托嬰中心-大安區",
@@ -95830,7 +95910,7 @@
       "address": "臺北市大安區和平東路三段1巷25號",
       "tel": "(02) 2707-3718",
       "telHref": "+886-2-27073718",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%9B%9B%E7%B6%AD%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%92%8C%E5%B9%B3%E6%9D%B1%E8%B7%AF%E4%B8%89%E6%AE%B51%E5%B7%B725%E8%99%9F",
@@ -95886,7 +95966,8 @@
       "floorAreaOut": "136.1平方公尺",
       "lat": 25.025661,
       "lng": 121.546866,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-巧心托嬰中心-大安區",
@@ -96238,7 +96319,7 @@
       "address": "臺北市大安區延吉街109號2樓",
       "tel": "(02)2772-0366",
       "telHref": "0227720366",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E8%BB%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%BB%B6%E5%90%89%E8%A1%97109%E8%99%9F2%E6%A8%93",
@@ -96294,7 +96375,8 @@
       "floorAreaOut": null,
       "lat": 25.043099,
       "lng": 121.554166,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-弘人幼兒園-大安區",
@@ -96308,7 +96390,7 @@
       "address": "臺北市大安區四維路170巷3號1至2樓、5號1至2樓",
       "tel": "(02) 2704-7899",
       "telHref": "+886-2-27047899",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BC%98%E4%BA%BA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%9B%9B%E7%B6%AD%E8%B7%AF170%E5%B7%B73%E8%99%9F1%E8%87%B32%E6%A8%93%E3%80%815%E8%99%9F1%E8%87%B32%E6%A8%93",
@@ -96364,7 +96446,8 @@
       "floorAreaOut": "103.03平方公尺",
       "lat": 25.028282,
       "lng": 121.547688,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-禾心蒙特梭利幼兒園-大安區",
@@ -97027,7 +97110,7 @@
       "address": "臺北市大安區信義路三段31巷11號1樓",
       "tel": "(02) 2754-6816",
       "telHref": "+886-2-27546816",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BA%AB%E9%8A%98%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E4%BF%A1%E7%BE%A9%E8%B7%AF%E4%B8%89%E6%AE%B531%E5%B7%B711%E8%99%9F1%E6%A8%93",
@@ -97072,7 +97155,8 @@
       "floorAreaOut": null,
       "lat": 25.035445,
       "lng": 121.534791,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-佳安幼兒園-大安區",
@@ -97086,7 +97170,7 @@
       "address": "臺北市大安區樂業街131、133號1樓",
       "tel": "(02) 2733-2971",
       "telHref": "+886-2-27332971",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BD%B3%E5%AE%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%A8%82%E6%A5%AD%E8%A1%97131%E3%80%81133%E8%99%9F1%E6%A8%93",
@@ -97131,7 +97215,8 @@
       "floorAreaOut": "31.4平方公尺",
       "lat": 25.020157,
       "lng": 121.553091,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-奇幻幼兒園-大安區",
@@ -97145,7 +97230,7 @@
       "address": "臺北市大安區忠孝東路三段217巷1弄7號1樓",
       "tel": "(02) 2740-1155",
       "telHref": "+886-2-27401155",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A5%87%E5%B9%BB%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF%E4%B8%89%E6%AE%B5217%E5%B7%B71%E5%BC%847%E8%99%9F1%E6%A8%93",
@@ -97190,7 +97275,8 @@
       "floorAreaOut": null,
       "lat": 25.042258,
       "lng": 121.539355,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-幸福日光托嬰中心-大安區",
@@ -97260,7 +97346,7 @@
       "address": "臺北市大安區和平東路三段308巷40號1樓",
       "tel": "(02) 2735-5304",
       "telHref": "+886-2-27355304",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E6%A8%82%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%92%8C%E5%B9%B3%E6%9D%B1%E8%B7%AF%E4%B8%89%E6%AE%B5308%E5%B7%B740%E8%99%9F1%E6%A8%93",
@@ -97336,7 +97422,8 @@
       "floorAreaOut": "71.8平方公尺",
       "lat": 25.019621,
       "lng": 121.555372,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-芭蒂恩蒙氏家園托嬰中心-大安區",
@@ -98226,7 +98313,7 @@
       "address": "臺北市大安區仁愛路三段51巷8號1樓",
       "tel": "(02) 2779-0069",
       "telHref": "+886-2-27790069",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A1%94%E5%AD%90%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E4%BB%81%E6%84%9B%E8%B7%AF%E4%B8%89%E6%AE%B551%E5%B7%B78%E8%99%9F1%E6%A8%93",
@@ -98292,7 +98379,8 @@
       "floorAreaOut": null,
       "lat": 25.039768,
       "lng": 121.535842,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-真心蒙特梭利幼兒園-大安區",
@@ -98483,7 +98571,7 @@
       "address": "臺北市大安區通化街143巷31號1樓至2樓",
       "tel": "(02) 2738-3431",
       "telHref": "+886-2-27383431",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%83%A0%E7%9C%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E9%80%9A%E5%8C%96%E8%A1%97143%E5%B7%B731%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -98549,7 +98637,8 @@
       "floorAreaOut": "280.94平方公尺",
       "lat": 25.028477,
       "lng": 121.555825,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-敦歆幼兒園-大安區",
@@ -98563,7 +98652,7 @@
       "address": "臺北市大安區忠孝東路三段217巷2弄8號1樓",
       "tel": "(02) 2776-1626",
       "telHref": "+886-2-27761626",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%95%A6%E6%AD%86%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF%E4%B8%89%E6%AE%B5217%E5%B7%B72%E5%BC%848%E8%99%9F1%E6%A8%93",
@@ -98608,7 +98697,8 @@
       "floorAreaOut": null,
       "lat": 25.042241,
       "lng": 121.540175,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-童年空間幼兒園-大安區",
@@ -98681,7 +98771,7 @@
       "address": "臺北市大安區樂業街182號2樓及184號2樓",
       "tel": "(02) 2732-0003",
       "telHref": "+886-2-27320003",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%AB%A5%E9%A6%A8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E6%A8%82%E6%A5%AD%E8%A1%97182%E8%99%9F2%E6%A8%93%E5%8F%8A184%E8%99%9F2%E6%A8%93",
@@ -98726,7 +98816,8 @@
       "floorAreaOut": null,
       "lat": 25.019093,
       "lng": 121.554046,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-菁英幼兒園-大安區",
@@ -99646,7 +99737,7 @@
       "address": "臺北市大安區復興南路二段160巷16號1樓",
       "tel": "(02) 2704-5180",
       "telHref": "+886-2-27045180",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%B6%93%E7%B7%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%BE%A9%E8%88%88%E5%8D%97%E8%B7%AF%E4%BA%8C%E6%AE%B5160%E5%B7%B716%E8%99%9F1%E6%A8%93",
@@ -99722,7 +99813,8 @@
       "floorAreaOut": null,
       "lat": 25.027791,
       "lng": 121.542329,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-嘟嘟幼兒園-大安區",
@@ -100686,7 +100778,7 @@
       "address": "臺北市大安區瑞安街208巷2號及4號1樓",
       "tel": "(02) 2708-7011",
       "telHref": "+886-2-27087011",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A9%98%E5%AD%90%E6%A8%B9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E7%91%9E%E5%AE%89%E8%A1%97208%E5%B7%B72%E8%99%9F%E5%8F%8A4%E8%99%9F1%E6%A8%93",
@@ -100731,7 +100823,8 @@
       "floorAreaOut": null,
       "lat": 25.028053,
       "lng": 121.540436,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-橘子樹寶貝托嬰中心-大安區",
@@ -101279,7 +101372,7 @@
       "address": "臺北市中山區復興北路430巷1號1樓",
       "tel": "(02)25048846#9",
       "telHref": "02250488469",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%9C%89%E9%99%90%E8%B2%AC%E4%BB%BB%E8%87%BA%E5%8C%97%E5%B8%82%E7%AB%8B%E4%BA%94%E5%B8%B8%E5%9C%8B%E6%B0%91%E4%B8%AD%E5%AD%B8%E5%93%A1%E7%94%9F%E6%B6%88%E8%B2%BB%E5%90%88%E4%BD%9C%E7%A4%BE%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%93%A1%E5%B7%A5%E5%AD%90%E5%A5%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E5%BE%A9%E8%88%88%E5%8C%97%E8%B7%AF430%E5%B7%B71%E8%99%9F1%E6%A8%93",
@@ -101345,7 +101438,8 @@
       "floorAreaOut": null,
       "lat": 25.063797,
       "lng": 121.543084,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-實踐大學附設臺北市私立幼兒園-中山區",
@@ -102293,7 +102387,7 @@
       "address": "臺北市中山區明水路397巷7弄24號1樓",
       "tel": "(02) 2532-0696",
       "telHref": "+886-2-25320696",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%A7%E6%99%BA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E6%98%8E%E6%B0%B4%E8%B7%AF397%E5%B7%B77%E5%BC%8424%E8%99%9F1%E6%A8%93",
@@ -102338,7 +102432,8 @@
       "floorAreaOut": "70.44平方公尺",
       "lat": 25.077936,
       "lng": 121.548754,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-大愛幼兒園-中山區",
@@ -102743,7 +102838,7 @@
       "address": "臺北市中山區龍江路377巷24號1樓",
       "tel": "(02) 2502-5750",
       "telHref": "+886-2-25025750",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BA%94%E5%B8%B8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E9%BE%8D%E6%B1%9F%E8%B7%AF377%E5%B7%B724%E8%99%9F1%E6%A8%93",
@@ -102799,7 +102894,8 @@
       "floorAreaOut": "70平方公尺",
       "lat": 25.064708,
       "lng": 121.54239,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-卡兒堡大直幼兒園-中山區",
@@ -102989,7 +103085,7 @@
       "address": "臺北市中山區松江路362巷13、15、17、19號1樓",
       "tel": "(02) 2522-3774",
       "telHref": "+886-2-25223774",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%AD%A3%E5%85%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E6%9D%BE%E6%B1%9F%E8%B7%AF362%E5%B7%B713%E3%80%8115%E3%80%8117%E3%80%8119%E8%99%9F1%E6%A8%93",
@@ -103034,7 +103130,8 @@
       "floorAreaOut": null,
       "lat": 25.062052,
       "lng": 121.532501,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-立興幼兒園-中山區",
@@ -103048,7 +103145,7 @@
       "address": "臺北市中山區龍江路342巷37號1樓及356巷48號1樓",
       "tel": "(02) 2503-4564",
       "telHref": "+886-2-25034564",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%AB%8B%E8%88%88%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E9%BE%8D%E6%B1%9F%E8%B7%AF342%E5%B7%B737%E8%99%9F1%E6%A8%93%E5%8F%8A356%E5%B7%B748%E8%99%9F1%E6%A8%93",
@@ -103093,7 +103190,8 @@
       "floorAreaOut": "130平方公尺",
       "lat": 25.065647,
       "lng": 121.539033,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-艾達幼兒園-中山區",
@@ -103107,7 +103205,7 @@
       "address": "臺北市中山區堤頂大道二段282、284、286號1樓、1樓夾層",
       "tel": "(02) 8501-1373",
       "telHref": "+886-2-85011373",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%89%BE%E9%81%94%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E5%A0%A4%E9%A0%82%E5%A4%A7%E9%81%93%E4%BA%8C%E6%AE%B5282%E3%80%81284%E3%80%81286%E8%99%9F1%E6%A8%93%E3%80%811%E6%A8%93%E5%A4%BE%E5%B1%A4",
@@ -103173,7 +103271,8 @@
       "floorAreaOut": null,
       "lat": 25.07825,
       "lng": 121.564914,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-宜家蒙特梭利幼兒園-中山區",
@@ -104269,7 +104368,7 @@
       "address": "臺北市中山區龍江路31號2樓",
       "tel": "(02) 2777-1300",
       "telHref": "+886-2-27771300",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8D%B3%E8%8D%B3%E5%9C%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E9%BE%8D%E6%B1%9F%E8%B7%AF31%E8%99%9F2%E6%A8%93",
@@ -104335,7 +104434,8 @@
       "floorAreaOut": null,
       "lat": 25.04864,
       "lng": 121.54052,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-傑聲幼兒園-中山區",
@@ -104349,7 +104449,7 @@
       "address": "臺北市中山區明水路397巷2弄10、12號1、2樓",
       "tel": "(02) 2532-5580",
       "telHref": "+886-2-25325580",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%82%91%E8%81%B2%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E6%98%8E%E6%B0%B4%E8%B7%AF397%E5%B7%B72%E5%BC%8410%E3%80%8112%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -104405,7 +104505,8 @@
       "floorAreaOut": null,
       "lat": 25.077972,
       "lng": 121.547574,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-喬幼一江幼兒園-中山區",
@@ -104419,7 +104520,7 @@
       "address": "臺北市中山區一江街21號1樓及2樓",
       "tel": "(02) 2562-8898",
       "telHref": "+886-2-25628898",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%96%AC%E5%B9%BC%E4%B8%80%E6%B1%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E4%B8%80%E6%B1%9F%E8%A1%9721%E8%99%9F1%E6%A8%93%E5%8F%8A2%E6%A8%93",
@@ -104495,7 +104596,8 @@
       "floorAreaOut": null,
       "lat": 25.052681,
       "lng": 121.531609,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-喬幼國際幼兒園-中山區",
@@ -105001,7 +105103,7 @@
       "address": "臺北市中山區松江路170巷17號2樓",
       "tel": "(02) 2522-2745",
       "telHref": "+886-2-25222745",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%98%89%E6%9C%B5%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E6%9D%BE%E6%B1%9F%E8%B7%AF170%E5%B7%B717%E8%99%9F2%E6%A8%93",
@@ -105077,7 +105179,8 @@
       "floorAreaOut": null,
       "lat": 25.056158,
       "lng": 121.530914,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-嘉霖幼兒園-中山區",
@@ -105487,7 +105590,7 @@
       "address": "臺北市中山區龍江路397巷12號1樓",
       "tel": "(02) 2509-7435",
       "telHref": "+886-2-25097435",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%BE%8D%E6%B1%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E5%B1%B1%E5%8D%80%E9%BE%8D%E6%B1%9F%E8%B7%AF397%E5%B7%B712%E8%99%9F1%E6%A8%93",
@@ -105553,7 +105656,8 @@
       "floorAreaOut": null,
       "lat": 25.065469,
       "lng": 121.54168,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-龍江媽咪托嬰中心-中山區",
@@ -106228,7 +106332,7 @@
       "address": "臺北市中正區重慶南路1段136巷2號1樓",
       "tel": "(02) 2371-3445",
       "telHref": "+886-2-23713445",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%B3%95%E5%8B%99%E9%83%A8%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%93%A1%E5%B7%A5%E5%AD%90%E5%A5%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E9%87%8D%E6%85%B6%E5%8D%97%E8%B7%AF1%E6%AE%B5136%E5%B7%B72%E8%99%9F1%E6%A8%93",
@@ -106273,7 +106377,8 @@
       "floorAreaOut": "441.62平方公尺",
       "lat": 25.036186,
       "lng": 121.512357,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財政部國有財產署職場互助教保服務中心委託社團法人臺灣兒童教育發展協會辦理-中正區",
@@ -106337,7 +106442,7 @@
       "address": "臺北市中正區寧波東街9巷4號、6號1樓",
       "tel": "(02) 2395-2273",
       "telHref": "+886-2-23952273",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E4%B8%AD%E8%8F%AF%E5%9F%BA%E7%9D%A3%E6%95%99%E8%A1%9B%E7%90%86%E5%85%AC%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%9F%8E%E4%B8%AD%E8%A1%9B%E7%90%86%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%AF%A7%E6%B3%A2%E6%9D%B1%E8%A1%979%E5%B7%B74%E8%99%9F%E3%80%816%E8%99%9F1%E6%A8%93",
@@ -106382,7 +106487,8 @@
       "floorAreaOut": "218.69平方公尺",
       "lat": 25.032613,
       "lng": 121.519635,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人台北市私立強恕高級中學附設臺北市私立幼兒園-中正區",
@@ -107489,7 +107595,7 @@
       "address": "臺北市中正區金山南路一段67巷8號1、2樓及8之1號1樓",
       "tel": "(02) 2393-6965",
       "telHref": "+886-2-23936965",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B7%A8%E5%8B%9D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E9%87%91%E5%B1%B1%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B567%E5%B7%B78%E8%99%9F1%E3%80%812%E6%A8%93%E5%8F%8A8%E4%B9%8B1%E8%99%9F1%E6%A8%93",
@@ -107534,7 +107640,8 @@
       "floorAreaOut": null,
       "lat": 25.03766,
       "lng": 121.528693,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-安筠托嬰中心原名稱：小哈利-中正區",
@@ -107745,7 +107852,7 @@
       "address": "臺北市中正區南海路96之1及96之2號1至2樓",
       "tel": "(02) 2303-3807",
       "telHref": "+886-2-23033807",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%B9%96%E4%B9%96%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%8D%97%E6%B5%B7%E8%B7%AF96%E4%B9%8B1%E5%8F%8A96%E4%B9%8B2%E8%99%9F1%E8%87%B32%E6%A8%93",
@@ -107841,7 +107948,8 @@
       "floorAreaOut": null,
       "lat": 25.028453,
       "lng": 121.508485,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-南門幼兒園-中正區",
@@ -108159,7 +108267,7 @@
       "address": "臺北市中正區杭州南路1段131巷5號1樓",
       "tel": "(02) 3322-2686",
       "telHref": "+886-2-33222686",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AE%B6%E7%B7%A3%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E6%9D%AD%E5%B7%9E%E5%8D%97%E8%B7%AF1%E6%AE%B5131%E5%B7%B75%E8%99%9F1%E6%A8%93",
@@ -108265,7 +108373,8 @@
       "floorAreaOut": "34.13平方公尺",
       "lat": 25.036563,
       "lng": 121.525348,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-涵鈺新天地幼兒園-中正區",
@@ -108279,7 +108388,7 @@
       "address": "臺北市中正區林森南路12號3樓之1",
       "tel": "(02) 2357-6386",
       "telHref": "+886-2-23576386",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B6%B5%E9%88%BA%E6%96%B0%E5%A4%A9%E5%9C%B0%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E6%9E%97%E6%A3%AE%E5%8D%97%E8%B7%AF12%E8%99%9F3%E6%A8%93%E4%B9%8B1",
@@ -108324,7 +108433,8 @@
       "floorAreaOut": null,
       "lat": 25.042659,
       "lng": 121.522594,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-傑瑞富幼兒園-中正區",
@@ -108397,7 +108507,7 @@
       "address": "臺北市中正區羅斯福路2段50號2樓之1及2樓之2",
       "tel": "(02) 2356-0362",
       "telHref": "+886-2-23560362",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%99%BA%E5%AF%B6%E5%9C%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E7%BE%85%E6%96%AF%E7%A6%8F%E8%B7%AF2%E6%AE%B550%E8%99%9F2%E6%A8%93%E4%B9%8B1%E5%8F%8A2%E6%A8%93%E4%B9%8B2",
@@ -108453,7 +108563,8 @@
       "floorAreaOut": null,
       "lat": 25.02786,
       "lng": 121.521595,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-萌芽托嬰中心-中正區",
@@ -108709,7 +108820,7 @@
       "address": "臺北市中正區寧波西街181巷44號1、2樓",
       "tel": "(02) 2305-3874",
       "telHref": "+886-2-23053874",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AF%B6%E8%B2%9D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%AF%A7%E6%B3%A2%E8%A5%BF%E8%A1%97181%E5%B7%B744%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -108754,7 +108865,8 @@
       "floorAreaOut": null,
       "lat": 25.026398,
       "lng": 121.509629,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-國語實驗國小學附設幼兒園-中正區",
@@ -108929,7 +109041,7 @@
       "address": "臺北市中正區重慶南路一段136巷4號1樓",
       "tel": "(02) 2331-9976",
       "telHref": "+886-2-23319976",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E7%81%A3%E9%AB%98%E7%AD%89%E6%B3%95%E9%99%A2%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%93%A1%E5%B7%A5%E5%AD%90%E5%A5%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E9%87%8D%E6%85%B6%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5136%E5%B7%B74%E8%99%9F1%E6%A8%93",
@@ -108967,7 +109079,8 @@
       "floorAreaOut": null,
       "lat": 25.036139,
       "lng": 121.511814,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-臺灣銀行桃源大樓職場互助教保服務中心委託社團法人台灣公共托育協會辦理-中正區",
@@ -110781,7 +110894,7 @@
       "address": "臺北市內湖區成功路五段臨37號",
       "tel": "(02) 2630-7030",
       "telHref": "+886-2-26307030",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%8F%E7%B6%A0%E5%B1%B1%E6%A3%AE%E6%9E%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E6%88%90%E5%8A%9F%E8%B7%AF%E4%BA%94%E6%AE%B5%E8%87%A837%E8%99%9F",
@@ -110826,7 +110939,8 @@
       "floorAreaOut": "183.12平方公尺",
       "lat": 25.077371,
       "lng": 121.606928,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-小瓢蟲幼兒園-內湖區",
@@ -111028,7 +111142,7 @@
       "address": "臺北市內湖區麗山街62巷18弄2、4、6號1樓",
       "tel": "(02) 2627-0022",
       "telHref": "+886-2-26270022",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BF%83%E6%83%A0%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%BA%97%E5%B1%B1%E8%A1%9762%E5%B7%B718%E5%BC%842%E3%80%814%E3%80%816%E8%99%9F1%E6%A8%93",
@@ -111084,7 +111198,8 @@
       "floorAreaOut": "625.5平方公尺",
       "lat": 25.081348,
       "lng": 121.578915,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-文心幼兒園-內湖區",
@@ -111098,7 +111213,7 @@
       "address": "臺北市內湖區星雲街68巷8、10、12號1樓",
       "tel": "(02) 2790-2507",
       "telHref": "+886-2-27902507",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%96%87%E5%BF%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E6%98%9F%E9%9B%B2%E8%A1%9768%E5%B7%B78%E3%80%8110%E3%80%8112%E8%99%9F1%E6%A8%93",
@@ -111164,7 +111279,8 @@
       "floorAreaOut": "90平方公尺",
       "lat": 25.07863,
       "lng": 121.592766,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-卡兒堡艾瑪托嬰中心-內湖區",
@@ -111206,7 +111322,7 @@
       "address": "臺北市內湖區康寧路三段16巷35號1、2樓及33號2樓",
       "tel": "(02) 2634-8514",
       "telHref": "+886-2-26348514",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8D%A1%E7%88%BE%E7%B6%AD%E5%BE%B7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E5%BA%B7%E5%AF%A7%E8%B7%AF%E4%B8%89%E6%AE%B516%E5%B7%B735%E8%99%9F1%E3%80%812%E6%A8%93%E5%8F%8A33%E8%99%9F2%E6%A8%93",
@@ -111262,7 +111378,8 @@
       "floorAreaOut": null,
       "lat": 25.071874,
       "lng": 121.607694,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-卡爾維德蒙特梭利幼兒園-內湖區",
@@ -111688,7 +111805,7 @@
       "address": "臺北市內湖區麗山街338巷5、7號1樓",
       "tel": "(02) 2798-6739",
       "telHref": "+886-2-27986739",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B0%91%E7%A5%A5%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%BA%97%E5%B1%B1%E8%A1%97338%E5%B7%B75%E3%80%817%E8%99%9F1%E6%A8%93",
@@ -111733,7 +111850,8 @@
       "floorAreaOut": "92.2平方公尺",
       "lat": 25.082463,
       "lng": 121.573365,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-永寶兒托嬰中心-內湖區",
@@ -112522,7 +112640,7 @@
       "address": "臺北市內湖區康寧路3段99巷10弄6號1樓及2樓",
       "tel": "(02) 2632-3564",
       "telHref": "+886-2-26323564",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%98%8E%E6%98%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E5%BA%B7%E5%AF%A7%E8%B7%AF3%E6%AE%B599%E5%B7%B710%E5%BC%846%E8%99%9F1%E6%A8%93%E5%8F%8A2%E6%A8%93",
@@ -112567,7 +112685,8 @@
       "floorAreaOut": null,
       "lat": 25.072344,
       "lng": 121.610648,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-東湖幼兒園-內湖區",
@@ -112581,7 +112700,7 @@
       "address": "臺北市內湖區康樂街85巷33、35、37號1樓",
       "tel": "(02) 2631-0351",
       "telHref": "+886-2-26310351",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%9D%B1%E6%B9%96%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E5%BA%B7%E6%A8%82%E8%A1%9785%E5%B7%B733%E3%80%8135%E3%80%8137%E8%99%9F1%E6%A8%93",
@@ -112657,7 +112776,8 @@
       "floorAreaOut": "97平方公尺",
       "lat": 25.069567,
       "lng": 121.619896,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-東湖站托嬰中心-內湖區",
@@ -112925,7 +113045,7 @@
       "address": "臺北市內湖區金湖路363巷45號1樓至3樓",
       "tel": "(02) 2634-7688",
       "telHref": "+886-2-26347688",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%9F%8F%E5%85%8B%E7%AB%8B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%87%91%E6%B9%96%E8%B7%AF363%E5%B7%B745%E8%99%9F1%E6%A8%93%E8%87%B33%E6%A8%93",
@@ -112970,7 +113090,8 @@
       "floorAreaOut": "162.06平方公尺",
       "lat": 25.073311,
       "lng": 121.600926,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-柏克立國際幼兒園-內湖區",
@@ -113029,7 +113150,7 @@
       "address": "臺北市內湖區金湖路363巷17號1樓至3樓及19號1樓",
       "tel": "(02) 2633-3002",
       "telHref": "+886-2-26333002",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%9F%8F%E5%85%8B%E8%90%8A%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%87%91%E6%B9%96%E8%B7%AF363%E5%B7%B717%E8%99%9F1%E6%A8%93%E8%87%B33%E6%A8%93%E5%8F%8A19%E8%99%9F1%E6%A8%93",
@@ -113074,7 +113195,8 @@
       "floorAreaOut": "150.55平方公尺",
       "lat": 25.073415,
       "lng": 121.601771,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-美敦幼兒園-內湖區",
@@ -113703,7 +113825,7 @@
       "address": "臺北市內湖區康寧路三段54之5號2樓",
       "tel": "(02) 2634-6557",
       "telHref": "+886-2-26346557",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%87%B1%E8%8F%B2%E6%9E%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E5%BA%B7%E5%AF%A7%E8%B7%AF%E4%B8%89%E6%AE%B554%E4%B9%8B5%E8%99%9F2%E6%A8%93",
@@ -113748,7 +113870,8 @@
       "floorAreaOut": null,
       "lat": 25.071414,
       "lng": 121.609474,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-凱菲林托嬰中心-內湖區",
@@ -114185,7 +114308,7 @@
       "address": "臺北市內湖區陽光街65號1樓",
       "tel": "(02) 2657-7679",
       "telHref": "+886-2-26577679",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A3%AE%E6%9E%97%E5%AD%B8%E9%A4%A8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%99%BD%E5%85%89%E8%A1%9765%E8%99%9F1%E6%A8%93",
@@ -114261,7 +114384,8 @@
       "floorAreaOut": null,
       "lat": 25.07631,
       "lng": 121.586625,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-湖畔小百合蒙特梭利幼兒園-內湖區",
@@ -115147,7 +115271,7 @@
       "address": "臺北市內湖區民權東路六段296巷75號1樓",
       "tel": "(02) 2632-9810",
       "telHref": "+886-2-26329810",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E5%AE%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E6%B0%91%E6%AC%8A%E6%9D%B1%E8%B7%AF%E5%85%AD%E6%AE%B5296%E5%B7%B775%E8%99%9F1%E6%A8%93",
@@ -115203,7 +115327,8 @@
       "floorAreaOut": null,
       "lat": 25.070859,
       "lng": 121.607789,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-聖育幼兒園-內湖區",
@@ -115217,7 +115342,7 @@
       "address": "臺北市內湖區內湖路三段60巷9、11號1樓至2樓",
       "tel": "(02) 2790-9417",
       "telHref": "+886-2-27909417",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E8%82%B2%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E5%85%A7%E6%B9%96%E8%B7%AF%E4%B8%89%E6%AE%B560%E5%B7%B79%E3%80%8111%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -115262,7 +115387,8 @@
       "floorAreaOut": null,
       "lat": 25.087197,
       "lng": 121.592354,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-聖喬治幼兒園-內湖區",
@@ -115478,7 +115604,7 @@
       "address": "臺北市內湖區成功路三段187巷35弄2號1樓及4號1樓",
       "tel": "(02) 2793-0308",
       "telHref": "+886-2-27930308",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BB%A3%E6%95%99%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E6%88%90%E5%8A%9F%E8%B7%AF%E4%B8%89%E6%AE%B5187%E5%B7%B735%E5%BC%842%E8%99%9F1%E6%A8%93%E5%8F%8A4%E8%99%9F1%E6%A8%93",
@@ -115564,7 +115690,8 @@
       "floorAreaOut": null,
       "lat": 25.079283,
       "lng": 121.592009,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-潭美幼兒園-內湖區",
@@ -115578,7 +115705,7 @@
       "address": "臺北市內湖區東湖路160巷10弄20、22、24號",
       "tel": "(02) 2631-9070",
       "telHref": "+886-2-26319070",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%BD%AD%E7%BE%8E%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E6%9D%B1%E6%B9%96%E8%B7%AF160%E5%B7%B710%E5%BC%8420%E3%80%8122%E3%80%8124%E8%99%9F",
@@ -115623,7 +115750,8 @@
       "floorAreaOut": null,
       "lat": 25.067658,
       "lng": 121.616888,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-澳森文德托嬰中心-內湖區",
@@ -115693,7 +115821,7 @@
       "address": "臺北市內湖區金湖路16之11號1樓",
       "tel": "(02) 8791-9961",
       "telHref": "+886-2-87919961",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%9E%8D%E6%81%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%85%A7%E6%B9%96%E5%8D%80%E9%87%91%E6%B9%96%E8%B7%AF16%E4%B9%8B11%E8%99%9F1%E6%A8%93",
@@ -115799,7 +115927,8 @@
       "floorAreaOut": null,
       "lat": 25.083301,
       "lng": 121.596139,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-諾貝爾內湖幼兒園-內湖區",
@@ -116654,7 +116783,7 @@
       "address": "臺北市文山區和興路2號1樓至2樓",
       "tel": "(02) 2236-2817",
       "telHref": "+886-2-22362817",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E8%8F%AF%E5%9F%BA%E7%9D%A3%E6%95%99%E9%9D%92%E5%B9%B4%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%96%87%E5%B1%B1%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E5%92%8C%E8%88%88%E8%B7%AF2%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -116710,7 +116839,8 @@
       "floorAreaOut": "329.15平方公尺",
       "lat": 24.986309,
       "lng": 121.545883,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人台北市中華基督教景美浸信會附設臺北市私立聖愛幼兒園-文山區",
@@ -116724,7 +116854,7 @@
       "address": "臺北市文山區育英街63號",
       "tel": "(02) 2933-2244",
       "telHref": "+886-2-29332244",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E8%8F%AF%E5%9F%BA%E7%9D%A3%E6%95%99%E6%99%AF%E7%BE%8E%E6%B5%B8%E4%BF%A1%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E6%84%9B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%82%B2%E8%8B%B1%E8%A1%9763%E8%99%9F",
@@ -116800,7 +116930,8 @@
       "floorAreaOut": "400平方公尺",
       "lat": 24.99219,
       "lng": 121.538677,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人台北市華亞之聲社中華基督教便以利教會附設臺北市私立華聲幼兒園-文山區",
@@ -116814,7 +116945,7 @@
       "address": "臺北市文山區指南路2段11號1樓",
       "tel": "(02) 2939-2038",
       "telHref": "+886-2-29392038",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E5%8F%B0%E5%8C%97%E5%B8%82%E8%8F%AF%E4%BA%9E%E4%B9%8B%E8%81%B2%E7%A4%BE%E4%B8%AD%E8%8F%AF%E5%9F%BA%E7%9D%A3%E6%95%99%E4%BE%BF%E4%BB%A5%E5%88%A9%E6%95%99%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8F%AF%E8%81%B2%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%8C%87%E5%8D%97%E8%B7%AF2%E6%AE%B511%E8%99%9F1%E6%A8%93",
@@ -116859,7 +116990,8 @@
       "floorAreaOut": "230.55平方公尺",
       "lat": 24.988762,
       "lng": 121.573043,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-國立政治大學附設實驗國民小學附設幼兒園-文山區",
@@ -116980,8 +117112,8 @@
       "district": "文山區",
       "street": "汀州路四段255、257、261、263號",
       "address": "臺北市文山區汀州路四段255、257、261、263號",
-      "tel": "(02) 2933-9335",
-      "telHref": "+886-2-29339335",
+      "tel": "(02)8935-1718",
+      "telHref": "0289351718",
       "ownership": "非營利",
       "capacity": null,
       "operator": null,
@@ -118254,7 +118386,7 @@
       "address": "臺北市文山區木柵路三段48巷1弄18、20號1樓",
       "tel": "(02) 8661-9636",
       "telHref": "+886-2-86619636",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%B8%89%E7%BE%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%9F%B5%E8%B7%AF%E4%B8%89%E6%AE%B548%E5%B7%B71%E5%BC%8418%E3%80%8120%E8%99%9F1%E6%A8%93",
@@ -118299,7 +118431,8 @@
       "floorAreaOut": null,
       "lat": 24.988042,
       "lng": 121.564823,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-千千幼兒園-文山區",
@@ -118313,7 +118446,7 @@
       "address": "臺北市文山區木柵路三段85巷8弄5號、5-1號1樓",
       "tel": "(02) 2939-7502",
       "telHref": "+886-2-29397502",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8D%83%E5%8D%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%9F%B5%E8%B7%AF%E4%B8%89%E6%AE%B585%E5%B7%B78%E5%BC%845%E8%99%9F%E3%80%815-1%E8%99%9F1%E6%A8%93",
@@ -118389,7 +118522,8 @@
       "floorAreaOut": null,
       "lat": 24.989553,
       "lng": 121.567071,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-子愛幼兒園-文山區",
@@ -118403,7 +118537,7 @@
       "address": "臺北市文山區興隆路四段165巷3、5號1樓",
       "tel": "(02) 2937-7790",
       "telHref": "+886-2-29377790",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AD%90%E6%84%9B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E5%9B%9B%E6%AE%B5165%E5%B7%B73%E3%80%815%E8%99%9F1%E6%A8%93",
@@ -118448,7 +118582,8 @@
       "floorAreaOut": null,
       "lat": 24.98416,
       "lng": 121.562239,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-小牧人托嬰中心-文山區",
@@ -118553,7 +118688,7 @@
       "address": "臺北市文山區木柵路3段85巷14弄14號及14之1號1樓",
       "tel": "(02) 2939-5610",
       "telHref": "+886-2-29395610",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BB%81%E7%BE%8E%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%9F%B5%E8%B7%AF3%E6%AE%B585%E5%B7%B714%E5%BC%8414%E8%99%9F%E5%8F%8A14%E4%B9%8B1%E8%99%9F1%E6%A8%93",
@@ -118598,7 +118733,8 @@
       "floorAreaOut": "151.8平方公尺",
       "lat": 24.989675,
       "lng": 121.566948,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-文山仁和幼兒園-文山區",
@@ -118671,7 +118807,7 @@
       "address": "臺北市文山區福興路63巷4弄26、28號1樓",
       "tel": "(02) 2930-8618",
       "telHref": "+886-2-29308618",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%96%87%E5%B1%B1%E6%87%B7%E6%81%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E7%A6%8F%E8%88%88%E8%B7%AF63%E5%B7%B74%E5%BC%8426%E3%80%8128%E8%99%9F1%E6%A8%93",
@@ -118716,7 +118852,8 @@
       "floorAreaOut": null,
       "lat": 25.004541,
       "lng": 121.549295,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-比利馬幼兒園-文山區",
@@ -119068,7 +119205,7 @@
       "address": "臺北市文山區景福街31號1樓",
       "tel": "(02) 2932-6469",
       "telHref": "+886-2-29326469",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B9%BC%E6%9E%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%99%AF%E7%A6%8F%E8%A1%9731%E8%99%9F1%E6%A8%93",
@@ -119113,7 +119250,8 @@
       "floorAreaOut": "57.75平方公尺",
       "lat": 24.99888,
       "lng": 121.537794,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-幼學館幼兒園-文山區",
@@ -119215,7 +119353,7 @@
       "address": "臺北市文山區木新路三段45巷7弄8、10、12號1樓",
       "tel": "(02) 2939-2220",
       "telHref": "+886-2-29392220",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%90%89%E5%A4%AA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%96%B0%E8%B7%AF%E4%B8%89%E6%AE%B545%E5%B7%B77%E5%BC%848%E3%80%8110%E3%80%8112%E8%99%9F1%E6%A8%93",
@@ -119260,7 +119398,8 @@
       "floorAreaOut": "146.75平方公尺",
       "lat": 24.982027,
       "lng": 121.564875,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-艾貝兒托嬰中心-文山區",
@@ -119431,7 +119570,7 @@
       "address": "臺北市文山區興隆路二段222之2號2樓",
       "tel": "(02) 2930-1241",
       "telHref": "+886-2-29301241",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BF%AB%E6%A8%82%E8%AB%BE%E8%B2%9D%E5%85%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E4%BA%8C%E6%AE%B5222%E4%B9%8B2%E8%99%9F2%E6%A8%93",
@@ -119476,7 +119615,8 @@
       "floorAreaOut": "61.39平方公尺",
       "lat": 25.001343,
       "lng": 121.552828,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-貝格爾樂佩二館托嬰中心-文山區",
@@ -119605,7 +119745,7 @@
       "address": "臺北市文山區忠順街二段26及26之1號1樓至2樓",
       "tel": "(02) 2939-1207",
       "telHref": "+886-2-29391207",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AE%9B%E7%9A%84%E5%BC%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E5%BF%A0%E9%A0%86%E8%A1%97%E4%BA%8C%E6%AE%B526%E5%8F%8A26%E4%B9%8B1%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -119650,7 +119790,8 @@
       "floorAreaOut": null,
       "lat": 24.984721,
       "lng": 121.563579,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-幸福家托嬰中心-文山區",
@@ -119777,7 +119918,7 @@
       "address": "臺北市文山區興隆路四段173及175號1樓至2樓",
       "tel": "(02) 8661-3011",
       "telHref": "+886-2-86613011",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%98%BF%E5%B8%83%E6%A0%BC%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E5%9B%9B%E6%AE%B5173%E5%8F%8A175%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -119822,7 +119963,8 @@
       "floorAreaOut": "42.24平方公尺",
       "lat": 24.983784,
       "lng": 121.562081,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-勁寶兒公館幼兒園-文山區",
@@ -119994,7 +120136,7 @@
       "address": "臺北市文山區興隆路三段二0七巷九弄9.11號1樓",
       "tel": "(02) 2230-7500",
       "telHref": "+886-2-22307500",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AE%B6%E5%AE%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E4%B8%89%E6%AE%B5%E4%BA%8C0%E4%B8%83%E5%B7%B7%E4%B9%9D%E5%BC%849.11%E8%99%9F1%E6%A8%93",
@@ -120039,7 +120181,8 @@
       "floorAreaOut": "116.89平方公尺",
       "lat": 24.995363,
       "lng": 121.561082,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-書宜幼兒園-文山區",
@@ -120164,7 +120307,7 @@
       "address": "臺北市文山區木新路二段79巷12弄16、18號1樓",
       "tel": "(02) 8661-0262",
       "telHref": "+886-2-86610262",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A2%85%E7%88%BE%E6%A3%AE%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%96%B0%E8%B7%AF%E4%BA%8C%E6%AE%B579%E5%B7%B712%E5%BC%8416%E3%80%8118%E8%99%9F1%E6%A8%93",
@@ -120209,7 +120352,8 @@
       "floorAreaOut": "517.84平方公尺",
       "lat": 24.984158,
       "lng": 121.570848,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-清華幼兒園-文山區",
@@ -120223,7 +120367,7 @@
       "address": "臺北市文山區興隆路三段36巷9弄2號1樓",
       "tel": "(02) 2931-1714",
       "telHref": "+886-2-29311714",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B8%85%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E4%B8%89%E6%AE%B536%E5%B7%B79%E5%BC%842%E8%99%9F1%E6%A8%93",
@@ -120268,7 +120412,8 @@
       "floorAreaOut": "69.68平方公尺",
       "lat": 24.999908,
       "lng": 121.55529,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-荳荳幼兒園-文山區",
@@ -120282,7 +120427,7 @@
       "address": "臺北市文山區木柵路一段59巷2號1樓",
       "tel": "(02) 2236-9488",
       "telHref": "+886-2-22369488",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8D%B3%E8%8D%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%9C%A8%E6%9F%B5%E8%B7%AF%E4%B8%80%E6%AE%B559%E5%B7%B72%E8%99%9F1%E6%A8%93",
@@ -120338,7 +120483,8 @@
       "floorAreaOut": null,
       "lat": 24.987072,
       "lng": 121.546038,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-惠生幼兒園-文山區",
@@ -120352,7 +120498,7 @@
       "address": "臺北市文山區興隆路三段207巷10弄1、3、9號",
       "tel": "(02) 2230-8526",
       "telHref": "+886-2-22308526",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%83%A0%E7%94%9F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E4%B8%89%E6%AE%B5207%E5%B7%B710%E5%BC%841%E3%80%813%E3%80%819%E8%99%9F",
@@ -120397,7 +120543,8 @@
       "floorAreaOut": "250平方公尺",
       "lat": 24.994801,
       "lng": 121.561075,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-愛兒福托嬰中心-文山區",
@@ -120526,7 +120673,7 @@
       "address": "臺北市文山區羅斯福路六段336號1樓至3樓",
       "tel": "(02) 8663-2915",
       "telHref": "+886-2-86632915",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%BB%AC%E6%B1%9F%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8%E9%99%84%E8%A8%AD%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E7%BE%85%E6%96%AF%E7%A6%8F%E8%B7%AF%E5%85%AD%E6%AE%B5336%E8%99%9F1%E6%A8%93%E8%87%B33%E6%A8%93",
@@ -120571,7 +120718,8 @@
       "floorAreaOut": "432.34平方公尺",
       "lat": 24.989529,
       "lng": 121.538741,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-滬江高級中學附設員工子女托嬰中心-文山區",
@@ -120669,7 +120817,7 @@
       "address": "臺北市文山區景華街121巷17弄9號",
       "tel": "(02) 2931-0558",
       "telHref": "+886-2-29310558",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A8%B9%E4%BA%BA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%99%AF%E8%8F%AF%E8%A1%97121%E5%B7%B717%E5%BC%849%E8%99%9F",
@@ -120725,7 +120873,8 @@
       "floorAreaOut": "297.34平方公尺",
       "lat": 24.99687,
       "lng": 121.545732,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-諾貝兒幼兒園-文山區",
@@ -120739,7 +120888,7 @@
       "address": "臺北市文山區興隆路二段203巷112及114號1樓",
       "tel": "(02) 2935-1301",
       "telHref": "+886-2-29351301",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%AB%BE%E8%B2%9D%E5%85%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E8%88%88%E9%9A%86%E8%B7%AF%E4%BA%8C%E6%AE%B5203%E5%B7%B7112%E5%8F%8A114%E8%99%9F1%E6%A8%93",
@@ -120784,7 +120933,8 @@
       "floorAreaOut": null,
       "lat": 25.003347,
       "lng": 121.54731,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-寶馨幼兒園-文山區",
@@ -120798,7 +120948,7 @@
       "address": "臺北市文山區溪口街85巷7弄6號1樓",
       "tel": "(02) 8663-5966",
       "telHref": "+886-2-86635966",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AF%B6%E9%A6%A8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%96%87%E5%B1%B1%E5%8D%80%E6%BA%AA%E5%8F%A3%E8%A1%9785%E5%B7%B77%E5%BC%846%E8%99%9F1%E6%A8%93",
@@ -120854,7 +121004,8 @@
       "floorAreaOut": null,
       "lat": 24.994775,
       "lng": 121.538497,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-指南實驗國民小學附設幼兒園-文山區",
@@ -122559,7 +122710,7 @@
       "address": "臺北市北投區明德路136巷9號1樓",
       "tel": "(02) 2821-5755",
       "telHref": "+886-2-28215755",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E4%B8%80%E5%BE%B7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%98%8E%E5%BE%B7%E8%B7%AF136%E5%B7%B79%E8%99%9F1%E6%A8%93",
@@ -122615,7 +122766,8 @@
       "floorAreaOut": "154平方公尺",
       "lat": 25.110024,
       "lng": 121.521245,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-小腳丫大未來托嬰中心-北投區",
@@ -122893,7 +123045,7 @@
       "address": "臺北市北投區實踐街54號",
       "tel": "(02) 2828-6318",
       "telHref": "+886-2-28286318",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BF%83%E5%B9%BC%E6%96%87%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E5%AF%A6%E8%B8%90%E8%A1%9754%E8%99%9F",
@@ -122938,7 +123090,8 @@
       "floorAreaOut": "110平方公尺",
       "lat": 25.115164,
       "lng": 121.509397,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-心美蒙特梭利幼兒園-北投區",
@@ -123011,7 +123164,7 @@
       "address": "臺北市北投區溫泉路73巷5號1樓",
       "tel": "(02) 2896-5006",
       "telHref": "+886-2-28965006",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8C%97%E6%8A%95%E9%9D%92%E9%9D%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%BA%AB%E6%B3%89%E8%B7%AF73%E5%B7%B75%E8%99%9F1%E6%A8%93",
@@ -123056,7 +123209,8 @@
       "floorAreaOut": null,
       "lat": 25.135802,
       "lng": 121.505729,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-卡蕾兒幼兒園-北投區",
@@ -123070,7 +123224,7 @@
       "address": "臺北市北投區文化三路14號1樓",
       "tel": "(02) 2892-6957",
       "telHref": "+886-2-28926957",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8D%A1%E8%95%BE%E5%85%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%96%87%E5%8C%96%E4%B8%89%E8%B7%AF14%E8%99%9F1%E6%A8%93",
@@ -123126,7 +123280,8 @@
       "floorAreaOut": null,
       "lat": 25.137624,
       "lng": 121.497874,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-可瑞荳托嬰中心-北投區",
@@ -123206,7 +123361,7 @@
         4,
         5
       ],
-      "floorArea": "162.09平方公尺",
+      "floorArea": null,
       "website": null,
       "closed": false,
       "penalties": [
@@ -123231,7 +123386,7 @@
           "fineAmount": 6000
         }
       ],
-      "floorAreaOut": "52平方公尺",
+      "floorAreaOut": null,
       "lat": 25.131913,
       "lng": 121.504224,
       "backboneFromArchive": true
@@ -123276,7 +123431,7 @@
       "address": "臺北市北投區實踐街82巷14號及16號1樓",
       "tel": "(02) 2827-2210",
       "telHref": "+886-2-28272210",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%9F%B3%E7%89%8C%E6%97%AD%E6%9D%B1%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E5%AF%A6%E8%B8%90%E8%A1%9782%E5%B7%B714%E8%99%9F%E5%8F%8A16%E8%99%9F1%E6%A8%93",
@@ -123342,7 +123497,8 @@
       "floorAreaOut": "132.6平方公尺",
       "lat": 25.114736,
       "lng": 121.5107,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-石牌微笑音符幼兒園-北投區",
@@ -123610,7 +123766,7 @@
       "address": "臺北市北投區中和街446巷56號",
       "tel": "(02) 2891-3311",
       "telHref": "+886-2-28913311",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%97%AD%E6%9D%B1%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E4%B8%AD%E5%92%8C%E8%A1%97446%E5%B7%B756%E8%99%9F",
@@ -123666,7 +123822,8 @@
       "floorAreaOut": "750平方公尺",
       "lat": 25.147103,
       "lng": 121.496804,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-米蘿幼兒園-北投區",
@@ -124240,7 +124397,7 @@
       "address": "臺北市北投區中央北路四段577巷27弄1號1樓",
       "tel": "(02) 2897-8840",
       "telHref": "+886-2-28978840",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%87%87%E9%83%81%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E4%B8%AD%E5%A4%AE%E5%8C%97%E8%B7%AF%E5%9B%9B%E6%AE%B5577%E5%B7%B727%E5%BC%841%E8%99%9F1%E6%A8%93",
@@ -124285,7 +124442,8 @@
       "floorAreaOut": null,
       "lat": 25.126716,
       "lng": 121.467632,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-城市國際幼兒園-北投區",
@@ -124512,7 +124670,7 @@
       "address": "臺北市北投區民族街12號1、2樓",
       "tel": "(02) 2893-0381",
       "telHref": "+886-2-28930381",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A1%83%E6%A8%82%E7%B5%B2%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%B0%91%E6%97%8F%E8%A1%9712%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -124557,7 +124715,8 @@
       "floorAreaOut": "7.2平方公尺",
       "lat": 25.13212,
       "lng": 121.504482,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-紘果托嬰中心-北投區",
@@ -124679,7 +124838,7 @@
       "address": "臺北市北投區大屯路31巷15號及91巷15號",
       "tel": "(02) 2894-6256",
       "telHref": "+886-2-28946256",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%9F%B9%E7%88%BE%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E5%A4%A7%E5%B1%AF%E8%B7%AF31%E5%B7%B715%E8%99%9F%E5%8F%8A91%E5%B7%B715%E8%99%9F",
@@ -124735,7 +124894,8 @@
       "floorAreaOut": "880.11平方公尺",
       "lat": 25.144373,
       "lng": 121.500706,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-凱薩琳幼兒園-北投區",
@@ -124948,7 +125108,7 @@
       "address": "臺北市北投區石牌路二段358號1、2樓",
       "tel": "(02) 2873-2423",
       "telHref": "+886-2-28732423",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8F%AF%E6%B0%91%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E7%9F%B3%E7%89%8C%E8%B7%AF%E4%BA%8C%E6%AE%B5358%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -125004,7 +125164,8 @@
       "floorAreaOut": "166.22平方公尺",
       "lat": 25.123304,
       "lng": 121.525356,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-超級寶貝幼兒園-北投區",
@@ -125018,7 +125179,7 @@
       "address": "臺北市北投區文林北路80巷38弄10號1樓",
       "tel": "(02) 2823-1799",
       "telHref": "+886-2-28231799",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%B6%85%E7%B4%9A%E5%AF%B6%E8%B2%9D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%96%87%E6%9E%97%E5%8C%97%E8%B7%AF80%E5%B7%B738%E5%BC%8410%E8%99%9F1%E6%A8%93",
@@ -125084,7 +125245,8 @@
       "floorAreaOut": null,
       "lat": 25.105503,
       "lng": 121.518941,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-愛德恩幼兒園-北投區",
@@ -125300,7 +125462,7 @@
       "address": "臺北市北投區洲美街271號1樓",
       "tel": "(02) 2834-3465",
       "telHref": "+886-2-28343465",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E5%BE%B7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E6%B4%B2%E7%BE%8E%E8%A1%97271%E8%99%9F1%E6%A8%93",
@@ -125345,7 +125507,8 @@
       "floorAreaOut": "274.46平方公尺",
       "lat": 25.109399,
       "lng": 121.499688,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-道生幼兒園-北投區",
@@ -125603,7 +125766,7 @@
       "address": "臺北市北投區大屯路21巷21號1樓",
       "tel": "(02) 2892-1534",
       "telHref": "+886-2-28921534",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%BD%98%E8%9C%9C%E6%8B%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E5%A4%A7%E5%B1%AF%E8%B7%AF21%E5%B7%B721%E8%99%9F1%E6%A8%93",
@@ -125648,7 +125811,8 @@
       "floorAreaOut": "310平方公尺",
       "lat": 25.143698,
       "lng": 121.499769,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-橘子蒙特梭利幼兒園-北投區",
@@ -125721,7 +125885,7 @@
       "address": "臺北市北投區石牌路二段315巷10弄10號2樓",
       "tel": "(02) 2871-0871",
       "telHref": "+886-2-28710871",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%84%AA%E6%A0%BC%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E7%9F%B3%E7%89%8C%E8%B7%AF%E4%BA%8C%E6%AE%B5315%E5%B7%B710%E5%BC%8410%E8%99%9F2%E6%A8%93",
@@ -125766,7 +125930,8 @@
       "floorAreaOut": null,
       "lat": 25.122902,
       "lng": 121.523184,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-優格快樂幼兒園-北投區",
@@ -125780,7 +125945,7 @@
       "address": "臺北市北投區石牌路二段315巷10弄10號1樓",
       "tel": "(02) 2871-8388",
       "telHref": "+886-2-28718388",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%84%AA%E6%A0%BC%E5%BF%AB%E6%A8%82%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E7%9F%B3%E7%89%8C%E8%B7%AF%E4%BA%8C%E6%AE%B5315%E5%B7%B710%E5%BC%8410%E8%99%9F1%E6%A8%93",
@@ -125825,7 +125990,8 @@
       "floorAreaOut": "76.92平方公尺",
       "lat": 25.122931,
       "lng": 121.523136,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-薇閣國民小學附設幼兒園-北投區",
@@ -125932,7 +126098,7 @@
       "address": "臺北市北投區中和街392號1、2樓",
       "tel": "(02) 2896-3620",
       "telHref": "+886-2-28963620",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%97%8D%E5%A4%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E4%B8%AD%E5%92%8C%E8%A1%97392%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -125998,7 +126164,8 @@
       "floorAreaOut": null,
       "lat": 25.143254,
       "lng": 121.498316,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-豐年幼兒園-北投區",
@@ -126439,7 +126606,7 @@
       "address": "臺北市松山區南京東路4段133巷5弄23號1樓",
       "tel": "(02) 2545-1351",
       "telHref": "+886-2-25451351",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E7%A6%8F%E6%99%BA%E6%96%87%E6%95%99%E5%9F%BA%E9%87%91%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A6%99%E8%A1%8C%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%8D%97%E4%BA%AC%E6%9D%B1%E8%B7%AF4%E6%AE%B5133%E5%B7%B75%E5%BC%8423%E8%99%9F1%E6%A8%93",
@@ -126484,7 +126651,8 @@
       "floorAreaOut": null,
       "lat": 25.052131,
       "lng": 121.555964,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人福智文教基金會附設臺北市私立妙慧幼兒園-松山區",
@@ -126498,7 +126666,7 @@
       "address": "臺北市松山區南京東路4段133巷5弄25號1至2樓",
       "tel": "(02) 2545-1307",
       "telHref": "+886-2-25451307",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E7%A6%8F%E6%99%BA%E6%96%87%E6%95%99%E5%9F%BA%E9%87%91%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A6%99%E6%85%A7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%8D%97%E4%BA%AC%E6%9D%B1%E8%B7%AF4%E6%AE%B5133%E5%B7%B75%E5%BC%8425%E8%99%9F1%E8%87%B32%E6%A8%93",
@@ -126543,7 +126711,8 @@
       "floorAreaOut": null,
       "lat": 25.052121,
       "lng": 121.556083,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財團法人臺北市私立立德幼兒園-松山區",
@@ -127510,7 +127679,7 @@
       "address": "臺北市松山區民權東路五段102號1、2樓、民權東路五段104巷2號1、2樓",
       "tel": "(02) 2767-2567",
       "telHref": "+886-2-27672567",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%A9%E5%96%9C%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E6%B0%91%E6%AC%8A%E6%9D%B1%E8%B7%AF%E4%BA%94%E6%AE%B5102%E8%99%9F1%E3%80%812%E6%A8%93%E3%80%81%E6%B0%91%E6%AC%8A%E6%9D%B1%E8%B7%AF%E4%BA%94%E6%AE%B5104%E5%B7%B72%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -127555,7 +127724,8 @@
       "floorAreaOut": null,
       "lat": 25.063183,
       "lng": 121.567743,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-日恩幼兒園-松山區",
@@ -127807,7 +127977,7 @@
       "address": "臺北市松山區光復北路165巷5號、7號1樓",
       "tel": "(02) 2763-9957",
       "telHref": "+886-2-27639957",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%AD%A3%E6%AC%A3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8C%97%E8%B7%AF165%E5%B7%B75%E8%99%9F%E3%80%817%E8%99%9F1%E6%A8%93",
@@ -127873,7 +128043,8 @@
       "floorAreaOut": null,
       "lat": 25.057422,
       "lng": 121.555826,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-正欣啓蒙幼兒園-松山區",
@@ -127887,7 +128058,7 @@
       "address": "臺北市松山區光復北路165巷3號1樓",
       "tel": "(02) 2763-9957",
       "telHref": "+886-2-27639957",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%AD%A3%E6%AC%A3%E5%95%93%E8%92%99%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8C%97%E8%B7%AF165%E5%B7%B73%E8%99%9F1%E6%A8%93",
@@ -127943,7 +128114,8 @@
       "floorAreaOut": null,
       "lat": 25.057416,
       "lng": 121.555732,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-民族幼兒園-松山區",
@@ -127957,7 +128129,7 @@
       "address": "臺北市松山區新中街4巷6、8號1樓",
       "tel": "(02) 2746-7661",
       "telHref": "+886-2-27467661",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B0%91%E6%97%8F%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E6%96%B0%E4%B8%AD%E8%A1%974%E5%B7%B76%E3%80%818%E8%99%9F1%E6%A8%93",
@@ -128013,7 +128185,8 @@
       "floorAreaOut": "162平方公尺",
       "lat": 25.057517,
       "lng": 121.560874,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-民權幼兒園-松山區",
@@ -128027,7 +128200,7 @@
       "address": "臺北市松山區富錦街562巷13號1樓",
       "tel": "(02) 2713-1092",
       "telHref": "+886-2-27131092",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B0%91%E6%AC%8A%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%AF%8C%E9%8C%A6%E8%A1%97562%E5%B7%B713%E8%99%9F1%E6%A8%93",
@@ -128072,7 +128245,8 @@
       "floorAreaOut": "96.26平方公尺",
       "lat": 25.062138,
       "lng": 121.567569,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-光華幼兒園-松山區",
@@ -128086,7 +128260,7 @@
       "address": "臺北市松山區慶城街16巷3、5號1樓",
       "tel": "(02) 2715-4555",
       "telHref": "+886-2-27154555",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%85%89%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E6%85%B6%E5%9F%8E%E8%A1%9716%E5%B7%B73%E3%80%815%E8%99%9F1%E6%A8%93",
@@ -128152,7 +128326,8 @@
       "floorAreaOut": null,
       "lat": 25.053222,
       "lng": 121.545962,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-多多托嬰中心-松山區",
@@ -128194,7 +128369,7 @@
       "address": "臺北市松山區光復南路46巷25.27,29號1樓",
       "tel": "(02) 2579-1370",
       "telHref": "+886-2-25791370",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%9A%E5%A4%9A%E5%84%AA%E8%B3%AA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8D%97%E8%B7%AF46%E5%B7%B725.27%2C29%E8%99%9F1%E6%A8%93",
@@ -128239,7 +128414,8 @@
       "floorAreaOut": null,
       "lat": 25.046051,
       "lng": 121.556006,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-宜家民權蒙特梭利幼兒園-松山區",
@@ -128323,7 +128499,7 @@
       "address": "臺北市松山區東興路2巷10號1樓",
       "tel": "(02) 2761-5555",
       "telHref": "+886-2-27615555",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%9D%BE%E8%BF%AA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E6%9D%B1%E8%88%88%E8%B7%AF2%E5%B7%B710%E8%99%9F1%E6%A8%93",
@@ -128399,7 +128575,8 @@
       "floorAreaOut": null,
       "lat": 25.050824,
       "lng": 121.564894,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-牧星托嬰中心-松山區",
@@ -128497,7 +128674,7 @@
       "address": "臺北市松山區八德路3段12巷51弄44之2號1樓",
       "tel": "(02) 2570-6450",
       "telHref": "+886-2-25706450",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%AB%E5%BE%B7%E8%B7%AF3%E6%AE%B512%E5%B7%B751%E5%BC%8444%E4%B9%8B2%E8%99%9F1%E6%A8%93",
@@ -128542,7 +128719,8 @@
       "floorAreaOut": "47平方公尺",
       "lat": 25.045876,
       "lng": 121.552085,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-采禾托嬰中心-松山區",
@@ -128584,7 +128762,7 @@
       "address": "臺北市松山區敦化南路一段80巷20號1樓",
       "tel": "(02) 2731-4531",
       "telHref": "+886-2-27314531",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%9D%92%E6%9E%97%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B580%E5%B7%B720%E8%99%9F1%E6%A8%93",
@@ -128625,11 +128803,23 @@
       "floorArea": "110.56平方公尺",
       "website": null,
       "closed": false,
-      "penalties": [],
+      "penalties": [
+        {
+          "date": "2026/08/10",
+          "docNo": "北市教前字第1153088721號",
+          "statute": "幼兒教育及照顧法第59條第1款(111/6/29修正公布)",
+          "description": "第30條第6項教保服務機構未訂定、未確實執行，或未定期檢討改進安全相關管理規範。",
+          "role": "負責人",
+          "sanction": "罰鍰：3,000元",
+          "sanctionKind": "罰鍰",
+          "fineAmount": 3000
+        }
+      ],
       "floorAreaOut": null,
       "lat": 25.046583,
       "lng": 121.547888,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-勁寶兒民權幼兒園-松山區",
@@ -128929,7 +129119,7 @@
       "address": "臺北市松山區八德路三段106巷70號",
       "tel": "(02) 2578-7470",
       "telHref": "+886-2-25787470",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%83%81%E6%AC%A3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%AB%E5%BE%B7%E8%B7%AF%E4%B8%89%E6%AE%B5106%E5%B7%B770%E8%99%9F",
@@ -128974,7 +129164,8 @@
       "floorAreaOut": "70平方公尺",
       "lat": 25.046009,
       "lng": 121.55408,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-悅福托嬰中心-松山區",
@@ -129106,7 +129297,7 @@
       "address": "臺北市松山區光復北路190巷35號1樓",
       "tel": "(02) 2717-1217",
       "telHref": "+886-2-27171217",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%B4%94%E9%9D%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8C%97%E8%B7%AF190%E5%B7%B735%E8%99%9F1%E6%A8%93",
@@ -129151,7 +129342,8 @@
       "floorAreaOut": null,
       "lat": 25.054685,
       "lng": 121.554319,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-耕心幼兒園-松山區",
@@ -129563,7 +129755,7 @@
       "address": "臺北市松山區光復北路100巷8號3樓",
       "tel": "(02) 2579-1349",
       "telHref": "+886-2-25791349",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%87%B1%E6%80%9D%E5%AF%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8C%97%E8%B7%AF100%E5%B7%B78%E8%99%9F3%E6%A8%93",
@@ -129608,7 +129800,8 @@
       "floorAreaOut": null,
       "lat": 25.050454,
       "lng": 121.557303,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-喜樂幼兒園-松山區",
@@ -129988,7 +130181,7 @@
       "address": "臺北市松山區復興北路361巷26號1樓",
       "tel": "(02) 2718-0033",
       "telHref": "+886-2-27180033",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E5%A6%82%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%BE%A9%E8%88%88%E5%8C%97%E8%B7%AF361%E5%B7%B726%E8%99%9F1%E6%A8%93",
@@ -130033,7 +130226,8 @@
       "floorAreaOut": null,
       "lat": 25.060329,
       "lng": 121.546174,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-聖儒幼兒園-松山區",
@@ -130047,7 +130241,7 @@
       "address": "臺北市松山區復興北路361巷24號1樓",
       "tel": "(02) 2717-3888",
       "telHref": "+886-2-27173888",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E5%84%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%BE%A9%E8%88%88%E5%8C%97%E8%B7%AF361%E5%B7%B724%E8%99%9F1%E6%A8%93",
@@ -130123,7 +130317,8 @@
       "floorAreaOut": null,
       "lat": 25.060316,
       "lng": 121.546054,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-資幼幼兒園-松山區",
@@ -130592,7 +130787,7 @@
       "address": "臺北市松山區南京東路四段133巷6弄2號1、2樓",
       "tel": "(02) 2713-1091",
       "telHref": "+886-2-27131091",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%84%AA%E5%AF%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%8D%97%E4%BA%AC%E6%9D%B1%E8%B7%AF%E5%9B%9B%E6%AE%B5133%E5%B7%B76%E5%BC%842%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -130648,7 +130843,8 @@
       "floorAreaOut": "242.59平方公尺",
       "lat": 25.05277,
       "lng": 121.554943,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-豐村幼兒園-松山區",
@@ -132067,7 +132263,7 @@
       "address": "臺北市信義區忠孝東路5段558號2樓",
       "tel": "(02) 2759-2360",
       "telHref": "+886-2-27592360",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AD%90%E7%95%9D%E8%92%99%E7%89%B9%E6%A2%AD%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF5%E6%AE%B5558%E8%99%9F2%E6%A8%93",
@@ -132203,7 +132399,8 @@
       "floorAreaOut": null,
       "lat": 25.042114,
       "lng": 121.580293,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-六三幼兒園-信義區",
@@ -132217,7 +132414,7 @@
       "address": "臺北市信義區信義路5段150巷351號1樓",
       "tel": "(02) 2345-4058",
       "telHref": "+886-2-23454058",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%85%AD%E4%B8%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E4%BF%A1%E7%BE%A9%E8%B7%AF5%E6%AE%B5150%E5%B7%B7351%E8%99%9F1%E6%A8%93",
@@ -132283,7 +132480,8 @@
       "floorAreaOut": "155.65平方公尺",
       "lat": 25.026069,
       "lng": 121.570136,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-友愛幼兒園-信義區",
@@ -132297,7 +132495,7 @@
       "address": "臺北市信義區忠孝東路5段524巷5弄23號1樓",
       "tel": "(02) 2728-5918",
       "telHref": "+886-2-27285918",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8F%8B%E6%84%9B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF5%E6%AE%B5524%E5%B7%B75%E5%BC%8423%E8%99%9F1%E6%A8%93",
@@ -132342,7 +132540,8 @@
       "floorAreaOut": "107平方公尺",
       "lat": 25.040923,
       "lng": 121.580644,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-天琪幼兒園-信義區",
@@ -132426,7 +132625,7 @@
       "address": "臺北市信義區信安街161號1樓至2樓",
       "tel": "(02) 2735-8636",
       "telHref": "+886-2-27358636",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E7%94%B2%E5%AD%90%E5%9C%92%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E4%BF%A1%E5%AE%89%E8%A1%97161%E8%99%9F1%E6%A8%93%E8%87%B32%E6%A8%93",
@@ -132522,7 +132721,8 @@
       "floorAreaOut": null,
       "lat": 25.022483,
       "lng": 121.554945,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-全心幼兒園-信義區",
@@ -132765,7 +132965,7 @@
       "address": "臺北市信義區松山路393巷32號1樓及忠孝東路五段621巷4號1樓",
       "tel": "(02) 8785-2293",
       "telHref": "+886-2-87852293",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AE%97%E5%91%A8%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E6%9D%BE%E5%B1%B1%E8%B7%AF393%E5%B7%B732%E8%99%9F1%E6%A8%93%E5%8F%8A%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF%E4%BA%94%E6%AE%B5621%E5%B7%B74%E8%99%9F1%E6%A8%93",
@@ -132821,7 +133021,8 @@
       "floorAreaOut": null,
       "lat": 25.042065,
       "lng": 121.579106,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-幸福晨陽托嬰中心-信義區",
@@ -133153,7 +133354,7 @@
       "address": "臺北市信義區福德街137巷4.5號1樓",
       "tel": "(02) 2726-1705",
       "telHref": "+886-2-27261705",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B8%85%E5%BF%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E7%A6%8F%E5%BE%B7%E8%A1%97137%E5%B7%B74.5%E8%99%9F1%E6%A8%93",
@@ -133198,7 +133399,8 @@
       "floorAreaOut": null,
       "lat": 25.037137,
       "lng": 121.58279,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-甜寶兒信義托嬰中心-信義區",
@@ -133299,7 +133501,7 @@
       "address": "臺北市信義區忠孝東路五段524巷3弄27號1樓",
       "tel": "(02) 2346-0084",
       "telHref": "+886-2-23460084",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%96%AC%E4%BC%8A%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF%E4%BA%94%E6%AE%B5524%E5%B7%B73%E5%BC%8427%E8%99%9F1%E6%A8%93",
@@ -133344,7 +133546,8 @@
       "floorAreaOut": null,
       "lat": 25.041415,
       "lng": 121.580745,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-逸仙幼兒園-信義區",
@@ -133428,7 +133631,7 @@
       "address": "臺北市信義區和平東路3段341巷12號1、2樓",
       "tel": "(02) 8732-3560",
       "telHref": "+886-2-87323560",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%BE%AE%E7%AC%91%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%92%8C%E5%B9%B3%E6%9D%B1%E8%B7%AF3%E6%AE%B5341%E5%B7%B712%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -133484,7 +133687,8 @@
       "floorAreaOut": null,
       "lat": 25.021297,
       "lng": 121.557299,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-聖幼幼兒園-信義區",
@@ -133498,7 +133702,7 @@
       "address": "臺北市信義區虎林街232巷54號1樓",
       "tel": "(02) 2759-9391",
       "telHref": "+886-2-27599391",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%81%96%E5%B9%BC%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E8%99%8E%E6%9E%97%E8%A1%97232%E5%B7%B754%E8%99%9F1%E6%A8%93",
@@ -133543,7 +133747,8 @@
       "floorAreaOut": null,
       "lat": 25.036001,
       "lng": 121.576074,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-達德幼兒園-信義區",
@@ -133644,7 +133849,7 @@
       "address": "臺北市信義區虎林街232巷66弄1號1樓及232巷68、72、74、76號1樓",
       "tel": "(02) 2727-9422",
       "telHref": "+886-2-27279422",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%85%A7%E5%85%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E8%99%8E%E6%9E%97%E8%A1%97232%E5%B7%B766%E5%BC%841%E8%99%9F1%E6%A8%93%E5%8F%8A232%E5%B7%B768%E3%80%8172%E3%80%8174%E3%80%8176%E8%99%9F1%E6%A8%93",
@@ -133740,7 +133945,8 @@
       "floorAreaOut": "212.66平方公尺",
       "lat": 25.035794,
       "lng": 121.575602,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-橄欖樹托嬰中心-信義區",
@@ -133922,7 +134128,7 @@
       "address": "臺北市信義區光復南路419巷17號1樓",
       "tel": "(02) 2345-8112",
       "telHref": "+886-2-23458112",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%AF%B6%E5%85%92%E5%AF%B6%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%85%89%E5%BE%A9%E5%8D%97%E8%B7%AF419%E5%B7%B717%E8%99%9F1%E6%A8%93",
@@ -133967,7 +134173,8 @@
       "floorAreaOut": "50平方公尺",
       "lat": 25.036588,
       "lng": 121.558052,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-協祐非營利幼兒園委託社團法人臺北市幼托協會辦理-信義區",
@@ -135317,7 +135524,7 @@
       "address": "臺北市南港區向陽路21號1樓",
       "tel": "(02)27837863#297",
       "telHref": "0227837863297",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%AB%8B%E5%8D%97%E6%B8%AF%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8%E6%95%99%E5%B8%AB%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%93%A1%E5%B7%A5%E5%AD%90%E5%A5%B3%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E5%90%91%E9%99%BD%E8%B7%AF21%E8%99%9F1%E6%A8%93",
@@ -135362,7 +135569,8 @@
       "floorAreaOut": null,
       "lat": 25.052434,
       "lng": 121.594847,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-向陽非營利幼兒園委託社團法人嬰幼兒教育與家庭發展協會辦理-南港區",
@@ -135574,7 +135782,7 @@
       "address": "臺北市南港區忠孝東路6段212巷4弄5、7及9號1樓",
       "tel": "(02) 2653-3111",
       "telHref": "+886-2-26533111",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A4%A7%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF6%E6%AE%B5212%E5%B7%B74%E5%BC%845%E3%80%817%E5%8F%8A9%E8%99%9F1%E6%A8%93",
@@ -135619,7 +135827,8 @@
       "floorAreaOut": "66平方公尺",
       "lat": 25.048022,
       "lng": 121.587122,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-小狀元托嬰中心-南港區",
@@ -135689,7 +135898,7 @@
       "address": "臺北市南港區成福路183號2樓",
       "tel": "(02) 2651-6526",
       "telHref": "+886-2-26516526",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%8F%E9%A8%8E%E5%A3%AB%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E6%88%90%E7%A6%8F%E8%B7%AF183%E8%99%9F2%E6%A8%93",
@@ -135734,7 +135943,8 @@
       "floorAreaOut": null,
       "lat": 25.040895,
       "lng": 121.58862,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-中研托嬰中心社團法人臺北市大大小小健康促進協會辦理-南港區",
@@ -136201,7 +136411,7 @@
       "address": "臺北市南港區福德街310巷30、32及34號1樓",
       "tel": "(02) 2786-8889",
       "telHref": "+886-2-27868889",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%B5%B7%E6%A0%BC%E6%96%AF%E5%A4%A7%E5%8D%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E7%A6%8F%E5%BE%B7%E8%A1%97310%E5%B7%B730%E3%80%8132%E5%8F%8A34%E8%99%9F1%E6%A8%93",
@@ -136347,7 +136557,8 @@
       "floorAreaOut": "346平方公尺",
       "lat": 25.04053,
       "lng": 121.587273,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-荳寶托嬰中心-南港區",
@@ -136389,7 +136600,7 @@
       "address": "臺北市南港區舊莊街一段145巷6弄31號",
       "tel": "(02) 2782-1776",
       "telHref": "+886-2-27821776",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8E%92%E5%85%89%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E8%88%8A%E8%8E%8A%E8%A1%97%E4%B8%80%E6%AE%B5145%E5%B7%B76%E5%BC%8431%E8%99%9F",
@@ -136434,7 +136645,8 @@
       "floorAreaOut": "250平方公尺",
       "lat": 25.039564,
       "lng": 121.622008,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-傑生寶華國際幼兒園-南港區",
@@ -136568,7 +136780,7 @@
       "address": "臺北市南港區合順街8巷5弄5號1樓",
       "tel": "(02) 2651-1256",
       "telHref": "+886-2-26511256",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%83%A0%E7%BE%A4%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E5%90%88%E9%A0%86%E8%A1%978%E5%B7%B75%E5%BC%845%E8%99%9F1%E6%A8%93",
@@ -136613,7 +136825,8 @@
       "floorAreaOut": null,
       "lat": 25.041866,
       "lng": 121.618728,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-萌田蒙特梭利托嬰中心-南港區",
@@ -137088,7 +137301,7 @@
       "address": "臺北市南港區東新街80巷11弄2號、4號",
       "tel": "(02) 2785-4601",
       "telHref": "+886-2-27854601",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%A8%B9%E5%BE%B7%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E6%9D%B1%E6%96%B0%E8%A1%9780%E5%B7%B711%E5%BC%842%E8%99%9F%E3%80%814%E8%99%9F",
@@ -137154,7 +137367,8 @@
       "floorAreaOut": "198.3平方公尺",
       "lat": 25.045561,
       "lng": 121.587437,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-龍華幼兒園-南港區",
@@ -137168,7 +137382,7 @@
       "address": "臺北市南港區玉成街247號1樓至4樓、247-1號1樓",
       "tel": "(02) 2786-7166",
       "telHref": "+886-2-27867166",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%BE%8D%E8%8F%AF%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E7%8E%89%E6%88%90%E8%A1%97247%E8%99%9F1%E6%A8%93%E8%87%B34%E6%A8%93%E3%80%81247-1%E8%99%9F1%E6%A8%93",
@@ -137224,7 +137438,8 @@
       "floorAreaOut": null,
       "lat": 25.042957,
       "lng": 121.586125,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-東明托嬰中心-南港區",
@@ -137391,11 +137606,11 @@
         4,
         5
       ],
-      "floorArea": "843.44平方公尺",
+      "floorArea": null,
       "website": "http://www.ctps.tp.edu.tw/",
       "closed": false,
       "penalties": [],
-      "floorAreaOut": "370.44平方公尺",
+      "floorAreaOut": null,
       "lat": 25.047126,
       "lng": 121.586609,
       "backboneFromArchive": true
@@ -137854,7 +138069,7 @@
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E6%B8%AF%E7%A6%8F%E9%9D%9E%E7%87%9F%E5%88%A9%E5%B9%BC%E5%85%92%E5%9C%92%EF%BC%88%E5%A7%94%E8%A8%97%E7%A4%BE%E5%9C%98%E6%B3%95%E4%BA%BA%E8%87%BA%E7%81%A3%E6%95%99%E8%82%B2%E5%B0%88%E6%A5%AD%E5%AD%B8%E6%9C%83%E8%BE%A6%E7%90%86%EF%BC%89%20%E8%87%BA%E5%8C%97%E5%B8%82%E5%8D%97%E6%B8%AF%E5%8D%80%E7%A6%8F%E5%BE%B7%E8%A1%97373%E5%B7%B743%E8%99%9F1%E6%A8%93",
       "regNo": "北市社五字第09130158100號",
-      "approvedCount": 136,
+      "approvedCount": 122,
       "fees": null,
       "ages": [],
       "floorArea": "914.01平方公尺",
@@ -137967,7 +138182,7 @@
       "address": "臺北市萬華區貴陽街二段94號1樓",
       "tel": "(02)23314921#11",
       "telHref": "022331492111",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E9%83%A8%E5%8F%B0%E7%81%A3%E5%9F%BA%E7%9D%A3%E9%95%B7%E8%80%81%E6%95%99%E6%9C%83%E8%89%8B%E8%88%BA%E6%95%99%E6%9C%83%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%84%9B%E5%BF%83%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E8%B2%B4%E9%99%BD%E8%A1%97%E4%BA%8C%E6%AE%B594%E8%99%9F1%E6%A8%93",
@@ -138053,7 +138268,8 @@
       "floorAreaOut": "177.07平方公尺",
       "lat": 25.039672,
       "lng": 121.503315,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-財政部臺北國稅局職場互助教保服務中心委託社團法人台北市教保人員協會辦理-萬華區",
@@ -138096,7 +138312,7 @@
       "address": "臺北市萬華區興寧街70號",
       "tel": "(02) 2304-0131",
       "telHref": "+886-2-23040131",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%B2%A1%E5%9C%98%E6%B3%95%E4%BA%BA%E5%A4%A9%E4%B8%BB%E6%95%99%E6%9C%83%E5%8F%B0%E5%8C%97%E6%95%99%E5%8D%80%E9%99%84%E8%A8%AD%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%82%B2%E4%BB%81%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E8%88%88%E5%AF%A7%E8%A1%9770%E8%99%9F",
@@ -138141,7 +138357,8 @@
       "floorAreaOut": "298平方公尺",
       "lat": 25.032118,
       "lng": 121.498923,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-國防部陸軍司令部精勤職場互助教保服務中心委託財團法人海棠文教基金會辦理-萬華區",
@@ -138562,7 +138779,7 @@
       "address": "臺北市萬華區寶興街140巷23號、27號1、2樓",
       "tel": "(02) 2307-8147",
       "telHref": "+886-2-23078147",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%B0%BC%E8%A5%BF%E5%9C%8B%E9%9A%9B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E5%AF%B6%E8%88%88%E8%A1%97140%E5%B7%B723%E8%99%9F%E3%80%8127%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -138618,7 +138835,8 @@
       "floorAreaOut": null,
       "lat": 25.023972,
       "lng": 121.49386,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-幼佳幼兒園-萬華區",
@@ -138824,7 +139042,7 @@
       "address": "臺北市萬華區西園路2段227之1號2樓",
       "tel": "(02) 2301-6998",
       "telHref": "+886-2-23016998",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%90%8D%E4%BA%BA%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E8%A5%BF%E5%9C%92%E8%B7%AF2%E6%AE%B5227%E4%B9%8B1%E8%99%9F2%E6%A8%93",
@@ -138869,7 +139087,8 @@
       "floorAreaOut": null,
       "lat": 25.026865,
       "lng": 121.493915,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-安馨托嬰中心-萬華區",
@@ -139149,7 +139368,7 @@
       "address": "臺北市萬華區國興路90-7號1樓",
       "tel": "(02) 2337-0181",
       "telHref": "+886-2-23370181",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E9%9D%92%E5%B9%B4%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E5%9C%8B%E8%88%88%E8%B7%AF90-7%E8%99%9F1%E6%A8%93",
@@ -139225,7 +139444,8 @@
       "floorAreaOut": null,
       "lat": 25.026735,
       "lng": 121.506359,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-娃娃果幼兒園-萬華區",
@@ -139239,7 +139459,7 @@
       "address": "臺北市萬華區艋舺大道184號2樓及186號1、2樓",
       "tel": "(02) 2306-9008",
       "telHref": "+886-2-23069008",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%A8%83%E5%A8%83%E6%9E%9C%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E8%89%8B%E8%88%BA%E5%A4%A7%E9%81%93184%E8%99%9F2%E6%A8%93%E5%8F%8A186%E8%99%9F1%E3%80%812%E6%A8%93",
@@ -139284,7 +139504,8 @@
       "floorAreaOut": null,
       "lat": 25.032717,
       "lng": 121.500215,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-盈虹幼兒園-萬華區",
@@ -139357,7 +139578,7 @@
       "address": "臺北市萬華區萬大路200號",
       "tel": "(02) 2307-2584",
       "telHref": "+886-2-23072584",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E8%8B%B1%E6%89%8D%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E8%90%AC%E5%A4%A7%E8%B7%AF200%E8%99%9F",
@@ -139463,7 +139684,8 @@
       "floorAreaOut": "206.7平方公尺",
       "lat": 25.02738,
       "lng": 121.500299,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "preschool-雪拉比幼兒園-萬華區",
@@ -139536,7 +139758,7 @@
       "address": "臺北市萬華區武成街28巷9弄2號",
       "tel": "(02) 2307-2749",
       "telHref": "+886-2-23072749",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E5%8D%9A%E6%84%9B%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E6%AD%A6%E6%88%90%E8%A1%9728%E5%B7%B79%E5%BC%842%E8%99%9F",
@@ -139612,7 +139834,8 @@
       "floorAreaOut": "231.4平方公尺",
       "lat": 25.019038,
       "lng": 121.495255,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-瑞吉歐托嬰中心-萬華區",
@@ -140052,7 +140275,7 @@
       "address": "臺北市萬華區中華路二段428之4號1樓、國興路90之1號1樓",
       "tel": "(02) 2301-8609",
       "telHref": "+886-2-23018609",
-      "ownership": "私立",
+      "ownership": "準公共",
       "capacity": null,
       "operator": null,
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%A7%81%E7%AB%8B%E6%AD%A1%E6%A8%82%E7%AB%A5%E5%B9%B4%E5%B9%BC%E5%85%92%E5%9C%92%20%E8%87%BA%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E4%B8%AD%E8%8F%AF%E8%B7%AF%E4%BA%8C%E6%AE%B5428%E4%B9%8B4%E8%99%9F1%E6%A8%93%E3%80%81%E5%9C%8B%E8%88%88%E8%B7%AF90%E4%B9%8B1%E8%99%9F1%E6%A8%93",
@@ -140138,7 +140361,8 @@
       "floorAreaOut": null,
       "lat": 25.027142,
       "lng": 121.50622,
-      "backboneFromArchive": true
+      "backboneFromArchive": true,
+      "ownershipFromFeeTable": true
     },
     {
       "id": "nursery-青年托嬰中心-萬華區",
@@ -140483,11 +140707,11 @@
         4,
         5
       ],
-      "floorArea": "1,080平方公尺",
+      "floorArea": null,
       "website": null,
       "closed": false,
       "penalties": [],
-      "floorAreaOut": "504平方公尺",
+      "floorAreaOut": null,
       "lat": 25.042891,
       "lng": 121.502684,
       "backboneFromArchive": true

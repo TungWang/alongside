@@ -563,6 +563,50 @@ check('招生時程頁在首頁與頁尾都找得到', () => {
   return read('搜尋/index.html').includes('href="/招生時程/"') ? true : '頁尾少了招生時程連結';
 });
 
+check('沒有市府開放資料的縣市也要有準公共', () => {
+  // 封存 GeoJSON 的屬性欄只有私立／公立／非營利，準公共整批落在私立裡。
+  // 曾經因此讓臺北市 173 間準公共被當成私立，自付額被高估中位數 6,174 元／月——
+  // 而且錯的方向是把負擔得起的園所顯示成負擔不起。
+  for (const c of DATA.cities.filter((x) => x.preschoolBackbone === 'archive')) {
+    const list = DATA.institutions.filter((i) => i.city === c.name && i.kind === 'preschool');
+    const quasi = list.filter((i) => i.ownership === '準公共');
+    if (quasi.length === 0) return `${c.name}一間準公共都沒有，屬性修正可能失效了`;
+    if (!quasi.some((i) => i.ownershipFromFeeTable)) {
+      return `${c.name}的準公共沒有任何一間標記來自收費表，修正路徑可能沒跑`;
+    }
+  }
+  return true;
+});
+
+check('屬性修正只動私立，且不碰有市府開放資料的縣市', () => {
+  // summary1 的 type 欄沒有「非營利」這個值，整批採用會毀掉非營利的辨識，
+  // 而非營利上限 2,000 與準公共 3,000 並不相同。
+  const openData = new Set(
+    DATA.cities.filter((c) => c.preschoolBackbone === 'open-data').map((c) => c.name),
+  );
+  for (const i of DATA.institutions) {
+    if (!i.ownershipFromFeeTable) continue;
+    if (i.ownership !== '準公共') return `${i.name} 被改成「${i.ownership}」，只該改成準公共`;
+    if (openData.has(i.city)) return `${i.name} 在${i.city}，那裡的市府開放資料才是權威來源`;
+  }
+  // 新北市的準公共來自市府開放資料，數量掉太多代表上游或比對出事
+  const ntpc = DATA.institutions.filter((i) => i.city === '新北市' && i.ownership === '準公共');
+  return ntpc.length > 200 ? true : `新北市準公共只剩 ${ntpc.length} 間，異常偏低`;
+});
+
+check('補回的準公共，試算走的是上限而不是育兒津貼', () => {
+  const fixed = DATA.institutions.filter((i) => i.ownershipFromFeeTable && i.fees);
+  if (!fixed.length) return '沒有任何補回的準公共有收費資料';
+  const inst = fixed.find((i) => i.fees['3']?.monthly > 10000) ?? fixed[0];
+  const age = inst.fees['3'] ? '3' : Object.keys(inst.fees)[0];
+  const r = estimate(inst.ownership, inst.fees[age].monthly, '1', false);
+  if (r.kind !== 'cap') return `${inst.name} 走的是 ${r.kind}，應該是平價教保的上限`;
+  if (r.pay > 3000) return `${inst.name} 第 1 胎自付 ${r.pay}，超過準公共上限 3,000`;
+  // 屬性來源要對家長講明白，因為準公共合約逐年異動
+  const h = read(`i/${inst.id}/index.html`);
+  return h.includes('園所屬性取自民間封存') ? true : `${inst.id} 沒有說明屬性的來源與不確定性`;
+});
+
 // --- 看門狗自己的測試 ---------------------------------------------------
 //
 // 這三隻狗平常完全靜默，而「壞掉的偵測器」跟「正常的偵測器」從外面看一模一樣——

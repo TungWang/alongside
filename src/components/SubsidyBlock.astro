@@ -15,9 +15,16 @@ import {
   SUBSIDY_UPDATED,
 } from '../lib/subsidy.js';
 import { subsidyWarning } from '../lib/checks.js';
+import data from '../data/institutions.json';
 
 const { inst } = Astro.props;
 const warning = subsidyWarning();
+
+// 沒有市府開放資料的縣市，園所屬性取自民間封存。而屬性直接決定這張表的金額——
+// 準公共每月上限 3,000，私立則是照付全額再領 5,000 津貼，差距可以到一萬多。
+// 準公共合約還會逐年異動，所以這件事必須讓家長知道，不能只寫在頁尾的來源說明裡。
+const archiveOwnership =
+  data.cities.find((c) => c.name === inst.city)?.preschoolBackbone === 'archive';
 
 const ages = inst.fees ? FEE_AGES.filter((a) => inst.fees[a]) : [];
 const affordable = isAffordableCare(inst.ownership);
@@ -55,6 +62,12 @@ const sample = cells[0];
           <p><strong>{warning.title}</strong></p>
           <p>{warning.body}</p>
         </div>
+      )}
+
+      {archiveOwnership && (
+        <p class="note">
+          {`${inst.city}沒有市府層級的幼兒園開放資料，園所屬性取自民間封存。屬性決定你適用哪一種補助，而準公共的合約每年會異動——金額差很多，請向園所或教育局確認這間目前算哪一類。`}
+        </p>
       )}
 
       <div class="card stack-sm">

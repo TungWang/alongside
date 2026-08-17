@@ -602,15 +602,20 @@ const FEE_AGES = ['2', '3', '4', '5'];
 
 async function fetchFees() {
   const byName = new Map();
+  // summary1 的 type 欄是唯一標出「準公共化」的地方。封存 GeoJSON 的 type
+  // 只有私立／公立／非營利，準公共全部落在私立裡——見 fixQuasiPublic()。
+  const typeByName = new Map();
   for (const city of CITIES) {
   for (const age of FEE_AGES) {
     const url = `${ARCHIVE}/data/summary1/${encodeURIComponent(city.name)}/${age}.csv`;
     const res = await fetchWithRetry(url, { label: `${city.name} 分齡收費 ${age} 歲` });
     if (!res.ok) throw new Error(`分齡收費下載失敗（${city.name} ${age} 歲）：${res.status}`);
     for (const row of parseCsv(await res.text())) {
-      const monthly = toInt(row.monthly1);
-      if (!row.point || !monthly) continue;
+      if (!row.point) continue;
       const key = matchKey(row.point);
+      if (row.type) typeByName.set(key, squash(row.type));
+      const monthly = toInt(row.monthly1);
+      if (!monthly) continue;
       if (!byName.has(key)) byName.set(key, {});
       byName.get(key)[age] = {
         monthly, // 每月必繳
@@ -621,13 +626,48 @@ async function fetchFees() {
     }
   }
   }
-  return byName;
+  return { byName, typeByName };
+}
+
+/**
+ * 補回臺北市的準公共。
+ *
+ * 沒有市府開放資料的縣市，幼兒園屬性取自封存 GeoJSON 的 type 欄，而那一欄
+ * 只有私立／公立／非營利三種值——準公共整批被歸進私立。實測臺北市 175 間
+ * 準公共化在 GeoJSON 裡 100% 標成私立，本站因此把它們全部當成私立。
+ *
+ * 後果打在站上最關鍵的數字上：準公共家長每月繳費上限 3,000 元，被當成私立
+ * 就變成「照付全額再扣 5,000 育兒津貼」。實測自付額被高估中位數 6,174 元／月、
+ * 最高 15,333 元／月——而且錯的方向是把負擔得起的園所顯示成負擔不起。
+ *
+ * 只做「私立 → 準公共」這一種升級，不整批採用 summary1 的 type：
+ * 那一欄沒有「非營利」這個值（會被歸到別類），整批換掉會毀掉非營利的辨識，
+ * 而非營利的上限（2,000）與準公共（3,000）並不相同。
+ *
+ * 只對 preschoolBackbone 為 archive 的縣市套用。新北市有市府開放資料，
+ * 那是權威來源——實測封存與市府資料一致率 96.2%（1,057 間中 1,017 間），
+ * 不一致的多半是準公共合約起訖的時間差，這種時候要信市府。
+ */
+function fixQuasiPublic(institutions, typeByName) {
+  let fixed = 0;
+  const archiveCities = new Set(CITIES.filter((c) => !c.preschoolOid).map((c) => c.name));
+  for (const inst of institutions) {
+    if (inst.kind !== 'preschool' || !archiveCities.has(inst.city)) continue;
+    if (inst.ownership !== '私立') continue;
+    if (typeByName.get(matchKey(inst.name)) !== '準公共化') continue;
+    inst.ownership = '準公共';
+    inst.ownershipFromFeeTable = true;
+    fixed++;
+  }
+  return fixed;
 }
 
 async function enrich(institutions, archive) {
   if (!archive) return { enriched: 0, withFees: 0, penaltyCount: 0, archive: null };
 
-  const fees = await fetchFees();
+  const { byName: fees, typeByName } = await fetchFees();
+  const quasiFixed = fixQuasiPublic(institutions, typeByName);
+  if (quasiFixed) console.log(`  補回 ${quasiFixed} 間準公共（封存 GeoJSON 的屬性欄沒有這一類）`);
   const preschools = institutions.filter((i) => i.kind === 'preschool');
   let enriched = 0;
   let withFees = 0;
