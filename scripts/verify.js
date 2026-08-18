@@ -15,6 +15,7 @@ const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/institutions.j
 const { PRESCHOOL, NURSERY, VERIFIED_ON, isStale } = await import('../src/lib/admission.js');
 const { estimate } = await import('../src/lib/subsidy.js');
 const SUB = await import('./check-subsidy.js');
+const SY = await import('../src/lib/quasi.js');
 const STALE = await import('../src/scripts/staleness.js');
 
 const read = (p) => fs.readFileSync(path.join(DIST, p), 'utf8');
@@ -563,48 +564,61 @@ check('招生時程頁在首頁與頁尾都找得到', () => {
   return read('搜尋/index.html').includes('href="/招生時程/"') ? true : '頁尾少了招生時程連結';
 });
 
-check('沒有市府開放資料的縣市也要有準公共', () => {
-  // 封存 GeoJSON 的屬性欄只有私立／公立／非營利，準公共整批落在私立裡。
-  // 曾經因此讓臺北市 173 間準公共被當成私立，自付額被高估中位數 6,174 元／月——
-  // 而且錯的方向是把負擔得起的園所顯示成負擔不起。
-  for (const c of DATA.cities.filter((x) => x.preschoolBackbone === 'archive')) {
-    const list = DATA.institutions.filter((i) => i.city === c.name && i.kind === 'preschool');
-    const quasi = list.filter((i) => i.ownership === '準公共');
-    if (quasi.length === 0) return `${c.name}一間準公共都沒有，屬性修正可能失效了`;
-    if (!quasi.some((i) => i.ownershipFromFeeTable)) {
-      return `${c.name}的準公共沒有任何一間標記來自收費表，修正路徑可能沒跑`;
+check('腳本被 import 時不會自己跑起來', () => {
+  // 真的發生過：verify 為了引用常數而 import 了 fetch-data.js，結果每次驗證都
+  // 重新抓一次資料並覆蓋 institutions.json——驗證的變成它自己剛寫出來的檔案，
+  // 而不是建置實際使用的那一份。執行時間從 1 秒變成 35 秒才被發現。
+  const dir = path.join(ROOT, 'scripts');
+  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.js'))) {
+    const src = fs.readFileSync(path.join(dir, f), 'utf8');
+    if (!/\nasync function main\(|\nfunction main\(/.test(src)) continue;
+    if (!/import\.meta\.url === `file:\/\/\$\{process\.argv\[1\]\}`/.test(src)) {
+      return `${f} 有 main() 卻沒有 import 守衛，被引用時會自己執行`;
     }
   }
   return true;
 });
 
-check('屬性修正只動私立，且不碰有市府開放資料的縣市', () => {
-  // summary1 的 type 欄沒有「非營利」這個值，整批採用會毀掉非營利的辨識，
-  // 而非營利上限 2,000 與準公共 3,000 並不相同。
-  const openData = new Set(
-    DATA.cities.filter((c) => c.preschoolBackbone === 'open-data').map((c) => c.name),
-  );
-  for (const i of DATA.institutions) {
-    if (!i.ownershipFromFeeTable) continue;
-    if (i.ownership !== '準公共') return `${i.name} 被改成「${i.ownership}」，只該改成準公共`;
-    if (openData.has(i.city)) return `${i.name} 在${i.city}，那裡的市府開放資料才是權威來源`;
+check('準公共依契約年度判定，且每個縣市都有', () => {
+  // 三個來源都標過準公共，三個都不夠好：封存 GeoJSON 的 type 沒有這一類，
+  // summary1 的 type 沒有「非營利」，新北市開放資料停在舊名單（漏 34 間、多 5 間）。
+  // pre_public 給的是契約起訖年度，所以能判斷「現在」算不算。
+  const year = SY.schoolYear(new Date(DATA.fetchedAt));
+  for (const c of DATA.cities) {
+    const q = DATA.institutions.filter(
+      (i) => i.city === c.name && i.kind === 'preschool' && i.ownership === '準公共',
+    );
+    if (!q.length) return `${c.name}一間準公共都沒有，契約判定可能失效了`;
+    const bad = q.find((i) => !SY.hasQuasiContract(i.quasiContract, year));
+    if (bad) return `${bad.name} 標為準公共，但契約「${bad.quasiContract}」在 ${year} 學年度無效`;
   }
-  // 新北市的準公共來自市府開放資料，數量掉太多代表上游或比對出事
-  const ntpc = DATA.institutions.filter((i) => i.city === '新北市' && i.ownership === '準公共');
-  return ntpc.length > 200 ? true : `新北市準公共只剩 ${ntpc.length} 間，異常偏低`;
+  return true;
 });
 
-check('補回的準公共，試算走的是上限而不是育兒津貼', () => {
-  const fixed = DATA.institutions.filter((i) => i.ownershipFromFeeTable && i.fees);
-  if (!fixed.length) return '沒有任何補回的準公共有收費資料';
-  const inst = fixed.find((i) => i.fees['3']?.monthly > 10000) ?? fixed[0];
-  const age = inst.fees['3'] ? '3' : Object.keys(inst.fees)[0];
+check('契約判定只在私立↔準公共之間切換', () => {
+  // 公立、非營利、職場互助各有不同的繳費上限，誤動會直接算錯家長要付多少。
+  // 實測 1,110 間中，契約有效者從未落在這三類上，所以這條界線是乾淨的。
+  const other = DATA.institutions.filter(
+    (i) => i.quasiContract && !['私立', '準公共'].includes(i.ownership),
+  );
+  if (other.length) return `${other[0].name} 是「${other[0].ownership}」卻帶著準公共契約`;
+  const q = DATA.institutions.filter((i) => i.ownership === '準公共');
+  return q.every((i) => i.quasiContract) ? true : '有準公共沒有記錄契約年度';
+});
+
+check('準公共數量沒有整批崩掉', () => {
+  // 準公共是分期程簽約的，期程換代時整批契約同時到期。上游若沒跟上，
+  // 幾百間會無聲降級成私立，家長看到的自付額突然多出好幾千。
+  // fetch 端已有 50% 門檻會中止建置，這裡是產物端的第二道。
+  const q = DATA.institutions.filter((i) => i.ownership === '準公共').length;
+  if (q < 300) return `全站只剩 ${q} 間準公共，異常偏低——可能是新期程名單尚未更新`;
+  const inst = DATA.institutions.find((i) => i.ownership === '準公共' && i.fees);
+  if (!inst) return '沒有任何準公共有收費資料';
+  const age = Object.keys(inst.fees)[0];
   const r = estimate(inst.ownership, inst.fees[age].monthly, '1', false);
-  if (r.kind !== 'cap') return `${inst.name} 走的是 ${r.kind}，應該是平價教保的上限`;
-  if (r.pay > 3000) return `${inst.name} 第 1 胎自付 ${r.pay}，超過準公共上限 3,000`;
-  // 屬性來源要對家長講明白，因為準公共合約逐年異動
+  if (r.kind !== 'cap' || r.pay > 3000) return `${inst.name} 的試算沒有走準公共上限`;
   const h = read(`i/${inst.id}/index.html`);
-  return h.includes('園所屬性取自民間封存') ? true : `${inst.id} 沒有說明屬性的來源與不確定性`;
+  return h.includes('準公共不是設立屬性') ? true : `${inst.id} 沒有說明契約判定的依據`;
 });
 
 // --- 看門狗自己的測試 ---------------------------------------------------
