@@ -564,6 +564,57 @@ check('招生時程頁在首頁與頁尾都找得到', () => {
   return read('搜尋/index.html').includes('href="/招生時程/"') ? true : '頁尾少了招生時程連結';
 });
 
+check('收費分項的涵蓋率沒有崩掉', () => {
+  // 上游改結構時解析會靜靜落空，「開學繳」整欄消失而頁面看起來仍然正常。
+  const withFees = DATA.institutions.filter((i) => i.kind === 'preschool' && i.fees);
+  const withRhythm = withFees.filter((i) =>
+    Object.values(i.fees).some((f) => f.registration !== undefined),
+  );
+  const rate = withRhythm.length / Math.max(withFees.length, 1);
+  return rate >= 0.8
+    ? true
+    : `只有 ${(rate * 100).toFixed(1)}% 的園所有收費分項（${withRhythm.length}/${withFees.length}）`;
+});
+
+check('開學繳與之後每月加起來等於全年', () => {
+  // 「每月必繳」是全年攤平的平均，不是付款節奏。三個數字必須自洽，
+  // 否則家長並排看到會不知道該信哪一個。
+  let checked = 0;
+  for (const inst of DATA.institutions) {
+    if (inst.kind !== 'preschool' || !inst.fees) continue;
+    for (const [age, f] of Object.entries(inst.fees)) {
+      if (f.registration === undefined || !f.yearly || !f.months) continue;
+      checked++;
+      // 開學一次繳每學期一次（一年兩次），月項按收費月數
+      const rebuilt = f.registration * 2 + f.monthlyAfter * f.months;
+      if (Math.abs(rebuilt - f.yearly) > f.yearly * 0.02) {
+        return `${inst.name} ${age} 歲：${f.registration}×2 + ${f.monthlyAfter}×${f.months} = ${rebuilt}，與全年 ${f.yearly} 差太多`;
+      }
+      if (f.monthlyAfter > f.monthly) {
+        return `${inst.name} ${age} 歲：之後每月 ${f.monthlyAfter} 高於平均每月 ${f.monthly}，攤平的方向反了`;
+      }
+    }
+  }
+  return checked > 1000 ? true : `只驗到 ${checked} 筆，樣本異常偏少`;
+});
+
+check('平價教保的頁面要講明繳的是上限而不是收費節奏', () => {
+  // 公立／非營利／準公共的家長每月繳費有政策上限，開學那筆不是他們的付款節奏。
+  // 不講清楚，這張表反而會嚇到本來負擔得起的家長。
+  const capped = DATA.institutions.find(
+    (i) => i.ownership === '準公共' && i.fees && Object.values(i.fees).some((f) => f.registration > 0),
+  );
+  if (!capped) return '找不到有分項的準公共園所';
+  const h = read(`i/${capped.id}/index.html`);
+  if (!h.includes('你實際繳的是政策上限')) return `${capped.id} 沒有說明上限優先於收費節奏`;
+
+  const priv = DATA.institutions.find(
+    (i) => i.ownership === '私立' && i.fees && Object.values(i.fees).some((f) => f.registration > 0),
+  );
+  const ph = read(`i/${priv.id}/index.html`);
+  return ph.includes('每學期開學都要繳一次') ? true : `${priv.id} 沒有說明開學繳是每學期一次`;
+});
+
 check('腳本被 import 時不會自己跑起來', () => {
   // 真的發生過：verify 為了引用常數而 import 了 fetch-data.js，結果每次驗證都
   // 重新抓一次資料並覆蓋 institutions.json——驗證的變成它自己剛寫出來的檔案，

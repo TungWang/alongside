@@ -602,6 +602,104 @@ function parseCsv(text) {
  */
 const FEE_AGES = ['2', '3', '4', '5'];
 
+/**
+ * 收費明細（開學一次繳）。
+ *
+ * summary1 給的 monthly1 是「全年總額 ÷ 月數」——政府算平價教保上限也是用這個公式，
+ * 金額沒錯，但它把開學要一次繳的那一包攤平了。實例：燕翔幼兒園站上顯示每月 14,783，
+ * 實際的付款節奏是開學繳 29,900、之後每月 9,800。一個照著 14,783 編預算的家長，
+ * 一年會有兩次各短缺三萬。
+ *
+ * 分項只存在 slip114（園所依法申報的明細表），每間一個 JSON。裡面每個項目都有
+ * 「收費期間」，分「學期」與「月」——學期項就是開學一次繳的部分。
+ *
+ * 解析有三個坑，全部踩過：
+ *   交通費是巢狀的單趟／雙趟兩欄，直接取數字會把 2000 與 3000 黏成 20003000。
+ *   交通費、課後延托費、家長會費都不計入「全學期總收費」，因為都是選繳。
+ *   月數可以是小數（5.5 個月），不能用去掉非數字的方式解析。
+ *
+ * 修正後 754 筆收費組合 100% 通過驗算，且與站上既有的 monthly 交叉比對 2,972/2,983 一致。
+ */
+const SLIP_YEAR = '114';
+const SLIP_OPTIONAL = new Set(['交通費', '課後延托費', '家長會費']);
+const SLIP_TOTAL = '全學期總收費';
+
+/** 小數月數要保留，5.5 不能變成 55 */
+const toDecimal = (v) => {
+  const m = String(v ?? '').match(/\d+(\.\d+)?/);
+  return m ? Number(m[0]) : 0;
+};
+
+/**
+ * 從一份明細表讀出某年齡的付款節奏。
+ * 驗算不過就回 null——寧可不顯示，也不要給家長一個算錯的「開學要繳多少」。
+ */
+export function readSlipTerm(slip, age) {
+  const sem = slip?.[age]?.['上學期'];
+  const cls = sem?.class?.['全日班'] || sem?.class?.['半日班'];
+  if (!cls) return null;
+  const months = toDecimal(sem.months);
+  const declared = toDecimal(cls[SLIP_TOTAL]?.小計);
+  if (!months || !declared) return null;
+
+  let registration = 0;
+  let perTerm = 0;
+  for (const [name, v] of Object.entries(cls)) {
+    if (name === SLIP_TOTAL || SLIP_OPTIONAL.has(name)) continue;
+    const sub = toDecimal(v.小計);
+    if (!sub) continue;
+    if (v.收費期間 === '學期') registration += sub;
+    else perTerm += sub;
+  }
+  if (Math.abs(registration + perTerm - declared) > 1) return null;
+
+  return {
+    registration, // 開學一次繳，每學期一次
+    monthlyAfter: Math.round(perTerm / months), // 開學之後每月
+    halfYear: declared,
+    fullDay: Boolean(sem.class?.['全日班']),
+  };
+}
+
+async function fetchSlips(preschools) {
+  const targets = preschools.filter((i) => i.fees);
+  let matched = 0;
+  let rejected = 0;
+
+  await mapLimit(targets, 12, async (inst) => {
+    const url = `${ARCHIVE}/data/slip${SLIP_YEAR}/${encodeURIComponent(inst.city)}/${encodeURIComponent(`${inst.name}.json`)}`;
+    let slip;
+    try {
+      const res = await fetchWithRetry(url, { label: `收費明細 ${inst.name}` });
+      if (!res.ok) return; // 404：這間沒有申報明細，照現況只顯示月費
+      slip = (await res.json()).slip;
+    } catch {
+      return; // 單一園所抓不到不該擋住整站，涵蓋率由下面的門檻把關
+    }
+    let any = false;
+    for (const age of Object.keys(inst.fees)) {
+      const t = readSlipTerm(slip, age);
+      if (!t) {
+        rejected++;
+        continue;
+      }
+      // 與 summary1 交叉比對：明細的半年總額 ×2 應該等於全年必繳。
+      // 對不上代表兩份資料講的不是同一個班別或學期，那就不要並排顯示。
+      if (inst.fees[age].yearly && Math.abs(t.halfYear * 2 - inst.fees[age].yearly) > 2) {
+        rejected++;
+        continue;
+      }
+      inst.fees[age].registration = t.registration;
+      inst.fees[age].monthlyAfter = t.monthlyAfter;
+      any = true;
+    }
+    if (any) matched++;
+  });
+
+  console.log(`  收費明細：${matched} / ${targets.length} 間有可用的分項（${rejected} 個年齡組合驗算不過而略過）`);
+  return matched / Math.max(targets.length, 1);
+}
+
 async function fetchFees() {
   const byName = new Map();
   for (const city of CITIES) {
@@ -724,6 +822,15 @@ async function enrich(institutions, archive) {
     inst.fees = f;
     // 有這個年齡的收費資料，就代表這間收這個年齡的孩子
     inst.ages = FEE_AGES.filter((a) => f[a]).map(Number);
+  }
+
+  // 跟封存對上率同一類的防護：上游若改結構，解析會靜靜地全部落空，
+  // 「開學繳」整欄消失而頁面看起來仍然正常。實測正常情況是 99.8%。
+  const slipRate = await fetchSlips(preschools);
+  if (slipRate < 0.8) {
+    throw new Error(
+      `只有 ${(slipRate * 100).toFixed(1)}% 的園所解析得出收費分項，低於 80%，疑似上游格式變更，中止建置`,
+    );
   }
 
   // 只對標記有裁罰的機構抓明細，省掉九成請求

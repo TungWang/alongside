@@ -9,12 +9,20 @@
 import data from '../data/institutions.json';
 import { FEE_AGES } from '../lib/stats.js';
 import { afterHoursFee, feeMonths } from '../lib/site.js';
+import { isAffordableCare } from '../lib/subsidy.js';
 
 const { inst, feeLink } = Astro.props;
 
 const available = Boolean(data.archive && inst.kind === 'preschool');
 const rows = available && inst.fees ? FEE_AGES.filter((a) => inst.fees[a]) : [];
 const flatCap = ['非營利', '職場互助'].includes(inst.ownership);
+
+// 「每月必繳」是全年攤平的平均，不是實際的付款節奏：學費、材料費這類項目是
+// 開學一次繳，雜費、餐點費才是按月。一個照著平均值編預算的家長，開學那個月會短缺。
+// 有分項的才顯示節奏——驗算不過的寧可不顯示，也不要給一個算錯的「開學要繳多少」。
+const hasRhythm = rows.some((a) => inst.fees[a].registration !== undefined);
+// 平價教保的家長每月繳費有政策上限，繳的是上限而不是園所申報的節奏
+const capped = isAffordableCare(inst.ownership);
 const afterHours = afterHoursFee(inst);
 const months = feeMonths(inst);
 ---
@@ -26,28 +34,52 @@ const months = feeMonths(inst);
     rows.length > 0 ? (
       <>
         <div class="card">
-          <table class="feetable">
-            <thead>
-              <tr>
-                <th>年齡</th>
-                <th class="num">每月必繳</th>
-                <th class="num">全年</th>
-                <th class="num">收費月數</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((a) => (
+          <div class="scroller">
+            <table class="feetable">
+              <thead>
                 <tr>
-                  <td>{a} 歲</td>
-                  <td class="num strong">{inst.fees[a].monthly.toLocaleString('en-US')}</td>
-                  <td class="num">
-                    {inst.fees[a].yearly ? inst.fees[a].yearly.toLocaleString('en-US') : '—'}
-                  </td>
-                  <td class="num">{inst.fees[a].months ?? '—'}</td>
+                  <th>年齡</th>
+                  {hasRhythm && <th class="num">開學繳</th>}
+                  {hasRhythm && <th class="num">之後每月</th>}
+                  <th class="num">平均每月</th>
+                  <th class="num">全年</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((a) => (
+                  <tr>
+                    <td>{a} 歲</td>
+                    {hasRhythm && (
+                      <td class="num strong">
+                        {inst.fees[a].registration === undefined
+                          ? '—'
+                          : inst.fees[a].registration.toLocaleString('en-US')}
+                      </td>
+                    )}
+                    {hasRhythm && (
+                      <td class="num strong">
+                        {inst.fees[a].monthlyAfter === undefined
+                          ? '—'
+                          : inst.fees[a].monthlyAfter.toLocaleString('en-US')}
+                      </td>
+                    )}
+                    <td class="num">{inst.fees[a].monthly.toLocaleString('en-US')}</td>
+                    <td class="num">
+                      {inst.fees[a].yearly ? inst.fees[a].yearly.toLocaleString('en-US') : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {hasRhythm && (
+            <p class="rhythm-note">
+              {capped
+                ? `「開學繳」與「之後每月」是園所申報的收費節奏。但${inst.ownership}屬於平價教保，你實際繳的是政策上限那個數字（見下方試算），不是這裡的節奏。`
+                : '學費、材料費這類項目是開學一次繳，雜費與餐點費才按月收。「平均每月」是把開學那筆攤平到全年的平均值——方便跟別間比較，但不是你實際的付款節奏。每學期開學都要繳一次。'}
+            </p>
+          )}
         </div>
 
         <dl class="extras">
@@ -130,8 +162,21 @@ const months = feeMonths(inst);
 </section>
 
 <style>
+  /* 五欄在窄螢幕會擠，讓表格自己橫向捲，不要讓整頁跟著歪 */
+  .scroller {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rhythm-note {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+
   .feetable {
     width: 100%;
+    min-width: 340px;
     border-collapse: collapse;
     font-size: 14px;
   }
