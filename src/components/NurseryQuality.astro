@@ -1,0 +1,131 @@
+---
+/**
+ * 托嬰中心的評鑑與準公共身分。
+ *
+ * 這一段只有臺北市有資料：新北市社會局公開的資料裡沒有評鑑、沒有準公共、沒有收托人數
+ * （掃過該平台 65 個資料集確認）。所以這個區塊在新北市的頁面上一樣會出現，
+ * 但講的是「本站沒有」而不是留白——「查過、沒有」和「這站根本沒查」對家長是兩回事，
+ * 而且不能讓新北的家長以為是他們的機構比較差。
+ */
+import data from '../data/institutions.json';
+import { linkOfKind } from '../lib/site.js';
+
+const { inst, links } = Astro.props;
+
+const evals = inst.evaluations ?? [];
+const evalLink = linkOfKind(links, 'evaluation');
+// 同一市有人拿得到評鑑，就代表資料源存在，這間沒有是對不上而不是沒查
+const cityHasEval = data.institutions.some(
+  (i) => i.city === inst.city && i.kind === 'nursery' && i.evaluations?.length,
+);
+---
+
+<section class="stack">
+  <h2>評鑑與收托</h2>
+
+  {
+    evals.length > 0 ? (
+      <div class="card stack-sm">
+        <ul class="grades">
+          {evals.map((e) => (
+            <li class="g">
+              <span class="g-year">{e.year} 年度</span>
+              <span class={e.grade.length > 4 ? 'g-grade g-long' : 'g-grade'}>{e.grade}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="note">
+          {'評鑑每幾年辦一次，沒有受評的年度不會出現。等第依原始公告照列（來源有「甲」與「甲等」等不同寫法，本站不改寫）。等第的定義與評鑑項目請看社會局的公告——本站只轉列結果，不做任何解讀或排名。'}
+        </p>
+      </div>
+    ) : (
+      <div class="state">
+        <p>
+          <strong>本站沒有這間的評鑑結果。</strong>
+        </p>
+        <p>
+          {cityHasEval
+            ? `${inst.city}有公開托嬰中心評鑑結果，但市府的機構名冊與評鑑名單彼此對不起來——有些機構只出現在其中一邊。本站不用推測去湊，所以這間顯示沒有資料，不代表它沒受評或評鑑不好。`
+            : `${inst.city}沒有公開托嬰中心的評鑑結果資料，本站無法整理。這是資料的落差，與機構品質無關。`}
+        </p>
+      </div>
+    )
+  }
+
+  {
+    inst.quasiPublic && (
+      <div class="card stack-sm">
+        <h3>這間是準公共托嬰中心</h3>
+        <p class="body">
+          {'準公共是機構與政府簽約，家長每月繳費有政策上限，差額由政府補給機構——實際負擔會比一般私立低不少。合約會換約，請向機構確認目前的狀態與你適用的金額。'}
+        </p>
+      </div>
+    )
+  }
+
+  {evalLink && (
+    <p class="note">
+      官方評鑑結果查詢見
+      <a href={evalLink.url} target="_blank" rel="noopener nofollow">
+        {evalLink.source} ↗
+      </a>
+      。
+    </p>
+  )}
+</section>
+
+<style>
+  .grades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .g {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 84px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .g-year {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .g-grade {
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  /* 來源有「因績優排除項目降為乙等」這種整句話，照列但不能撐爆版面 */
+  .g-long {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 700;
+  }
+  .body {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .state {
+    background: #f3ece0;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .state p {
+    margin: 0;
+  }
+  .state strong {
+    color: var(--ink);
+  }
+</style>

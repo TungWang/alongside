@@ -33,6 +33,16 @@ const ordered = [...districts].sort((a, b) => countByDistrict[b] - countByDistri
 const preschools = institutions.filter((i) => i.kind === 'preschool').length;
 const nurseries = total - preschools;
 
+// 托嬰中心的資料落差很大：臺北市社會局公開評鑑與收托人數，新北市沒有。
+// 這件事要照實講，而且要說明是資料落差不是機構差異，否則新北的家長會誤會。
+const nurseryList = institutions.filter((i) => i.kind === 'nursery');
+const homes = nurseryList.filter((i) => i.category === '社區公共托育家園').length;
+const withEval = nurseryList.filter((i) => i.evaluations?.length).length;
+const evalCities = [...new Set(nurseryList.filter((i) => i.evaluations?.length).map((i) => i.city))];
+const noEvalCities = data.cities
+  .map((c) => c.name)
+  .filter((n) => !evalCities.includes(n) && nurseryList.some((i) => i.city === n));
+
 const where = cityList(data.cities);
 const title = `${where}幼兒園與托嬰中心一覽｜${SITE_NAME}`;
 const description = `整理${where} ${data.districts.length} 個行政區共 ${total} 間立案幼兒園與托嬰中心的基本資料，並附上裁罰、評鑑、收退費與補助的官方查詢連結。資料來自政府開放平台。`;
@@ -83,13 +93,18 @@ const description = `整理${where} ${data.districts.length} 個行政區共 ${t
       <div class="agepick">
         <article class="agecard">
           <h3>未滿 2 歲</h3>
-          <p class="agecard-sub">托嬰中心或居家保母</p>
+          <p class="agecard-sub">托嬰中心、托育家園或居家保母</p>
           <p class="agecard-body">
-            {`這個年齡只能上托嬰中心（${nurseries} 間）或找居家保母。本站對托嬰中心只有名稱、地址、電話與收托人數——沒有收費、沒有裁罰、也算不了距離，因為政府開放資料就只給到這裡。居家保母受個資法規範，沒有名冊可用。`}
+            {`這個年齡的選擇是托嬰中心、社區公共托育家園（${homes} 間，規模較小）或居家保母，本站收錄前兩者共 ${nurseries} 間。居家保母受個資法規範，沒有名冊可用。`}
           </p>
           <p class="agecard-body">
-            <strong>老實說，這一段我們幫得有限。</strong>
-            {'能做的是幫你把該區的托嬰中心列出來，並直接給你社會局的裁罰與評鑑查詢入口。'}
+            {`${evalCities.join('、')}的社會局有公開評鑑結果與收托人數，所以那 ${withEval} 間看得到評鑑等第，部分還看得到目前還有沒有名額。`}
+            {noEvalCities.length > 0 &&
+              `${noEvalCities.join('、')}沒有公開這兩項，那裡只有名稱、地址、電話與核定人數——這是資料落差，跟機構好壞無關。`}
+          </p>
+          <p class="agecard-body">
+            <strong>共同的限制：</strong>
+            {'兩市都沒有托嬰中心的收費與裁罰的結構化資料，也都算不了距離（缺座標）。要問價格與過往紀錄，請用下面的官方查詢入口或直接打電話。'}
           </p>
           <div class="agecard-links">
             <a class="btn btn-quiet" href="/招生時程/">什麼時候要登記</a>

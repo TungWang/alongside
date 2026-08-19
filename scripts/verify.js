@@ -16,6 +16,7 @@ const { PRESCHOOL, NURSERY, VERIFIED_ON, isStale } = await import('../src/lib/ad
 const { estimate } = await import('../src/lib/subsidy.js');
 const SUB = await import('./check-subsidy.js');
 const SY = await import('../src/lib/quasi.js');
+const NAME = await import('./fetch-data.js');
 const STALE = await import('../src/scripts/staleness.js');
 
 const read = (p) => fs.readFileSync(path.join(DIST, p), 'utf8');
@@ -166,8 +167,10 @@ check('幼兒園頁只給教育部連結', () => {
 });
 
 check('托嬰頁只給社會局連結', () => {
+  // 只比對真正指向教育部的網址。封存資料的 GitHub 網址（github.com/kiang/ap.ece.moe.edu.tw）
+  // 含有同一段字串，用裸字串比對會誤判——實際發生過，訊息還指錯方向。
   const bad = htmlFiles.filter(
-    (f) => f.includes('/i/nursery-') && html(f).includes('ap.ece.moe.edu.tw'),
+    (f) => f.includes('/i/nursery-') && /https:\/\/(ap|www)\.ece\.moe\.edu\.tw/.test(html(f)),
   );
   return bad.length ? `${bad.length} 頁誤含教育部連結` : true;
 });
@@ -416,9 +419,22 @@ check('收藏功能與比較頁', () => {
 });
 
 check('首頁依年齡分流並誠實說明資料落差', () => {
+  // 原本釘死一句「這一段我們幫得有限」。臺北市開始有評鑑與名額之後那句話不再準確，
+  // 所以改成驗意圖：0–2 歲那張卡必須同時講出共同限制與縣市間的落差。
   const h = read('index.html');
   if (!h.includes('孩子多大了')) return '首頁缺少年齡分流';
-  if (!h.includes('這一段我們幫得有限')) return '未誠實說明 0–2 歲的資料限制';
+  if (!/共同的限制/.test(h)) return '未說明 0–2 歲兩市共同的資料限制';
+  if (!/收費與裁罰/.test(h) || !/算不了距離/.test(h)) return '未具體列出缺哪些資料';
+
+  // 有縣市拿得到評鑑、有縣市拿不到時，必須講明那是資料落差而不是機構差異
+  const nurseries = DATA.institutions.filter((i) => i.kind === 'nursery');
+  const withEval = [...new Set(nurseries.filter((i) => i.evaluations?.length).map((i) => i.city))];
+  const without = DATA.cities
+    .map((c) => c.name)
+    .filter((n) => !withEval.includes(n) && nurseries.some((i) => i.city === n));
+  if (withEval.length && without.length && !h.includes('跟機構好壞無關')) {
+    return '有縣市缺評鑑資料，卻沒有說明那是資料落差而非機構差異';
+  }
   return true;
 });
 
@@ -459,7 +475,9 @@ check('行政區未跨縣市重複', () => {
 check('各縣市的官方連結都給對機關', () => {
   const tp = htmlFiles.filter((f) => f.includes(`${path.sep}i${path.sep}`) && html(f).includes('臺北市政府'));
   if (!tp.length) return '找不到任何臺北市的機構頁';
-  const wrongEdu = tp.filter((f) => f.includes('nursery-') && html(f).includes('ap.ece.moe.edu.tw'));
+  const wrongEdu = tp.filter(
+    (f) => f.includes('nursery-') && /https:\/\/(ap|www)\.ece\.moe\.edu\.tw/.test(html(f)),
+  );
   const wrongCity = tp.filter((f) => html(f).includes('sw.ntpc.gov.tw') || html(f).includes('kidedu.ntpc'));
   if (wrongEdu.length) return `${wrongEdu.length} 個臺北托嬰頁誤含教育部連結`;
   if (wrongCity.length) return `${wrongCity.length} 個臺北市頁面誤含新北市連結`;
@@ -613,6 +631,97 @@ check('平價教保的頁面要講明繳的是上限而不是收費節奏', () =
   );
   const ph = read(`i/${priv.id}/index.html`);
   return ph.includes('每學期開學都要繳一次') ? true : `${priv.id} 沒有說明開學繳是每學期一次`;
+});
+
+check('托嬰的名稱比對不會把不同分館湊在一起', () => {
+  // 「漢妮」與「漢妮明水園」、「凱瑞莎」與「凱瑞莎青田」是不同分館。
+  // 用子字串比對可以把命中率從 89% 推到 95%，代價是把甲館的評鑑掛到乙館頭上——
+  // 那比不顯示糟得多。這裡直接餵已知的危險組合給比對器，它必須放棄而不是硬猜。
+  const roster = [
+    { name: '臺北市私立漢妮明水園托嬰中心', district: '中山區' },
+    { name: '臺北市私立凱瑞莎青田托嬰中心', district: '大安區' },
+    { name: '臺北市中山托嬰中心', district: '中山區' },
+    { name: '臺北市私立安筠托嬰中心(原名稱：小哈利)', district: '中正區' },
+    { name: '臺北市大安托嬰中心', district: '大安區' },
+    { name: '臺北市私立天心大安托嬰中心', district: '大安區' },
+  ];
+  const idx = NAME.buildNameIndex(roster);
+
+  // 必須放棄的：招牌相同但屬不同分館
+  for (const [raw, district] of [
+    ['臺北市私立漢妮托嬰中心', '中山區'],
+    ['臺北市私立凱瑞莎托嬰中心', '大安區'],
+  ]) {
+    const got = idx.find(raw, district);
+    if (got) return `「${raw}」被硬湊到「${got.name}」`;
+  }
+
+  // 必須對上的：只是寫法不同
+  const cases = [
+    ['中山托嬰中心', '中山區', '臺北市中山托嬰中心'],
+    ['臺北市私立小哈利托嬰中心', '中正區', '臺北市私立安筠托嬰中心(原名稱：小哈利)'],
+    ['臺北市政府社會局委託某協會經營管理臺北市中山托嬰中心', '中山區', '臺北市中山托嬰中心'],
+  ];
+  for (const [raw, district, want] of cases) {
+    const got = idx.find(raw, district);
+    if (got?.name !== want) return `「${raw}」應對到「${want}」，實際是「${got?.name ?? '沒對上'}」`;
+  }
+
+  // 名冊裡有兩間都含「大安」，光憑「大安托嬰中心」不足以判斷時要靠行政區，
+  // 而完全不明確的鍵一律不採用
+  const evals = DATA.institutions.filter((i) => i.evaluations?.length);
+  if (!evals.length) return '沒有任何機構有評鑑資料';
+  const bad = evals.find((i) => i.kind !== 'nursery');
+  return bad ? `${bad.name} 不是托嬰中心卻有托嬰評鑑` : true;
+});
+
+check('社區公共托育家園有被收錄且標對來源', () => {
+  // 0–2 歲的第三種選擇，兩份托嬰名冊都不含它——招生時程頁已經寫了臺北市的候補規則
+  // 「限登記 1 家公辦民營托嬰中心與 1 家社區公共托育家園」，卻一間都沒給。
+  const homes = DATA.institutions.filter((i) => i.category === '社區公共托育家園');
+  if (homes.length < 40) return `只有 ${homes.length} 間社區公共托育家園，異常偏少`;
+  // 全名前段是受託單位，不該混進機構名稱（市府自營的沒有受託單位，那是正常的）
+  const messy = homes.find((h) => /委託|經營管理|承辦/.test(h.name));
+  if (messy) return `${messy.name} 的名稱含受託單位`;
+  const delegated = homes.filter((h) => h.operator).length;
+  if (delegated < homes.length * 0.5) return `只有 ${delegated} 間有受託單位，疑似解析失敗`;
+  const h = read(`i/${homes[0].id}/index.html`);
+  return h.includes('準公共化托嬰中心') ? true : `${homes[0].id} 沒有標出正確的資料出處`;
+});
+
+check('評鑑等第照原文列出，本站不另外做評價', () => {
+  // 裁罰是客觀的不利事實，評鑑等第是政府的評價。把「乙」標成警示色
+  // 等於本站又加了一層判斷，與「不做任何評價、排名或背書」的原則矛盾。
+  const inst = DATA.institutions.find((i) => i.evaluations?.some((e) => e.grade.startsWith('乙')));
+  if (!inst) return '找不到有乙等紀錄的機構';
+  const h = read(`i/${inst.id}/index.html`);
+  if (/ov-flag[^>]*>(?:(?!<\/li>).)*最近評鑑/s.test(h)) return `${inst.id} 把評鑑等第標成警示`;
+  if (!h.includes('不做任何解讀或排名')) return `${inst.id} 沒有聲明不做解讀`;
+  // 來源有「甲」與「甲等」兩種寫法，不該被改寫成統一格式
+  const raw = new Set(DATA.institutions.flatMap((i) => i.evaluations?.map((e) => e.grade) ?? []));
+  return raw.has('甲') && raw.has('甲等') ? true : '等第似乎被改寫過，應照原文列出';
+});
+
+check('沒有評鑑資料時要說明原因，不能留白', () => {
+  const none = DATA.institutions.find(
+    (i) => i.kind === 'nursery' && i.city === '臺北市' && !i.evaluations?.length,
+  );
+  if (none) {
+    const h = read(`i/${none.id}/index.html`);
+    if (!h.includes('市府的機構名冊與評鑑名單彼此對不起來')) {
+      return `${none.id} 沒有說明為什麼查不到評鑑`;
+    }
+  }
+  const other = DATA.institutions.find(
+    (i) => i.kind === 'nursery' && i.city !== '臺北市',
+  );
+  if (other) {
+    const h = read(`i/${other.id}/index.html`);
+    if (!h.includes('這是資料的落差，與機構品質無關')) {
+      return `${other.id} 沒有說明缺評鑑是資料落差而非品質問題`;
+    }
+  }
+  return true;
 });
 
 check('腳本被 import 時不會自己跑起來', () => {

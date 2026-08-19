@@ -68,6 +68,10 @@ const CITIES = [
     nurseries: [
       { adapter: 'taipei', rid: 'e7cdaca3-e9da-46f9-b857-395e6e8e06a6', label: '托嬰中心' },
       { adapter: 'taipei', rid: 'a02ccc34-dd28-4c5d-b527-c5433ec1a453', label: '公設民營托嬰中心' },
+      // 這份同時是「社區公共托育家園」唯一的名冊來源——那是 0–2 歲的第三種選擇，
+      // 規模較小（收托上限 12 人），臺北市的候補規則也把它與托嬰中心分開計算，
+      // 但兩份托嬰名冊都不含它。見 fromTaipeiQuasi()。
+      { adapter: 'taipei-quasi', rid: '75bb5396-4880-4301-9dde-2f7ccae00d57', label: '社區公共托育家園' },
     ],
   },
 ];
@@ -294,6 +298,35 @@ function fromNtpcNursery(row, city, label) {
  * 臺北市開放資料的托嬰。跟新北市的差異：沒有行政區欄位（要從地址剖析）、
  * 私立那份沒有收托人數、機構類型混在同一個欄位裡。
  */
+/**
+ * 社區公共托育家園。
+ * 全名長這樣：「臺北市政府社會局委託X協會經營管理臺北市Y社區公共托育家園」，
+ * 前面那一大段是受託單位不是機構名，顯示時取「臺北市Y社區公共托育家園」。
+ */
+function fromTaipeiQuasi(row, city, label) {
+  const full = squash(row['機構名稱']);
+  const delegated = full.match(/(?:經營管理|辦理|承辦)(.+)$/);
+  const name = squash(delegated ? delegated[1] : full);
+  const raw = squash(row['地址']);
+  const district = squash(row['行政區']) || districtFromAddress(raw);
+  return makeInstitution({
+    city,
+    kind: 'nursery',
+    category: label,
+    name,
+    district,
+    street: toStreet(raw, district),
+    tel: toTel(squash(row['電話'])),
+    ownership: '公共托育',
+    extra: {
+      capacity: toInt(row['核定收托人數']),
+      enrolled: toInt(row['實際收托人數']),
+      quasiPublic: true,
+      operator: delegated ? squash(full.slice(0, full.length - delegated[1].length)) : null,
+    },
+  });
+}
+
 function fromTaipeiNursery(row, city, label) {
   const raw = squash(row['地址']);
   const district = districtFromAddress(raw);
@@ -374,6 +407,15 @@ async function fetchInstitutions(archive) {
           all.push(fromNtpcNursery(row, city.name, src.label));
           nurseries++;
         }
+      } else if (src.adapter === 'taipei-quasi') {
+        // 這份是準公共名單，多數列是既有的托嬰中心（之後在 enrich 補資料），
+        // 只有社區公共托育家園是別處沒有的，才在這裡建成新機構。
+        for (const row of await fetchCsv(TAIPEI_DL + src.rid, `臺北市 ${src.label}`)) {
+          const name = squash(row['機構名稱']);
+          if (!name || !/公共托育家園/.test(name)) continue;
+          all.push(fromTaipeiQuasi(row, city.name, src.label));
+          nurseries++;
+        }
       } else {
         for (const row of await fetchCsv(TAIPEI_DL + src.rid, `臺北市 ${src.label}`)) {
           if (!squash(row['機構名稱'])) continue;
@@ -396,6 +438,67 @@ async function fetchInstitutions(archive) {
 
 // 比對用：封存端與開放資料端的機構名稱寫法略有出入，去掉空白與括號後可 100% 對上
 const matchKey = (name) => squash(name).replace(/\s/g, '').replace(/[（）()]/g, '');
+
+/**
+ * 托嬰中心的名稱比對。
+ *
+ * 市府的幾份資料集對同一間機構用不同寫法：名冊寫「臺北市私立安筠托嬰中心(原名稱：小哈利)」、
+ * 準公共名單用舊名「小哈利」、評鑑名單省略市名寫「中山托嬰中心」、公辦民營則是
+ * 「臺北市政府社會局委託X協會經營管理臺北市Y托嬰中心」的全名。
+ *
+ * 刻意不做子字串比對：「漢妮」與「漢妮明水園」、「凱瑞莎」與「凱瑞莎青田」是不同分館，
+ * 猜錯會把甲館的評鑑等第掛到乙館頭上——那比不顯示糟得多。所以只做安全的寫法變體，
+ * 並且一個鍵對到兩間就視為不明確、直接放棄。實測碰撞數 0。
+ */
+const nameNorm = (s) => squash(s).replace(/\s/g, '').replace(/[（）]/g, (c) => (c === '（' ? '(' : ')'));
+
+export function nameKeys(raw) {
+  const out = new Set();
+  const add = (v) => {
+    if (!v) return;
+    out.add(v);
+    out.add(v.replace(/^臺北市/, ''));
+    out.add(v.replace(/私立/, ''));
+    out.add(v.replace(/^臺北市/, '').replace(/私立/, ''));
+  };
+  const n = nameNorm(raw);
+  add(n);
+  const bare = n.replace(/\([^)]*\)/g, '');
+  add(bare);
+  const old = n.match(/\((?:原名稱?|原名|前名稱?)[:：]?([^)]+)\)/);
+  if (old) {
+    add(old[1]);
+    add(`臺北市私立${old[1]}托嬰中心`);
+  }
+  const delegated = bare.match(/(?:經營管理|辦理|承辦)(.+)$/);
+  if (delegated) add(delegated[1]);
+  return [...out].filter(Boolean);
+}
+
+/** 建索引；一個鍵對到兩間不同機構就標為不明確，之後一律不採用 */
+export function buildNameIndex(list) {
+  const idx = new Map();
+  const ambiguous = new Set();
+  for (const item of list) {
+    for (const k of nameKeys(item.name)) {
+      for (const key of [`${k}@${item.district}`, k]) {
+        if (idx.has(key) && idx.get(key) !== item) ambiguous.add(key);
+        else idx.set(key, item);
+      }
+    }
+  }
+  return {
+    find(raw, district) {
+      const keys = nameKeys(raw);
+      for (const k of keys) {
+        const withDistrict = `${k}@${squash(district)}`;
+        if (idx.has(withDistrict) && !ambiguous.has(withDistrict)) return idx.get(withDistrict);
+      }
+      for (const k of keys) if (idx.has(k) && !ambiguous.has(k)) return idx.get(k);
+      return null;
+    },
+  };
+}
 
 /**
  * 卡片與清單上顯示哪一個年齡的費用：一律用「有資料的最小年齡」。
@@ -787,6 +890,61 @@ function applyQuasiPublic(institutions, archive) {
   );
 }
 
+/**
+ * 臺北市托嬰中心的評鑑與收托狀況。
+ *
+ * 這是本站對 0–2 歲第一次能講出「品質」與「還有沒有位子」——在此之前只有名稱地址電話。
+ * 兩份都只有臺北市有：新北市社會局公開的三份資料裡沒有評鑑、沒有準公共、沒有收托人數
+ * （掃過該平台 65 個資料集確認）。這個不對稱要在頁面上照實說，不能讓新北的家長
+ * 以為是他們的機構比較差。
+ *
+ * 覆蓋不到全部：市府自己的名冊與評鑑名單就對不起來——評鑑名單有 22 間不在名冊裡，
+ * 名冊也有機構不在評鑑名單裡。對不上的一律顯示「無資料」並說明原因。
+ */
+const TAIPEI_NURSERY_EXTRAS = {
+  quasi: '75bb5396-4880-4301-9dde-2f7ccae00d57', // 核定／實際收托人數、準公共身分
+  evaluation: '43c0bdc5-ddb0-40bf-accd-a096d8c5ac23', // 逐年評鑑等第
+};
+
+async function enrichNurseries(institutions) {
+  const targets = institutions.filter((i) => i.city === '臺北市' && i.kind === 'nursery');
+  if (!targets.length) return;
+  const index = buildNameIndex(targets);
+
+  let withQuasi = 0;
+  for (const row of await fetchCsv(TAIPEI_DL + TAIPEI_NURSERY_EXTRAS.quasi, '臺北市 準公共托嬰')) {
+    const name = squash(row['機構名稱']);
+    if (!name) continue;
+    const inst = index.find(name, row['行政區']);
+    if (!inst) continue;
+    inst.quasiPublic = true;
+    inst.capacity = toInt(row['核定收托人數']) ?? inst.capacity;
+    inst.enrolled = toInt(row['實際收托人數']) ?? null;
+    withQuasi++;
+  }
+
+  let withEval = 0;
+  for (const row of await fetchCsv(TAIPEI_DL + TAIPEI_NURSERY_EXTRAS.evaluation, '臺北市 托嬰評鑑')) {
+    const name = squash(row['機構名稱']);
+    if (!name) continue;
+    const inst = index.find(name, row['行政區']);
+    if (!inst) continue;
+    // 欄位是「110年」「111年」…，逐年一格，空白代表那年沒受評
+    const grades = Object.entries(row)
+      .map(([k, v]) => [k.match(/^(\d{3})年$/)?.[1], squash(v)])
+      .filter(([year, grade]) => year && grade)
+      .map(([year, grade]) => ({ year, grade }))
+      .sort((a, b) => b.year.localeCompare(a.year));
+    if (!grades.length) continue;
+    inst.evaluations = grades;
+    withEval++;
+  }
+
+  console.log(
+    `  臺北市托嬰：${withEval} / ${targets.length} 間有評鑑、${withQuasi} 間是準公共（其餘市府名單本身就對不起來）`,
+  );
+}
+
 async function enrich(institutions, archive) {
   if (!archive) return { enriched: 0, withFees: 0, penaltyCount: 0, archive: null };
 
@@ -897,6 +1055,7 @@ async function main() {
 
   console.log('\n  補充月費與裁罰（民間封存）…');
   const meta = await enrich(institutions, archive);
+  await enrichNurseries(institutions);
 
   // 跟裁罰抓取同一類的防護：上游若改欄位名或資料結構，比對會靜靜地全部落空，
   // 整站的月費與裁罰就無聲消失。與其發布一個「看起來正常但少了一半資料」的網站，

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import OverviewBlock from '../../components/OverviewBlock.astro';
 import PenaltyList from '../../components/PenaltyList.astro';
 import FeeBlock from '../../components/FeeBlock.astro';
+import NurseryQuality from '../../components/NurseryQuality.astro';
 import SubsidyBlock from '../../components/SubsidyBlock.astro';
 import DataNotice from '../../components/DataNotice.astro';
 import data from '../../data/institutions.json';
@@ -215,6 +216,8 @@ const jsonLd = {
         )
       }
     </section>
+
+    {inst.kind === 'nursery' && <NurseryQuality inst={inst} links={links} />}
 
     <FeeBlock inst={inst} feeLink={feeLink} />
 

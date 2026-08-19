@@ -80,6 +80,32 @@ if (term) {
   });
 }
 
+// 托嬰中心先前只有名稱地址電話。評鑑與收托狀況是本站第一次能對 0–2 歲講出
+// 「品質」與「還有沒有位子」——後者也是招生時程頁原本明講查不到的那件事。
+if (inst.kind === 'nursery' && inst.evaluations?.length) {
+  const latest = inst.evaluations[0];
+  // 刻意不加警示色。裁罰是客觀的不利事實，評鑑等第是政府的評價——
+  // 本站的原則是不做任何評價、排名或背書，把「乙」標紅就是自己又加了一層判斷。
+  // 等第原文照列（來源有「甲」與「甲等」等不同寫法，不改寫成統一格式）。
+  items.push({
+    key: 'eval',
+    label: '最近評鑑',
+    value: latest.grade,
+    note: `${latest.year} 年度　共 ${inst.evaluations.length} 次紀錄`,
+  });
+}
+
+if (inst.kind === 'nursery' && inst.capacity && Number.isInteger(inst.enrolled)) {
+  const free = inst.capacity - inst.enrolled;
+  items.push({
+    key: 'vacancy',
+    label: '名額',
+    value: free > 0 ? `還有 ${free} 個` : '已收滿',
+    note: `市府公布時核定 ${inst.capacity}、實收 ${inst.enrolled}——會變動，要打電話確認`,
+    strong: free > 0,
+  });
+}
+
 const capacity = inst.approvedCount || inst.capacity;
 if (capacity) {
   items.push({ key: 'size', label: '核定收托', value: `${capacity} 人`, note: '全園上限，不是班級人數' });

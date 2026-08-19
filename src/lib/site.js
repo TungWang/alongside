@@ -148,6 +148,10 @@ const CITY_DATASETS = {
       url: 'https://data.taipei/dataset/detail?id=081df75e-85c7-464c-b125-546920911c5c' },
     公設民營托嬰中心: { label: '臺北市嬰幼兒照顧服務_公辦民營托嬰中心', agency: '臺北市政府社會局',
       url: 'https://data.taipei/dataset/detail?id=9c9a3f77-8340-48d8-bc0e-f9155521b758' },
+    社區公共托育家園: { label: '臺北市準公共化托嬰中心', agency: '臺北市政府社會局',
+      url: 'https://data.taipei/dataset/detail?id=aeaaa517-089c-42a7-ad5b-60fef89c3545' },
+    托嬰中心評鑑: { label: '臺北市托嬰中心評鑑結果', agency: '臺北市政府社會局',
+      url: 'https://data.taipei/dataset/detail?id=e7b45593-9d44-469c-97fa-f1a52c69ebaa' },
   },
 };
 
