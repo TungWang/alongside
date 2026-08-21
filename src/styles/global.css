@@ -394,15 +394,14 @@ main {
 
 /* ---------- 篩選列 ---------- */
 
+/* 換行而不是橫向捲動。原本是 overflow-x: auto 且刻意隱藏捲軸——手機滑得動，
+   但桌機用滑鼠既沒有捲軸可拉、滾輪也不會橫向捲，後面的條件等於消失了。
+   這是頁面的主要控制項，不能有看不到也到不了的選項；多佔一兩行遠比藏起來好。 */
 .filterbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 7px;
-  overflow-x: auto;
   padding: 2px 0 8px;
-  scrollbar-width: none;
-}
-.filterbar::-webkit-scrollbar {
-  display: none;
 }
 .filterbar button {
   flex: 0 0 auto;

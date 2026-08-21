@@ -724,6 +724,26 @@ check('沒有評鑑資料時要說明原因，不能留白', () => {
   return true;
 });
 
+check('篩選列不會把選項藏在看不到的橫向捲動裡', () => {
+  // 真的被回報過：.filterbar 用 overflow-x: auto 又隱藏捲軸，手機滑得動，
+  // 但桌機用滑鼠既沒有捲軸可拉、滾輪也不會橫向捲，後面幾個條件完全到不了。
+  // 篩選是這一頁的主要控制項，不能有看不到也按不到的選項。
+  const css = fs.readFileSync(path.join(ROOT, 'src/styles/global.css'), 'utf8');
+  const block = css.match(/\.filterbar\s*\{[^}]*\}/)?.[0];
+  if (!block) return '找不到 .filterbar 樣式';
+  if (/overflow-x\s*:\s*(auto|scroll)/.test(block)) return '.filterbar 又改回橫向捲動了';
+  if (!/flex-wrap\s*:\s*wrap/.test(block)) return '.filterbar 沒有 flex-wrap: wrap，選項會被擠出畫面';
+  if (/scrollbar-width\s*:\s*none/.test(block)) return '.filterbar 隱藏了捲軸';
+
+  // 建置產物裡也要真的有那些按鈕，數量對得上資料
+  const d = DATA.districts.find(
+    (x) => DATA.institutions.filter((i) => i.district === x).length > 20,
+  );
+  const h = read(`d/${d}/index.html`);
+  const buttons = (h.match(/data-filter="/g) || []).length;
+  return buttons >= 6 ? true : `${d} 只有 ${buttons} 個篩選按鈕，異常偏少`;
+});
+
 check('腳本被 import 時不會自己跑起來', () => {
   // 真的發生過：verify 為了引用常數而 import 了 fetch-data.js，結果每次驗證都
   // 重新抓一次資料並覆蓋 institutions.json——驗證的變成它自己剛寫出來的檔案，
